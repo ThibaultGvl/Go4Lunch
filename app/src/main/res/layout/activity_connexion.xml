@@ -7,7 +7,7 @@
     tools:context=".ui.ConnexionActivity">
 
     <ImageView
-        android:src="@drawable/gp4kunch"
+        android:src="@drawable/go4lunch_background"
         android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
