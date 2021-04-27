@@ -1,5 +1,6 @@
 package com.example.go4lunch.ui;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -14,14 +15,16 @@ import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.ActivityMainBinding;
 import com.example.go4lunch.model.Restaurant;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private ActivityMainBinding binding;
     private Fragment mapsFragment;
     private Fragment restaurantFragment;
     private Fragment userFragment;
     private BottomNavigationView bottomNavigationView;
+    private NavigationView navigationView;
 
     private static final int MAPS_FRAGMENT = 0;
     private static final int RESTAURANT_FRAGMENT = 1;
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         this.configureBottomView();
+        this.configureNavigationView();
         setContentView(view);
     }
 
@@ -93,5 +97,14 @@ public class MainActivity extends AppCompatActivity {
     private void configureBottomView() {
         this.bottomNavigationView = binding.navBottomBar;
         this.bottomNavigationView.setOnNavigationItemSelectedListener(this::onNavigationBottomItemSelected);
+    }
+
+    private void configureNavigationView() {
+        this.navigationView = (NavigationView) binding.navView;
+        this.navigationView.setNavigationItemSelectedListener(this);
+    }
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        return false;
     }
 }
