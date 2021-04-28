@@ -15,5 +15,4 @@
         android:id="@+id/workmate"
         android:icon="@drawable/ic_baseline_supervisor_account_24"
         android:title="@string/workmates"/>
-
 </menu>

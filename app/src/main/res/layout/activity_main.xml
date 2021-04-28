@@ -23,17 +23,20 @@
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_menu_24"/>
+                android:src="@drawable/ic_baseline_menu_24"
+                android:background="@color/primary_color"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/white"
                 android:text="@string/default_banner"/>
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_search_24"/>
+                android:src="@drawable/ic_baseline_search_24"
+                android:background="@color/primary_color"/>
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -68,6 +71,7 @@
         app:itemTextColor="@color/white"
         app:itemIconTint="@color/white"
         android:fitsSystemWindows="true"
+        app:headerLayout="@layout/activity_nav_header"
         app:layout_constraintStart_toStartOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -103,8 +103,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.navigationView = (NavigationView) binding.navView;
         this.navigationView.setNavigationItemSelectedListener(this);
     }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.your_lunch :
+
+            case R.id.settings :
+
+            case R.id.logout :
+
+        }
+        return true;
     }
 }
