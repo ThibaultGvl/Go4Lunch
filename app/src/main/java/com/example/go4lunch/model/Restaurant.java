@@ -6,8 +6,6 @@ public class Restaurant {
 
     private String name;
 
-    private String type;
-
     private String address;
 
     private int distance;
@@ -24,7 +22,6 @@ public class Restaurant {
     public Restaurant(String name, String type, String address, int distance, int rank,int mate, long picture, Time schedules) {
 
         this.name = name;
-        this.type = type;
         this.address = address;
         this.distance = distance;
         this.rank = rank;
@@ -39,14 +36,6 @@ public class Restaurant {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getAddress() {

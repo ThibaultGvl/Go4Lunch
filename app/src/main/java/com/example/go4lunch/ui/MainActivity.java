@@ -1,7 +1,11 @@
 package com.example.go4lunch.ui;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
@@ -10,6 +14,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.ActivityMainBinding;
@@ -25,6 +30,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Fragment userFragment;
     private BottomNavigationView bottomNavigationView;
     private NavigationView navigationView;
+    private ImageButton navBtn;
+    private DrawerLayout drawerLayout;
+    private Toolbar toolbar;
 
     private static final int MAPS_FRAGMENT = 0;
     private static final int RESTAURANT_FRAGMENT = 1;
@@ -35,9 +43,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
+        navBtn = binding.menuBtn;
         this.configureBottomView();
+        this.configureToolBar();
         this.configureNavigationView();
+        this.configureDrawerLayout();
         setContentView(view);
+        navBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     public boolean onNavigationBottomItemSelected(MenuItem item) {
@@ -94,9 +111,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    private void configureToolBar() {
+        this.toolbar = binding.toolbar;
+        setSupportActionBar(toolbar);
+    }
+
     private void configureBottomView() {
         this.bottomNavigationView = binding.navBottomBar;
         this.bottomNavigationView.setOnNavigationItemSelectedListener(this::onNavigationBottomItemSelected);
+    }
+
+    private void configureDrawerLayout() {
+        this.drawerLayout = binding.drawer;
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
     }
 
     private void configureNavigationView() {
@@ -116,6 +145,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.logout :
 
         }
+
+        this.drawerLayout.closeDrawer(GravityCompat.START);
+
         return true;
     }
 }
