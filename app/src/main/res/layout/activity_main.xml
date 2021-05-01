@@ -27,21 +27,6 @@
             android:background="@color/primary_color">
 
             <ImageButton
-                android:id="@+id/menu_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_menu_24"
-                android:background="@color/primary_color"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:text="@string/default_banner"
-                android:textSize="20sp"
-                android:paddingStart="20dp"/>
-
-            <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_baseline_search_24"
@@ -93,4 +78,5 @@
             android:layout_gravity="bottom"
             android:layout_marginStart="100dp"/>
     </com.google.android.material.navigation.NavigationView>
+
 </androidx.drawerlayout.widget.DrawerLayout>

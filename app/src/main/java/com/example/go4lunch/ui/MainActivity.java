@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.ActivityMainBinding;
 import com.example.go4lunch.model.Restaurant;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -30,7 +31,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Fragment userFragment;
     private BottomNavigationView bottomNavigationView;
     private NavigationView navigationView;
-    private ImageButton navBtn;
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
 
@@ -43,18 +43,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
-        navBtn = binding.menuBtn;
         this.configureBottomView();
-        this.configureToolBar();
         this.configureNavigationView();
         this.configureDrawerLayout();
         setContentView(view);
-        navBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
     }
 
     public boolean onNavigationBottomItemSelected(MenuItem item) {
@@ -129,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void configureNavigationView() {
-        this.navigationView = (NavigationView) binding.navView;
+        this.navigationView = binding.navView;
         this.navigationView.setNavigationItemSelectedListener(this);
     }
 

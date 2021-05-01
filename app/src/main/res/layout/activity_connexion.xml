@@ -9,10 +9,10 @@
 
     <ImageView
         android:id="@+id/connexion_background"
-        android:src="@drawable/go4lunch_background"
-        android:scaleType="centerCrop"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/go4lunch_background" />
 
     <ImageView
         android:id="@+id/connexion_logo"
@@ -51,15 +51,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
-        style="@style/FirebaseUI.Button.AccountChooser.FacebookButton"
         android:text="@string/sign_in_with_facebook"
+        android:drawableLeft="@drawable/ic_baseline_facebook_24"
+        android:background="#675EFF"
         android:layout_below="@id/connexion_slogan"
         android:layout_centerHorizontal="true"/>
 
     <Button
+        android:id="@+id/connexion_google"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/FirebaseUI.Button.AccountChooser.GoogleButton"
         android:text="@string/sign_in_with_google"
         android:layout_below="@id/connexion_fb"
         android:layout_centerHorizontal="true"/>
