@@ -42,9 +42,15 @@ public class ConnexionActivity extends AppCompatActivity {
         fbBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startMainActivity();
+                startFacebookSignInActivity();
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        startMainActivity();
     }
 
     private void startGoogleSignInActivity(){

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.ConnexionActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/connexion_background"
@@ -23,7 +27,7 @@
         android:layout_alignTop="@id/connexion_background"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/bottom_bar_height"
-        tools:ignore="RtlSymmetry" />
+        android:paddingStart="10dp"/>
 
     <TextView
         android:id="@+id/connexion_app_name"
@@ -53,7 +57,7 @@
         android:layout_marginTop="100dp"
         android:text="@string/sign_in_with_facebook"
         android:drawableLeft="@drawable/ic_baseline_facebook_24"
-        android:background="#675EFF"
+        android:backgroundTint="@color/com_facebook_blue"
         android:layout_below="@id/connexion_slogan"
         android:layout_centerHorizontal="true"/>
 
@@ -61,8 +65,15 @@
         android:id="@+id/connexion_google"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:text="@string/sign_in_with_google"
+        android:drawableLeft="@drawable/ic_baseline_g_mobiledata_24"
+        android:backgroundTint="@color/google_btn"
+        android:layout_alignStart="@id/connexion_fb"
+        android:layout_alignEnd="@id/connexion_fb"
         android:layout_below="@id/connexion_fb"
         android:layout_centerHorizontal="true"/>
 
-</RelativeLayout>
+    </RelativeLayout>
+
+</ScrollView>

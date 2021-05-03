@@ -8,4 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="primary_color">#FB6C29</color>
+    <color name="google_btn">#FF4B2B</color>
 </resources>

@@ -1,5 +1,8 @@
 package com.example.go4lunch.model;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class User {
 
     private String user;
@@ -21,6 +24,8 @@ public class User {
     public void setUser(String user) {
         this.user = user;
     }
+
+    public FirebaseUser getCurrentUser(String currentUser) {return FirebaseAuth.getInstance().getCurrentUser();}
 
     public long getPicture() {
         return picture;
