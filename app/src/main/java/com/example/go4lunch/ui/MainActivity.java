@@ -18,11 +18,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.ActivityMainBinding;
+import com.example.go4lunch.databinding.ActivityNavHeaderBinding;
 import com.example.go4lunch.model.Restaurant;
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.data.model.User;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -30,23 +33,28 @@ import com.google.android.material.navigation.NavigationView;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private ActivityMainBinding binding;
+    private ActivityNavHeaderBinding mNavHeaderBinding;
     private Fragment mapsFragment;
     private Fragment restaurantFragment;
     private Fragment userFragment;
+    private Fragment settingsFragment;
     private BottomNavigationView bottomNavigationView;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
+    private User user;
 
     private static final int MAPS_FRAGMENT = 0;
     private static final int RESTAURANT_FRAGMENT = 1;
     private static final int USER_FRAGMENT = 2;
+    private static final int SETTINGS_FRAGMENT = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
+        this.showFragment(MAPS_FRAGMENT);
         this.configureToolBar();
         this.configureBottomView();
         this.configureNavigationView();
@@ -96,9 +104,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.startTransactionFragment(restaurantFragment);
     }
 
-    private  void showUserFragment() {
+    private void showUserFragment() {
         if (this.userFragment == null) this.userFragment = UserFragment.newInstance(1);
         this.startTransactionFragment(userFragment);
+    }
+
+    private void showSettingsFragment() {
+        if (this.settingsFragment == null) this.settingsFragment = SettingsFragment.newInstance();
     }
 
     private void startTransactionFragment(Fragment fragment) {
@@ -136,15 +148,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(intent);
     }
 
+    private void configureNavDrawer() {
+        TextView currentUserName = mNavHeaderBinding.nameProfile;
+        TextView currentUserEmail = mNavHeaderBinding.emailProfile;
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
         switch (id) {
             case R.id.your_lunch :
-
+                
             case R.id.settings :
-
+                showSettingsFragment();
             case R.id.logout :
                 signOut();
         }

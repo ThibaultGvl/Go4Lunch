@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.go4lunch.R;
+import com.example.go4lunch.databinding.FragmentUserBinding;
 import com.example.go4lunch.ui.dummy.DummyContent;
 
 /**
@@ -24,6 +25,8 @@ public class UserFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
+
+    private FragmentUserBinding binding;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -45,7 +48,6 @@ public class UserFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }

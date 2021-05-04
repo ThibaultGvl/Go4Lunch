@@ -10,7 +10,7 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-    <string name="FACEBOOK_FB_APP_ID">466239517962046</string>
+    <string name="facebook_application_id">466239517962046</string>
 
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
@@ -39,4 +39,6 @@
     <string name="slogan">Find a nice restaurant and invite your co-worker for lunch</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="sign_in_with_facebook">Sign in with Facebook</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
 </resources>

@@ -34,7 +34,9 @@
     <FrameLayout
         android:id="@+id/main_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/bottom_bar_height"
+        android:layout_marginTop="?attr/actionBarSize"/>
 
     <RelativeLayout
         android:id="@+id/bottom_bar"
