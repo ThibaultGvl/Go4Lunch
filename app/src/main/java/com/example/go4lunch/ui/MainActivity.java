@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(intent);
     }
 
-    private void configureNavDrawer() {
+    private void configureHeadNavDrawer() {
         TextView currentUserName = mNavHeaderBinding.nameProfile;
         TextView currentUserEmail = mNavHeaderBinding.emailProfile;
     }

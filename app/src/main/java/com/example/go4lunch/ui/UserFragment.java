@@ -26,8 +26,6 @@ public class UserFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
 
-    private FragmentUserBinding binding;
-
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).

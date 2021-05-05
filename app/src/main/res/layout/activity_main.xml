@@ -23,11 +23,42 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <ImageButton
+                android:id="@+id/hamburger_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_menu_24"
+                android:tint="@color/white"
+                android:background="@color/primary_color"
+                android:paddingBottom="@dimen/padding_item"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <TextView
+                android:id="@+id/banner_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/default_banner"
+                android:textSize="@dimen/banner_text_size"
+                android:layout_marginStart="@dimen/banner_margin_size"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toEndOf="@id/hamburger_btn"
+                app:layout_constraintTop_toTopOf="@id/hamburger_btn"/>
+
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_baseline_search_24"
-                android:background="@color/primary_color"/>
+                android:background="@color/primary_color"
+                android:layout_marginEnd="@dimen/banner_margin_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/hamburger_btn"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.appcompat.widget.Toolbar>
 
 
@@ -69,13 +100,13 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
-            android:layout_width="125dp"
-            android:layout_height="125dp"
+            android:layout_width="@dimen/logo_size"
+            android:layout_height="@dimen/logo_size"
             android:src="@drawable/ic_logo_go4lunch"
             app:tint="@color/white"
             android:background="@color/fui_transparent"
             android:layout_gravity="bottom"
-            android:layout_marginStart="100dp"/>
+            android:layout_marginStart="@dimen/logo_margin_size"/>
     </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

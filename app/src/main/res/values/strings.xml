@@ -21,7 +21,6 @@
     <string name="your_lunch">YOUR LUNCH</string>
     <string name="settings">SETTINGS</string>
     <string name="logout">LOGOUT</string>
-    <string name="default_banner">I\'M HUNGRY</string>
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
@@ -41,4 +40,6 @@
     <string name="sign_in_with_facebook">Sign in with Facebook</string>
     <string name="name">Name</string>
     <string name="email">Email</string>
+    <string name="what_workmate_eat">What workmate eat</string>
+    <string name="default_banner">I\'m Hungry!</string>
 </resources>

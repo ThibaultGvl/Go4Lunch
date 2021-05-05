@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/user_image"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="@dimen/user_image_size"
+        android:layout_height="@dimen/user_image_size"
         android:layout_margin="@dimen/text_margin" />
 
     <TextView
@@ -17,5 +17,5 @@
         android:layout_gravity="center_vertical"
         android:layout_margin="@dimen/text_margin"
         android:textAppearance="?attr/textAppearanceListItem"
-        android:text="What workmate eat"/>
+        android:text="@string/what_workmate_eat"/>
 </LinearLayout>
