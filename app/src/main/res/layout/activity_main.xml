@@ -83,7 +83,6 @@
         app:menu="@menu/navigation_drawer_menu"
         app:itemTextColor="@color/white"
         app:itemIconTint="@color/white"
-        app:headerLayout="@layout/activity_nav_header"
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView

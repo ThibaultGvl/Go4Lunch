@@ -5,9 +5,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.example.go4lunch.R;
+import com.example.go4lunch.databinding.FragmentUserBinding;
+import com.example.go4lunch.model.User;
 import com.example.go4lunch.ui.dummy.DummyContent.DummyItem;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -17,32 +22,38 @@ import java.util.List;
  */
 public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<User> users;
 
-    public UserRecyclerViewAdapter(List<DummyItem> items) {
-        mValues = items;
+    private ImageView userImage;
+
+    private TextView eatingPlace;
+
+    private FragmentUserBinding fragmentUserBinding;
+
+    public UserRecyclerViewAdapter(List<User> users) {
+        this.users = users;
     }
 
+    @NotNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_user, parent, false);
-        return new ViewHolder(view);
+    public ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
+        fragmentUserBinding = (FragmentUserBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        return new ViewHolder(parent);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
+        holder.mUser = users.get(position);
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return users.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public DummyItem mItem;
+        public User mUser;
 
         public ViewHolder(View view) {
             super(view);

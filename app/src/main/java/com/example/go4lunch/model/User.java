@@ -5,33 +5,53 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class User {
 
-    private String user;
+    private String username;
 
-    private long picture;
+    private String uid;
+
+    private String email;
+
+    private String picture;
 
     private Restaurant restaurant;
 
-    public User(String user, long picture, Restaurant restaurant) {
-        this.user = user;
+    public User(String username, String uid, String email, String picture, Restaurant restaurant) {
+        this.username = username;
+        this.uid = uid;
+        this.email = email;
         this.picture = picture;
         this.restaurant = restaurant;
     }
 
-    public String getUser() {
-        return user;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public FirebaseUser getCurrentUser(String currentUser) {return FirebaseAuth.getInstance().getCurrentUser();}
+    public String getUid() {
+        return uid;
+    }
 
-    public long getPicture() {
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPicture() {
         return picture;
     }
 
-    public void setPicture(long picture) {
+    public void setPicture(String picture) {
         this.picture = picture;
     }
 

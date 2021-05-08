@@ -1,6 +1,7 @@
 package com.example.go4lunch.ui;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,12 +15,17 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.ActivityMainBinding;
 import com.example.go4lunch.databinding.ActivityNavHeaderBinding;
@@ -29,6 +35,8 @@ import com.firebase.ui.auth.data.model.User;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
@@ -44,6 +52,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
+    private TextView currentUserName;
+    private TextView currentUserEmail;
+    private ImageView currentUserImage;
     private User user;
 
     private static final int MAPS_FRAGMENT = 0;
@@ -61,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.configureBottomView();
         this.configureNavigationView();
         this.configureDrawerLayout();
+        this.updateUIWhenCreating();
         setContentView(view);
     }
 
@@ -145,6 +157,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void configureNavigationView() {
         this.navigationView = binding.navView;
         this.navigationView.setNavigationItemSelectedListener(this);
+        this.mNavHeaderBinding = ActivityNavHeaderBinding.inflate(LayoutInflater.from(navigationView.getContext()));
+        this.navigationView.addHeaderView(mNavHeaderBinding.getRoot());
+        this.currentUserName = mNavHeaderBinding.nameProfile;
+        this.currentUserEmail = mNavHeaderBinding.emailProfile;
+        this.currentUserImage = mNavHeaderBinding.imageProfile;
     }
 
     private void signOut() {
@@ -154,8 +171,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void configureHeadNavDrawer() {
-        TextView currentUserName = mNavHeaderBinding.nameProfile;
-        TextView currentUserEmail = mNavHeaderBinding.emailProfile;
+        this.mNavHeaderBinding = ActivityNavHeaderBinding.inflate(getLayoutInflater());
+        this.currentUserName = mNavHeaderBinding.nameProfile;
+        this.currentUserEmail = mNavHeaderBinding.emailProfile;
+        this.currentUserImage = mNavHeaderBinding.imageProfile;
     }
 
     @Override
@@ -174,5 +193,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.drawerLayout.closeDrawer(GravityCompat.START);
 
         return true;
+    }
+
+    @Nullable
+    protected FirebaseUser getCurrentUser(){ return FirebaseAuth.getInstance().getCurrentUser(); }
+
+    protected Boolean isCurrentUserLogged(){ return (this.getCurrentUser() != null); }
+
+    private void updateUIWhenCreating(){
+
+        if (isCurrentUserLogged()){
+
+            if (this.getCurrentUser().getPhotoUrl() != null) {
+                Glide.with(this)
+                        .load(this.getCurrentUser().getPhotoUrl())
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(currentUserImage);
+            }
+
+            String email = TextUtils.isEmpty(this.getCurrentUser().getEmail()) ? getString(R.string.info_no_email_found) : this.getCurrentUser().getEmail();
+            String username = TextUtils.isEmpty(this.getCurrentUser().getDisplayName()) ? getString(R.string.info_no_username_found) : this.getCurrentUser().getDisplayName();
+
+            currentUserName.setText(username);
+            currentUserEmail.setText(email);
+        }
     }
 }

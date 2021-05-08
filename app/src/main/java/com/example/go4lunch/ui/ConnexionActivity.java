@@ -1,17 +1,23 @@
 package com.example.go4lunch.ui;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.ActivityConnexionBinding;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
 
@@ -36,13 +42,21 @@ public class ConnexionActivity extends AppCompatActivity {
         googleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startGoogleSignInActivity();
+                if (isCurrentUserLogged()){
+                    startMainActivity();
+                } else {
+                    startGoogleSignInActivity();
+                }
             }
         });
         fbBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startFacebookSignInActivity();
+                if (isCurrentUserLogged()){
+                    startMainActivity();
+                } else {
+                    startFacebookSignInActivity();
+                }
             }
         });
     }
@@ -75,4 +89,9 @@ public class ConnexionActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
+
+    @Nullable
+    protected FirebaseUser getCurrentUser(){ return FirebaseAuth.getInstance().getCurrentUser(); }
+
+    protected Boolean isCurrentUserLogged(){ return (this.getCurrentUser() != null); }
 }
