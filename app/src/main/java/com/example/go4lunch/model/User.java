@@ -5,9 +5,9 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class User {
 
-    private String username;
-
     private String uid;
+
+    private String username;
 
     private String email;
 
@@ -15,9 +15,9 @@ public class User {
 
     private Restaurant restaurant;
 
-    public User(String username, String uid, String email, String picture, Restaurant restaurant) {
-        this.username = username;
+    public User(String uid, String username, String email, String picture, Restaurant restaurant) {
         this.uid = uid;
+        this.username = username;
         this.email = email;
         this.picture = picture;
         this.restaurant = restaurant;

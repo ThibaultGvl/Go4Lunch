@@ -8,9 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.databinding.FragmentUserBinding;
 import com.example.go4lunch.model.User;
-import com.example.go4lunch.ui.dummy.DummyContent.DummyItem;
+import com.example.go4lunch.utils.UserCRUD;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -24,10 +26,6 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
 
     private final List<User> users;
 
-    private ImageView userImage;
-
-    private TextView eatingPlace;
-
     private FragmentUserBinding fragmentUserBinding;
 
     public UserRecyclerViewAdapter(List<User> users) {
@@ -38,12 +36,14 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     @Override
     public ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
         fragmentUserBinding = (FragmentUserBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
-        return new ViewHolder(parent);
+        return new ViewHolder(fragmentUserBinding);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mUser = users.get(position);
+        User user = users.get(position);
+        holder.userEating.setText(user.getUsername());
+        Glide.with(holder.userImage.getContext()).load(user.getPicture()).apply(RequestOptions.circleCropTransform()).into(holder.userImage);
     }
 
     @Override
@@ -52,14 +52,23 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
+
         public User mUser;
 
-        public ViewHolder(View view) {
-            super(view);
-            mView = view;
+        public ImageView userImage;
+
+        public TextView userEating;
+
+        public FragmentUserBinding mFragmentUserBinding;
+
+        public ViewHolder(FragmentUserBinding fragmentUserBinding) {
+            super(fragmentUserBinding.getRoot());
+            mFragmentUserBinding = fragmentUserBinding;
+            userImage = fragmentUserBinding.userImage;
+            userEating = fragmentUserBinding.eatingPlace;
         }
 
+        @NotNull
         @Override
         public String toString() {
             return super.toString();

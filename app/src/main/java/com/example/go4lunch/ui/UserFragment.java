@@ -13,8 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.go4lunch.R;
-import com.example.go4lunch.databinding.FragmentUserBinding;
-import com.example.go4lunch.ui.dummy.DummyContent;
+import com.example.go4lunch.model.User;
+import com.example.go4lunch.utils.UserCRUD;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -25,6 +28,8 @@ public class UserFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
+
+    private final List<User> users = new ArrayList<>();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -65,7 +70,7 @@ public class UserFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new UserRecyclerViewAdapter(DummyContent.ITEMS));
+            recyclerView.setAdapter(new UserRecyclerViewAdapter(users));
         }
         return view;
     }

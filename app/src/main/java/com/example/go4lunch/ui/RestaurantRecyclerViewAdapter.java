@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.go4lunch.R;
-import com.example.go4lunch.ui.dummy.DummyContent.DummyItem;
+import com.example.go4lunch.model.Restaurant;
 
 import java.util.List;
 
@@ -18,10 +18,10 @@ import java.util.List;
  */
 public class RestaurantRecyclerViewAdapter extends RecyclerView.Adapter<RestaurantRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Restaurant> restaurants;
 
-    public RestaurantRecyclerViewAdapter(List<DummyItem> items) {
-        mValues = items;
+    public RestaurantRecyclerViewAdapter(List<Restaurant> restaurants) {
+        this.restaurants = restaurants;
     }
 
     @Override
@@ -33,17 +33,17 @@ public class RestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Restaura
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
+        holder.mRestaurant = restaurants.get(position);
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return restaurants.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public DummyItem mItem;
+        public Restaurant mRestaurant;
 
         public ViewHolder(View view) {
             super(view);

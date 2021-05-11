@@ -38,7 +38,8 @@
             android:lines="1"
             android:layout_alignTop="@+id/image_profile"
             android:layout_toEndOf="@+id/image_profile"
-            android:text="@string/name"/>
+            android:text="@string/name"
+            android:textColor="@color/white"/>
 
         <TextView
             android:id="@+id/email_profile"
@@ -47,7 +48,8 @@
             android:lines="1"
             android:layout_alignBottom="@+id/image_profile"
             android:layout_toEndOf="@+id/image_profile"
-            android:text="@string/email"/>
+            android:text="@string/email"
+            android:textColor="@color/white"/>
 
     </RelativeLayout>
 
