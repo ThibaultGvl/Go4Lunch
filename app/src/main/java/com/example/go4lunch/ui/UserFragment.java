@@ -61,7 +61,7 @@ public class UserFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.configureViewModel();
-        //this.getUsers();
+        this.getUsers();
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -85,7 +85,7 @@ public class UserFragment extends Fragment {
     private void configureViewModel() {
         ViewModelFactory mViewModelFactory = Injection.provideViewModelFactory();
         this.mViewModel = new ViewModelProvider(this, mViewModelFactory).get(ViewModel.class);
-        //this.mViewModel.initUsers(this.getContext());
+        this.mViewModel.initUsers(this.getContext());
     }
 
     private void updateUsers(List<User> users) {

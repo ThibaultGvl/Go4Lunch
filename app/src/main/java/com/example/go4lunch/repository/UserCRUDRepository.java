@@ -5,9 +5,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.go4lunch.R;
-import com.example.go4lunch.model.Restaurant;
 import com.example.go4lunch.model.User;
 import com.example.go4lunch.utils.UserCRUD;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -17,109 +17,132 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class UserCRUDRepository {
 
-    private final UserCRUD mUserCRUD;
-
-    private User userToGet;
-
-    private User currentUser;
-
-    public UserCRUDRepository(UserCRUD userCRUD) {
-        this.mUserCRUD = userCRUD;
-    }
-
     public LiveData<List<User>> getUsers(Context context) {
-        LiveData<List<User>> result;
-        UserCRUD.getUsersCollection().get().addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
-                (OnSuccessListener<? super QuerySnapshot>) (result = (LiveData<List<User>>) Objects.requireNonNull(UserCRUD.getUsersCollection().get().getResult()).toObjects(User.class))
-        );
+        MutableLiveData<List<User>> result = new MutableLiveData<>();
+        UserCRUD.getUsersCollection().get().addOnFailureListener(onFailureListener(context)).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot documentSnapshots) {
+                List<User> users = new ArrayList<>();
+                for (DocumentSnapshot documentSnapshot : documentSnapshots.getDocuments()) {
+                    if(documentSnapshot != null) {
+                        User user = documentSnapshot.toObject(User.class);
+                        user.setUid(documentSnapshot.getId());
+                        users.add(user);
+                    }
+                }
+                result.setValue(users);
+            }
+        });
         return result;
     }
 
     public void getCurrentUserFirestore() {
+        MutableLiveData<User> result = new MutableLiveData<>();
         UserCRUD.getUser(getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                documentSnapshot = UserCRUD.getUser(getCurrentUser().getUid()).getResult();
+                if (documentSnapshot != null) {
+                    User user = documentSnapshot.toObject(User.class);
+                    user.setUid(documentSnapshot.getId());
+                    result.setValue(user);
+                }
+            }
+        });
+    }
+
+    public void getUser(String uid, Context context) {
+        MutableLiveData<User> result = new MutableLiveData<>();
+        UserCRUD.getUser(uid).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot != null) {
+                    User user = documentSnapshot.toObject(User.class);
+                    user.setUid(documentSnapshot.getId());
+                    result.setValue(user);
+                }
             }
         });
     }
 
     public void createUser(Context context) {
+        MutableLiveData<Void> result = new MutableLiveData<>();
 
-        if(getCurrentUser() != null) {
+        FirebaseUser user = this.getCurrentUser();
 
-            String uid = this.getCurrentUser().getUid();
-            String username = this.getCurrentUser().getDisplayName();
-            String email = this.getCurrentUser().getEmail();
-            String imageUrl = (this.getCurrentUser().getPhotoUrl() != null) ? this.getCurrentUser().getPhotoUrl().toString() : null;
-            Restaurant restaurant = null;
+        if(user != null) {
 
-            UserCRUD.createUser(uid, username, email, imageUrl, restaurant).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(new OnSuccessListener<Void>() {
+            String uid = user.getUid();
+            String username = user.getDisplayName();
+            String email = user.getEmail();
+            String imageUrl = (user.getPhotoUrl() != null) ? Objects.requireNonNull(this.getCurrentUser().getPhotoUrl()).toString() : null;
+
+            UserCRUD.createUser(uid, username, email, imageUrl, null).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     Toast.makeText(context, R.string.user_created, Toast.LENGTH_SHORT).show();
+                    result.setValue(aVoid);
                 }
             });
         }
     }
 
-    public void getUser(String uid, Context context) {
-     UserCRUD.getUser(uid).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-         @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if(documentSnapshot != null) {
-                    documentSnapshot = UserCRUD.getUser(uid).getResult();
-                }
-         }
-        });
-    }
-
     public void updateUserUsername(String uid, String username, Context context) {
+        MutableLiveData<Void> result = new MutableLiveData<>();
         UserCRUD.updateUsername(uid, username).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(context, R.string.update, Toast.LENGTH_SHORT).show();
+                result.setValue(aVoid);
             }
         });
     }
 
     public void updateUserEmail(String uid, String email, Context context) {
+        MutableLiveData<Void> result = new MutableLiveData<>();
         UserCRUD.updateUserEmail(uid, email).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(context, R.string.update, Toast.LENGTH_SHORT).show();
+                result.setValue(aVoid);
             }
         });
     }
 
     public void updateUserImage(String uid, String image, Context context) {
+        MutableLiveData<Void> result = new MutableLiveData<>();
         UserCRUD.updateUserImage(uid, image).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(context, R.string.update, Toast.LENGTH_SHORT).show();
+                result.setValue(aVoid);
             }
         });
     }
 
-    public void updateUserRestaurant(String uid, Restaurant restaurant, Context context) {
-        UserCRUD.updateUserRestaurant(uid, restaurant).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(new OnSuccessListener<Void>() {
+    public void updateUserRestaurant(String uid, String restaurantId, Context context) {
+        MutableLiveData<Void> result = new MutableLiveData<>();
+        UserCRUD.updateUserRestaurant(uid, restaurantId).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(context, R.string.restaurant_choice, Toast.LENGTH_SHORT).show();
+                result.setValue(aVoid);
             }
         });
     }
 
     public void deleteUser(String uid, Context context) {
+        MutableLiveData<Void> result = new MutableLiveData<>();
         UserCRUD.deleteUser(uid).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(context, R.string.user_delete, Toast.LENGTH_SHORT).show();
+                result.setValue(aVoid);
             }
         });
     }

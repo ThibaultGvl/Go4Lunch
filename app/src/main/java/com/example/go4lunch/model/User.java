@@ -25,16 +25,16 @@ public class User {
     @Expose
     private String picture;
 
-    @SerializedName("restaurant")
+    @SerializedName("restaurantId")
     @Expose
-    private Restaurant restaurant;
+    private String restaurantId;
 
-    public User(String uid, String username, String email, String picture, Restaurant restaurant) {
+    public User(String uid, String username, String email, String picture, String restaurantId) {
         this.uid = uid;
         this.username = username;
         this.email = email;
         this.picture = picture;
-        this.restaurant = restaurant;
+        this.restaurantId = restaurantId;
     }
 
     public String getUsername() {
@@ -69,11 +69,11 @@ public class User {
         this.picture = picture;
     }
 
-    public Restaurant getRestaurant() {
-        return restaurant;
+    public String getRestaurant() {
+        return restaurantId;
     }
 
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
+    public void setRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
     }
 }

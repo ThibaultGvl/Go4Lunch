@@ -15,13 +15,13 @@ public class UserCRUD {
         return FirebaseFirestore.getInstance().collection(COLLECTION_NAME);
     }
 
-    public static Task<Void> createUser(String uid, String username, String email, String userImage, Restaurant restaurant) {
-        User userToCreate = new User(uid, username, email, userImage, restaurant);
-        return UserCRUD.getUsersCollection().document().set(userToCreate);
-    }
-
     public static Task<DocumentSnapshot> getUser(String uid) {
         return UserCRUD.getUsersCollection().document(uid).get();
+    }
+
+    public static Task<Void> createUser(String uid, String username, String email, String userImage, String restaurantId) {
+        User userToCreate = new User(uid, username, email, userImage, restaurantId);
+        return UserCRUD.getUsersCollection().document().set(userToCreate);
     }
 
     public static Task<Void> updateUsername(String uid, String username) {
@@ -36,8 +36,8 @@ public class UserCRUD {
         return UserCRUD.getUsersCollection().document(uid).update("image", userImage);
     }
 
-    public static Task<Void> updateUserRestaurant(String uid, Restaurant restaurant) {
-        return UserCRUD.getUsersCollection().document(uid).update("restaurant", restaurant);
+    public static Task<Void> updateUserRestaurant(String uid, String restaurantId) {
+        return UserCRUD.getUsersCollection().document(uid).update("restaurant_id", restaurantId);
     }
 
     public static Task<Void> deleteUser(String uid) {

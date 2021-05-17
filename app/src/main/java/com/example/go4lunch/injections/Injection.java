@@ -8,10 +8,8 @@ import java.util.concurrent.Executors;
 
 public class Injection {
 
-   public static UserCRUD sUserCRUD;
-
-   public static UserCRUDRepository provideUserCRUDDataSource(){
-      return new UserCRUDRepository(sUserCRUD);
+   public static UserCRUDRepository provideUserCRUD(){
+      return new UserCRUDRepository();
    }
 
    public static Executor provideExecutor() {
@@ -19,7 +17,7 @@ public class Injection {
    }
 
    public static ViewModelFactory provideViewModelFactory() {
-      UserCRUDRepository userCRUDRepository = provideUserCRUDDataSource();
+      UserCRUDRepository userCRUDRepository = provideUserCRUD();
       Executor executor = provideExecutor();
       return new ViewModelFactory(userCRUDRepository, executor);
    }

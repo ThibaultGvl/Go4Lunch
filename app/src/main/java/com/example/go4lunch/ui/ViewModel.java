@@ -53,8 +53,8 @@ public class ViewModel extends androidx.lifecycle.ViewModel {
         executor.execute(() -> mUserCRUDRepository.updateUserImage(uid, image, context));
     }
 
-    public void updateUserRestaurant(String uid, Restaurant restaurant, Context context) {
-        executor.execute(() -> mUserCRUDRepository.updateUserRestaurant(uid, restaurant, context));
+    public void updateUserRestaurant(String uid, String restaurantId, Context context) {
+        executor.execute(() -> mUserCRUDRepository.updateUserRestaurant(uid, restaurantId, context));
     }
 
     public void getCurrentUser() {

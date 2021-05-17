@@ -213,12 +213,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             currentUserName.setText(username);
             currentUserEmail.setText(email);
-            //this.mViewModel.createCurrentUser(this);
+            this.mViewModel.createCurrentUser(this);
         }
     }
     private void configureViewModel() {
         ViewModelFactory mViewModelFactory = Injection.provideViewModelFactory();
         this.mViewModel = new ViewModelProvider(this, mViewModelFactory).get(ViewModel.class);
-        //this.mViewModel.initUsers(this);
+        this.mViewModel.initUsers(this);
     }
 }
