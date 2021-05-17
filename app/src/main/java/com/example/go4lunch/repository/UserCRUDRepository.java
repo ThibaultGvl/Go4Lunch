@@ -15,32 +15,38 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
+import java.util.Objects;
 
 public class UserCRUDRepository {
 
     private final UserCRUD mUserCRUD;
 
+    private User userToGet;
+
+    private User currentUser;
+
     public UserCRUDRepository(UserCRUD userCRUD) {
         this.mUserCRUD = userCRUD;
     }
 
-    protected FirebaseUser getCurrentUser(){ return FirebaseAuth.getInstance().getCurrentUser(); }
-
-    protected Boolean isCurrentUserLogged(){ return (this.getCurrentUser() != null); }
+    public LiveData<List<User>> getUsers(Context context) {
+        LiveData<List<User>> result;
+        UserCRUD.getUsersCollection().get().addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
+                (OnSuccessListener<? super QuerySnapshot>) (result = (LiveData<List<User>>) Objects.requireNonNull(UserCRUD.getUsersCollection().get().getResult()).toObjects(User.class))
+        );
+        return result;
+    }
 
     public void getCurrentUserFirestore() {
         UserCRUD.getUser(getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User currentUser = documentSnapshot.toObject(User.class);
+                documentSnapshot = UserCRUD.getUser(getCurrentUser().getUid()).getResult();
             }
         });
-    }
-
-    public void getUsers() {
-        UserCRUD.getUsersCollection();
     }
 
     public void createUser(Context context) {
@@ -63,10 +69,39 @@ public class UserCRUDRepository {
     }
 
     public void getUser(String uid, Context context) {
-        UserCRUD.getUser(uid).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
+     UserCRUD.getUser(uid).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+         @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User userToGet = documentSnapshot.toObject(User.class);
+                if(documentSnapshot != null) {
+                    documentSnapshot = UserCRUD.getUser(uid).getResult();
+                }
+         }
+        });
+    }
+
+    public void updateUserUsername(String uid, String username, Context context) {
+        UserCRUD.updateUsername(uid, username).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(context, R.string.update, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void updateUserEmail(String uid, String email, Context context) {
+        UserCRUD.updateUserEmail(uid, email).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(context, R.string.update, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void updateUserImage(String uid, String image, Context context) {
+        UserCRUD.updateUserImage(uid, image).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(context, R.string.update, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -80,7 +115,7 @@ public class UserCRUDRepository {
         });
     }
 
-    public void deleteUser(String uid,Context context) {
+    public void deleteUser(String uid, Context context) {
         UserCRUD.deleteUser(uid).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -88,6 +123,11 @@ public class UserCRUDRepository {
             }
         });
     }
+
+    protected FirebaseUser getCurrentUser(){ return FirebaseAuth.getInstance().getCurrentUser(); }
+
+    protected Boolean isCurrentUserLogged(){ return (this.getCurrentUser() != null); }
+
 
     private OnFailureListener onFailureListener(Context context) {
         return new OnFailureListener() {

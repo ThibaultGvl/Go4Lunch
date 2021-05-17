@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.FragmentUserBinding;
 import com.example.go4lunch.model.User;
 import com.example.go4lunch.utils.UserCRUD;
@@ -42,7 +43,8 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         User user = users.get(position);
-        holder.userEating.setText(user.getUsername());
+        String userEatingText = user.getUsername() + (R.string.user_eating) + user.getRestaurant();
+        holder.userEating.setText(userEatingText);
         Glide.with(holder.userImage.getContext()).load(user.getPicture()).apply(RequestOptions.circleCropTransform()).into(holder.userImage);
     }
 
@@ -52,8 +54,6 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
-        public User mUser;
 
         public ImageView userImage;
 

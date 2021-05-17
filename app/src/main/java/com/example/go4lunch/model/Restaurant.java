@@ -1,21 +1,38 @@
 package com.example.go4lunch.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.sql.Time;
 
 public class Restaurant {
 
+    @SerializedName("name")
+    @Expose
     private String name;
 
+    @SerializedName("address")
+    @Expose
     private String address;
 
+    @SerializedName("distance")
+    @Expose
     private int distance;
 
+    @SerializedName("rank")
+    @Expose
     private int rank;
 
+    @SerializedName("mate")
+    @Expose
     private int mate;
 
+    @SerializedName("picture")
+    @Expose
     private long picture;
 
+    @SerializedName("schedules")
+    @Expose
     private Time schedules;
 
 
@@ -27,7 +44,7 @@ public class Restaurant {
         this.rank = rank;
         this.mate = mate;
         this.picture = picture;
-        this.schedules =schedules;
+        this.schedules = schedules;
     }
 
     public String getName() {

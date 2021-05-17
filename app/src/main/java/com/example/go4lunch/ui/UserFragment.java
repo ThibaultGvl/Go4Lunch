@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,8 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.go4lunch.R;
+import com.example.go4lunch.databinding.FragmentUserBinding;
+import com.example.go4lunch.databinding.FragmentUserListBinding;
+import com.example.go4lunch.injections.Injection;
+import com.example.go4lunch.injections.ViewModelFactory;
 import com.example.go4lunch.model.User;
-import com.example.go4lunch.utils.UserCRUD;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +29,15 @@ import java.util.List;
  */
 public class UserFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
+    private FragmentUserListBinding mFragmentUserBinding;
+
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
+
     private int mColumnCount = 1;
+
+    private ViewModel mViewModel;
+
+    private UserRecyclerViewAdapter adapter;
 
     private final List<User> users = new ArrayList<>();
 
@@ -38,7 +48,6 @@ public class UserFragment extends Fragment {
     public UserFragment() {
     }
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static UserFragment newInstance(int columnCount) {
         UserFragment fragment = new UserFragment();
@@ -51,27 +60,43 @@ public class UserFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.configureViewModel();
+        //this.getUsers();
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_user_list, container, false);
+        mFragmentUserBinding = FragmentUserListBinding.inflate(inflater, container, false);
+        View view = mFragmentUserBinding.getRoot();
 
-        // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
             recyclerView.setAdapter(new UserRecyclerViewAdapter(users));
         }
         return view;
+    }
+
+    private void configureViewModel() {
+        ViewModelFactory mViewModelFactory = Injection.provideViewModelFactory();
+        this.mViewModel = new ViewModelProvider(this, mViewModelFactory).get(ViewModel.class);
+        //this.mViewModel.initUsers(this.getContext());
+    }
+
+    private void updateUsers(List<User> users) {
+        this.users.clear();
+        this.users.addAll(users);
+        adapter.notifyDataSetChanged();
+    }
+
+    private void getUsers() {
+        if(this.mViewModel.getUsers() != null) {
+            this.mViewModel.getUsers().observe(this, this::updateUsers);
+        }
     }
 }

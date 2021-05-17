@@ -13,7 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.go4lunch.R;
+import com.example.go4lunch.databinding.FragmentRestaurantBinding;
 import com.example.go4lunch.model.Restaurant;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +33,10 @@ public class RestaurantFragment extends Fragment {
     private int mColumnCount = 1;
 
     private List<Restaurant> mRestaurants = new ArrayList<>();
+
+    private FragmentRestaurantBinding mFragmentRestaurantBinding;
+
+    private AutocompleteSupportFragment autocompleteFragment;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -50,16 +58,18 @@ public class RestaurantFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mFragmentRestaurantBinding = FragmentRestaurantBinding.inflate(getLayoutInflater());
+        View view = mFragmentRestaurantBinding.getRoot();
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_restaurant_list, container, false);
+        mFragmentRestaurantBinding = FragmentRestaurantBinding.inflate(inflater, container, false);
+        View view = mFragmentRestaurantBinding.getRoot();
 
         // Set the adapter
         if (view instanceof RecyclerView) {

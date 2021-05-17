@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,8 +25,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.ActivityMainBinding;
 import com.example.go4lunch.databinding.ActivityNavHeaderBinding;
+import com.example.go4lunch.injections.Injection;
+import com.example.go4lunch.injections.ViewModelFactory;
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.data.model.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,25 +43,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Fragment restaurantFragment;
     private Fragment userFragment;
     private Fragment settingsFragment;
-    private BottomNavigationView bottomNavigationView;
-    private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private TextView currentUserName;
     private TextView currentUserEmail;
     private ImageView currentUserImage;
-    private User user;
+    private ViewModel mViewModel;
 
     private static final int MAPS_FRAGMENT = 0;
     private static final int RESTAURANT_FRAGMENT = 1;
     private static final int USER_FRAGMENT = 2;
-    private static final int SETTINGS_FRAGMENT = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
+        this.configureViewModel();
         this.showFragment(MAPS_FRAGMENT);
         this.configureToolBar();
         this.configureBottomView();
@@ -117,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void showSettingsFragment() {
         if (this.settingsFragment == null) this.settingsFragment = SettingsFragment.newInstance();
+        this.startTransactionFragment(settingsFragment);
     }
 
     private void startTransactionFragment(Fragment fragment) {
@@ -132,8 +134,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void configureBottomView() {
-        this.bottomNavigationView = binding.navBottomBar;
-        this.bottomNavigationView.setOnNavigationItemSelectedListener(this::onNavigationBottomItemSelected);
+        BottomNavigationView bottomNavigationView = binding.navBottomBar;
+        bottomNavigationView.setOnNavigationItemSelectedListener(this::onNavigationBottomItemSelected);
     }
 
     private void configureDrawerLayout() {
@@ -147,10 +149,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void configureNavigationView() {
-        this.navigationView = binding.navView;
-        this.navigationView.setNavigationItemSelectedListener(this);
+        NavigationView navigationView = binding.navView;
+        navigationView.setNavigationItemSelectedListener(this);
         this.mNavHeaderBinding = ActivityNavHeaderBinding.inflate(LayoutInflater.from(navigationView.getContext()));
-        this.navigationView.addHeaderView(mNavHeaderBinding.getRoot());
+        navigationView.addHeaderView(mNavHeaderBinding.getRoot());
         this.currentUserName = mNavHeaderBinding.nameProfile;
         this.currentUserEmail = mNavHeaderBinding.emailProfile;
         this.currentUserImage = mNavHeaderBinding.imageProfile;
@@ -175,11 +177,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch (id) {
             case R.id.your_lunch :
-                
+
+                break;
             case R.id.settings :
                 showSettingsFragment();
+                break;
             case R.id.logout :
                 signOut();
+                break;
         }
 
         this.drawerLayout.closeDrawer(GravityCompat.START);
@@ -196,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (isCurrentUserLogged()){
 
-            if (this.getCurrentUser().getPhotoUrl() != null) {
+            if (Objects.requireNonNull(this.getCurrentUser()).getPhotoUrl() != null) {
                 Glide.with(this)
                         .load(this.getCurrentUser().getPhotoUrl())
                         .apply(RequestOptions.circleCropTransform())
@@ -208,6 +213,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             currentUserName.setText(username);
             currentUserEmail.setText(email);
+            //this.mViewModel.createCurrentUser(this);
         }
+    }
+    private void configureViewModel() {
+        ViewModelFactory mViewModelFactory = Injection.provideViewModelFactory();
+        this.mViewModel = new ViewModelProvider(this, mViewModelFactory).get(ViewModel.class);
+        //this.mViewModel.initUsers(this);
     }
 }

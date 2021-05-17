@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.go4lunch.repository.UserCRUDRepository;
-import com.example.go4lunch.utils.UserCRUD;
 
 import org.jetbrains.annotations.NotNull;
 

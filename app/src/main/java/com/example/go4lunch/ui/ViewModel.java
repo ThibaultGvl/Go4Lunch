@@ -1,29 +1,15 @@
 package com.example.go4lunch.ui;
 
 import android.content.Context;
-import android.location.GnssAntennaInfo;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
-import com.example.go4lunch.R;
 import com.example.go4lunch.model.Restaurant;
 import com.example.go4lunch.model.User;
 import com.example.go4lunch.repository.UserCRUDRepository;
-import com.example.go4lunch.utils.UserCRUD;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
-
-import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 public class ViewModel extends androidx.lifecycle.ViewModel {
 
@@ -38,14 +24,33 @@ public class ViewModel extends androidx.lifecycle.ViewModel {
         this.executor = executor;
     }
 
+    public void initUsers(Context context) {
+        if (this.users != null) {
+            return;
+        }
+        users = mUserCRUDRepository.getUsers(context);
+    }
+
     public LiveData<List<User>> getUsers() {return users;}
 
     public void getUser(String uid, Context context) {
         executor.execute(() -> mUserCRUDRepository.getUser(uid, context));
     }
 
-    public void createUser(Context context) {
+    public void createCurrentUser(Context context) {
         executor.execute(() -> mUserCRUDRepository.createUser(context));
+    }
+
+    public void updateUsername(String uid, String username, Context context) {
+        executor.execute(() -> mUserCRUDRepository.updateUserUsername(uid, username, context));
+    }
+
+    public void updateUserEmail(String uid, String email, Context context) {
+        executor.execute(() -> mUserCRUDRepository.updateUserEmail(uid, email, context));
+    }
+
+    public void updateUserImage(String uid, String image, Context context) {
+        executor.execute(() -> mUserCRUDRepository.updateUserImage(uid, image, context));
     }
 
     public void updateUserRestaurant(String uid, Restaurant restaurant, Context context) {
