@@ -1,9 +1,5 @@
 package com.example.go4lunch.model;
 
-import androidx.lifecycle.LiveData;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -25,7 +21,7 @@ public class User {
     @Expose
     private String picture;
 
-    @SerializedName("restaurantId")
+    @SerializedName("restaurant_id")
     @Expose
     private String restaurantId;
 

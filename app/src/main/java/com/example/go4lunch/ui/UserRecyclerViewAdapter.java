@@ -45,7 +45,12 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         User user = users.get(position);
         String userEatingText = user.getUsername() + (R.string.user_eating) + user.getRestaurant();
         holder.userEating.setText(userEatingText);
-        Glide.with(holder.userImage.getContext()).load(user.getPicture()).apply(RequestOptions.circleCropTransform()).into(holder.userImage);
+        if(user.getPicture() != null) {
+            Glide.with(holder.userImage.getContext()).load(user.getPicture()).apply(RequestOptions.circleCropTransform()).into(holder.userImage);
+        }
+        else {
+            holder.userImage.setColorFilter(R.color.primary_color);
+        }
     }
 
     @Override

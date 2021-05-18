@@ -37,9 +37,9 @@ public class UserFragment extends Fragment {
 
     private ViewModel mViewModel;
 
-    private UserRecyclerViewAdapter adapter;
-
     private final List<User> users = new ArrayList<>();
+
+    private UserRecyclerViewAdapter adapter = new UserRecyclerViewAdapter(users);
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -77,7 +77,7 @@ public class UserFragment extends Fragment {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new UserRecyclerViewAdapter(users));
+            recyclerView.setAdapter(adapter);
         }
         return view;
     }
