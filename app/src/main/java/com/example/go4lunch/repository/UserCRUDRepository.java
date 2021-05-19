@@ -70,7 +70,6 @@ public class UserCRUDRepository {
             String imageUrl = (user.getPhotoUrl() != null) ? Objects.requireNonNull(this.getCurrentUser().getPhotoUrl()).toString() : null;
 
             UserCRUD.createUser(uid, username, email, imageUrl, null).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(aVoid -> {
-                Toast.makeText(context, R.string.user_created, Toast.LENGTH_SHORT).show();
                 result.setValue(user);
             });
         }

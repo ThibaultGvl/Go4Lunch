@@ -25,7 +25,7 @@ public class UserCRUD {
 
     public static Task<Void> createUser(String uid, String username, String email, String picture, String restaurantId) {
         User userToCreate = new User(uid, username, email, picture, restaurantId);
-        return UserCRUD.getUsersCollection().document().set(userToCreate);
+        return UserCRUD.getUsersCollection().document(uid).set(userToCreate);
     }
 
     public static Task<Void> updateUsername(String uid, String username) {

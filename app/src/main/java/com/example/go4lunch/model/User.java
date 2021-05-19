@@ -25,6 +25,8 @@ public class User {
     @Expose
     private String restaurantId;
 
+    public User() { }
+
     public User(String uid, String username, String email, String picture, String restaurantId) {
         this.uid = uid;
         this.username = username;
