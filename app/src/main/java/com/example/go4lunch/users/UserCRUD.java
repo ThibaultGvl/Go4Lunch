@@ -1,4 +1,4 @@
-package com.example.go4lunch.utils;
+package com.example.go4lunch.users;
 
 import com.example.go4lunch.model.User;
 import com.google.android.gms.tasks.Task;

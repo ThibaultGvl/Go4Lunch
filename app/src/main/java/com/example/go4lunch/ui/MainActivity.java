@@ -10,13 +10,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,8 +25,12 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.ActivityMainBinding;
 import com.example.go4lunch.databinding.ActivityNavHeaderBinding;
-import com.example.go4lunch.injections.Injection;
-import com.example.go4lunch.injections.ViewModelFactory;
+import com.example.go4lunch.maps.MapsFragment;
+import com.example.go4lunch.restaurant.RestaurantFragment;
+import com.example.go4lunch.users.UserInjection;
+import com.example.go4lunch.users.UserViewModelFactory;
+import com.example.go4lunch.users.UserFragment;
+import com.example.go4lunch.users.UserViewModel;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -38,7 +42,6 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private ActivityMainBinding binding;
-    private ActivityNavHeaderBinding mNavHeaderBinding;
     private Fragment mapsFragment;
     private Fragment restaurantFragment;
     private Fragment userFragment;
@@ -48,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView currentUserName;
     private TextView currentUserEmail;
     private ImageView currentUserImage;
-    private ViewModel mViewModel;
+    private UserViewModel mViewModel;
 
     private static final int MAPS_FRAGMENT = 0;
     private static final int RESTAURANT_FRAGMENT = 1;
@@ -59,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
-        this.configureViewModel();
+        this.configureUserViewModel();
         this.showFragment(MAPS_FRAGMENT);
         this.configureToolBar();
         this.configureBottomView();
@@ -69,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(view);
     }
 
+    @SuppressLint("NonConstantResourceId")
     public boolean onNavigationBottomItemSelected(MenuItem item) {
 
         int id = item.getItemId();
@@ -151,11 +155,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void configureNavigationView() {
         NavigationView navigationView = binding.navView;
         navigationView.setNavigationItemSelectedListener(this);
-        this.mNavHeaderBinding = ActivityNavHeaderBinding.inflate(LayoutInflater.from(navigationView.getContext()));
-        navigationView.addHeaderView(mNavHeaderBinding.getRoot());
-        this.currentUserName = mNavHeaderBinding.nameProfile;
-        this.currentUserEmail = mNavHeaderBinding.emailProfile;
-        this.currentUserImage = mNavHeaderBinding.imageProfile;
+        com.example.go4lunch.databinding.ActivityNavHeaderBinding navHeaderBinding = ActivityNavHeaderBinding.inflate(LayoutInflater.from(navigationView.getContext()));
+        navigationView.addHeaderView(navHeaderBinding.getRoot());
+        this.currentUserName = navHeaderBinding.nameProfile;
+        this.currentUserEmail = navHeaderBinding.emailProfile;
+        this.currentUserImage = navHeaderBinding.imageProfile;
     }
 
     private void signOut() {
@@ -164,13 +168,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(intent);
     }
 
-    private void configureHeadNavDrawer() {
-        this.mNavHeaderBinding = ActivityNavHeaderBinding.inflate(getLayoutInflater());
-        this.currentUserName = mNavHeaderBinding.nameProfile;
-        this.currentUserEmail = mNavHeaderBinding.emailProfile;
-        this.currentUserImage = mNavHeaderBinding.imageProfile;
-    }
-
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -216,9 +214,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             this.mViewModel.createCurrentUser(this);
         }
     }
-    private void configureViewModel() {
-        ViewModelFactory mViewModelFactory = Injection.provideViewModelFactory();
-        this.mViewModel = new ViewModelProvider(this, mViewModelFactory).get(ViewModel.class);
+    private void configureUserViewModel() {
+        UserViewModelFactory mViewModelFactory = UserInjection.provideViewModelFactory();
+        this.mViewModel = new ViewModelProvider(this, mViewModelFactory).get(UserViewModel.class);
         this.mViewModel.initUsers(this);
     }
 }

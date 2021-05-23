@@ -1,11 +1,10 @@
-package com.example.go4lunch.ui;
+package com.example.go4lunch.restaurant;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.example.go4lunch.R;
 import com.example.go4lunch.model.Restaurant;

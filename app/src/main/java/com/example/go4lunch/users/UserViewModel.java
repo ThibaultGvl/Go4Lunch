@@ -1,17 +1,16 @@
-package com.example.go4lunch.ui;
+package com.example.go4lunch.users;
 
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.go4lunch.model.Restaurant;
 import com.example.go4lunch.model.User;
-import com.example.go4lunch.repository.UserCRUDRepository;
+import com.example.go4lunch.users.UserCRUDRepository;
 
 import java.util.List;
 import java.util.concurrent.Executor;
 
-public class ViewModel extends androidx.lifecycle.ViewModel {
+public class UserViewModel extends androidx.lifecycle.ViewModel {
 
     private final UserCRUDRepository mUserCRUDRepository;
 
@@ -19,7 +18,7 @@ public class ViewModel extends androidx.lifecycle.ViewModel {
 
     private LiveData<List<User>> users;
 
-    public ViewModel(UserCRUDRepository userCRUDRepository, Executor executor){
+    public UserViewModel(UserCRUDRepository userCRUDRepository, Executor executor){
         this.mUserCRUDRepository = userCRUDRepository;
         this.executor = executor;
     }

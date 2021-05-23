@@ -49,5 +49,8 @@
     <string name="restaurant_choice">Your choice has been registered</string>
     <string name="update">Information has been update</string>
     <string name="user_delete">Your account has been delete</string>
-    <string name="user_eating">\"is eating \"</string>
+    <string name="user_doest_know_eating">\" hasn\'t decided yet\"</string>
+    <string name="default_info_title">Default Location</string>
+    <string name="default_info_snippet">Your location permission is disabled.</string>
+    <string name="current_location_null">Current location is null. Using defaults.</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.go4lunch.ui;
+package com.example.go4lunch.restaurant;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.FragmentRestaurantBinding;
 import com.example.go4lunch.model.Restaurant;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;

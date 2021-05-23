@@ -1,9 +1,10 @@
-package com.example.go4lunch.ui;
+package com.example.go4lunch.users;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,21 +14,14 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.FragmentUserBinding;
 import com.example.go4lunch.model.User;
-import com.example.go4lunch.utils.UserCRUD;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.ViewHolder> {
 
     private final List<User> users;
-
-    private FragmentUserBinding fragmentUserBinding;
 
     public UserRecyclerViewAdapter(List<User> users) {
         this.users = users;
@@ -36,20 +30,28 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     @NotNull
     @Override
     public ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
-        fragmentUserBinding = (FragmentUserBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        com.example.go4lunch.databinding.FragmentUserBinding fragmentUserBinding = (FragmentUserBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
         return new ViewHolder(fragmentUserBinding);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NotNull final ViewHolder holder, int position) {
         User user = users.get(position);
-        String userEatingText = user.getUsername() + (R.string.user_eating) + user.getRestaurant();
-        holder.userEating.setText(userEatingText);
+        String userKnowWhatEatingText = user.getUsername() + " is eating ";
+        String userDoestKnowWhatEating = user.getUsername() + " hasn't decided yet";
         if(user.getPicture() != null) {
             Glide.with(holder.userImage.getContext()).load(user.getPicture()).apply(RequestOptions.circleCropTransform()).into(holder.userImage);
         }
         else {
             holder.userImage.setColorFilter(R.color.primary_color);
+        }
+        if(user.getRestaurant() != null) {
+            holder.userEating.setText(userKnowWhatEatingText);
+        }
+        else {
+            holder.userEating.setText(userDoestKnowWhatEating);
+            holder.userEating.setTypeface(holder.userEating.getTypeface(), Typeface.ITALIC);
+            holder.userEating.setTextColor(Color.GRAY);
         }
     }
 
@@ -58,7 +60,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         return users.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView userImage;
 

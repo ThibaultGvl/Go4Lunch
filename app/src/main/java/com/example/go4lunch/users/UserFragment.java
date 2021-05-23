@@ -1,4 +1,4 @@
-package com.example.go4lunch.ui;
+package com.example.go4lunch.users;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,11 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.go4lunch.R;
-import com.example.go4lunch.databinding.FragmentUserBinding;
 import com.example.go4lunch.databinding.FragmentUserListBinding;
-import com.example.go4lunch.injections.Injection;
-import com.example.go4lunch.injections.ViewModelFactory;
 import com.example.go4lunch.model.User;
 
 import org.jetbrains.annotations.NotNull;
@@ -29,17 +25,15 @@ import java.util.List;
  */
 public class UserFragment extends Fragment {
 
-    private FragmentUserListBinding mFragmentUserBinding;
-
     private static final String ARG_COLUMN_COUNT = "column-count";
 
     private int mColumnCount = 1;
 
-    private ViewModel mViewModel;
+    private UserViewModel mViewModel;
 
     private final List<User> users = new ArrayList<>();
 
-    private UserRecyclerViewAdapter adapter = new UserRecyclerViewAdapter(users);
+    private final UserRecyclerViewAdapter adapter = new UserRecyclerViewAdapter(users);
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -70,8 +64,8 @@ public class UserFragment extends Fragment {
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mFragmentUserBinding = FragmentUserListBinding.inflate(inflater, container, false);
-        View view = mFragmentUserBinding.getRoot();
+        com.example.go4lunch.databinding.FragmentUserListBinding fragmentUserBinding = FragmentUserListBinding.inflate(inflater, container, false);
+        View view = fragmentUserBinding.getRoot();
 
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -83,8 +77,8 @@ public class UserFragment extends Fragment {
     }
 
     private void configureViewModel() {
-        ViewModelFactory mViewModelFactory = Injection.provideViewModelFactory();
-        this.mViewModel = new ViewModelProvider(this, mViewModelFactory).get(ViewModel.class);
+        UserViewModelFactory mViewModelFactory = UserInjection.provideViewModelFactory();
+        this.mViewModel = new ViewModelProvider(this, mViewModelFactory).get(UserViewModel.class);
         this.mViewModel.initUsers(this.getContext());
     }
 

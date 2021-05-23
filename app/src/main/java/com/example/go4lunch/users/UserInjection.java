@@ -1,12 +1,9 @@
-package com.example.go4lunch.injections;
-
-import com.example.go4lunch.repository.UserCRUDRepository;
-import com.example.go4lunch.utils.UserCRUD;
+package com.example.go4lunch.users;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class Injection {
+public class UserInjection {
 
    public static UserCRUDRepository provideUserCRUD(){
       return new UserCRUDRepository();
@@ -16,9 +13,9 @@ public class Injection {
       return Executors.newSingleThreadExecutor();
    }
 
-   public static ViewModelFactory provideViewModelFactory() {
+   public static UserViewModelFactory provideViewModelFactory() {
       UserCRUDRepository userCRUDRepository = provideUserCRUD();
       Executor executor = provideExecutor();
-      return new ViewModelFactory(userCRUDRepository, executor);
+      return new UserViewModelFactory(userCRUDRepository, executor);
    }
 }
