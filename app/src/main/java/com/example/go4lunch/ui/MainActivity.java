@@ -39,7 +39,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     private ActivityMainBinding binding;
     private Fragment mapsFragment;
@@ -111,7 +112,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void showRestaurantFragment() {
-        if (this.restaurantFragment == null) this.restaurantFragment = RestaurantFragment.newInstance(1);
+        if (this.restaurantFragment == null) this.restaurantFragment =
+                RestaurantFragment.newInstance(1);
         this.startTransactionFragment(restaurantFragment);
     }
 
@@ -139,12 +141,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void configureBottomView() {
         BottomNavigationView bottomNavigationView = binding.navBottomBar;
-        bottomNavigationView.setOnNavigationItemSelectedListener(this::onNavigationBottomItemSelected);
+        bottomNavigationView.setOnNavigationItemSelectedListener
+                (this::onNavigationBottomItemSelected);
     }
 
     private void configureDrawerLayout() {
         this.drawerLayout = binding.drawer;
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
+                drawerLayout, toolbar, R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
@@ -155,7 +159,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void configureNavigationView() {
         NavigationView navigationView = binding.navView;
         navigationView.setNavigationItemSelectedListener(this);
-        com.example.go4lunch.databinding.ActivityNavHeaderBinding navHeaderBinding = ActivityNavHeaderBinding.inflate(LayoutInflater.from(navigationView.getContext()));
+        com.example.go4lunch.databinding.ActivityNavHeaderBinding navHeaderBinding =
+                ActivityNavHeaderBinding.inflate(LayoutInflater.from(navigationView.getContext()));
         navigationView.addHeaderView(navHeaderBinding.getRoot());
         this.currentUserName = navHeaderBinding.nameProfile;
         this.currentUserEmail = navHeaderBinding.emailProfile;
@@ -206,8 +211,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .into(currentUserImage);
             }
 
-            String email = TextUtils.isEmpty(this.getCurrentUser().getEmail()) ? getString(R.string.info_no_email_found) : this.getCurrentUser().getEmail();
-            String username = TextUtils.isEmpty(this.getCurrentUser().getDisplayName()) ? getString(R.string.info_no_username_found) : this.getCurrentUser().getDisplayName();
+            String email = TextUtils.isEmpty(this.getCurrentUser().getEmail()) ?
+                    getString(R.string.info_no_email_found) : this.getCurrentUser().getEmail();
+            String username = TextUtils.isEmpty(this.getCurrentUser().getDisplayName()) ?
+                    getString(R.string.info_no_username_found) : this.getCurrentUser().getDisplayName();
 
             currentUserName.setText(username);
             currentUserEmail.setText(email);
@@ -216,7 +223,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     private void configureUserViewModel() {
         UserViewModelFactory mViewModelFactory = UserInjection.provideViewModelFactory();
-        this.mViewModel = new ViewModelProvider(this, mViewModelFactory).get(UserViewModel.class);
+        this.mViewModel = new ViewModelProvider(this, mViewModelFactory)
+                .get(UserViewModel.class);
         this.mViewModel.initUsers(this);
     }
 }

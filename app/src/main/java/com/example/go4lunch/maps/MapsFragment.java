@@ -55,7 +55,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         int apiKey = R.string.google_maps_key;
         Places.initialize(this.requireContext(), String.valueOf(apiKey));
         Places.createClient(this.requireContext());
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.requireContext());
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient
+                (this.requireContext());
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
@@ -84,7 +85,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == PERMISSION_ID) {
@@ -99,7 +101,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         if (mLocationPermission) {
             mFusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
                 mLastKnownLocation = task.getResult();
-                LatLng mLastKnownLocationLatLng = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+                LatLng mLastKnownLocationLatLng = new
+                        LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                         mLastKnownLocationLatLng, DEFAULT_ZOOM));
                 mMap.addMarker(new MarkerOptions().position(mLastKnownLocationLatLng));
@@ -120,7 +123,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     private void configureViewModel() {
         MapsViewModelFactory mapsViewModelFactory = MapsInjection.provideMapsViewModelFactory();
-        MapsViewModel viewModel = new ViewModelProvider(this, mapsViewModelFactory).get(MapsViewModel.class);
+        MapsViewModel viewModel = new ViewModelProvider(this, mapsViewModelFactory)
+                .get(MapsViewModel.class);
     }
 
 }
