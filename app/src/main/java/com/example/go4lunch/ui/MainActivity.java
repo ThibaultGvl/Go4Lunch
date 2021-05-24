@@ -108,22 +108,26 @@ public class MainActivity extends AppCompatActivity
 
     private void showMapsFragment() {
         if (this.mapsFragment == null) this.mapsFragment = MapsFragment.newInstance();
+        binding.bannerTitle.setText(R.string.default_banner);
         this.startTransactionFragment(this.mapsFragment);
     }
 
     private void showRestaurantFragment() {
         if (this.restaurantFragment == null) this.restaurantFragment =
                 RestaurantFragment.newInstance(1);
+        binding.bannerTitle.setText(R.string.default_banner);
         this.startTransactionFragment(restaurantFragment);
     }
 
     private void showUserFragment() {
         if (this.userFragment == null) this.userFragment = UserFragment.newInstance(1);
+        binding.bannerTitle.setText(R.string.user_fragment_banner);
         this.startTransactionFragment(userFragment);
     }
 
     private void showSettingsFragment() {
         if (this.settingsFragment == null) this.settingsFragment = SettingsFragment.newInstance();
+        binding.bannerTitle.setText(R.string.preferences);
         this.startTransactionFragment(settingsFragment);
     }
 

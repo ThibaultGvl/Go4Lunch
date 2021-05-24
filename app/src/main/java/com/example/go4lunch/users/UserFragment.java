@@ -3,6 +3,7 @@ package com.example.go4lunch.users;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,8 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.go4lunch.databinding.ActivityMainBinding;
 import com.example.go4lunch.databinding.FragmentUserListBinding;
 import com.example.go4lunch.model.User;
+import com.google.android.material.internal.ToolbarUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -26,6 +29,10 @@ import java.util.List;
 public class UserFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
+
+    private ActivityMainBinding mActivityMainBinding;
+
+    private Toolbar toolbar;
 
     private int mColumnCount = 1;
 
@@ -75,6 +82,8 @@ public class UserFragment extends Fragment {
         }
         return view;
     }
+
+
 
     private void configureViewModel() {
         UserViewModelFactory mViewModelFactory = UserInjection.provideViewModelFactory();

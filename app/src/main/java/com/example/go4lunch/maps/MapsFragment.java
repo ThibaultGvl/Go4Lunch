@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -18,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.go4lunch.R;
+import com.example.go4lunch.databinding.FragmentMapsBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -31,6 +31,7 @@ import com.google.android.libraries.places.api.Places;
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private FragmentMapsBinding mMapsBinding;
     private final int PERMISSION_ID = 26;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private final int DEFAULT_ZOOM = 15;
@@ -46,7 +47,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_maps, container, false);
+        mMapsBinding = FragmentMapsBinding.inflate(inflater, container, false);
+        View view = mMapsBinding.getRoot();
+        return view;
     }
 
     @Override
@@ -63,6 +66,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             mapFragment.getMapAsync(this);
         }
         getLastLocation();
+        mMapsBinding.position.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLastLocation();
+            }
+        });
     }
 
 
@@ -106,9 +115,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                         mLastKnownLocationLatLng, DEFAULT_ZOOM));
                 mMap.addMarker(new MarkerOptions().position(mLastKnownLocationLatLng));
-            });
-        }
-        else {
+            }
+            );
+        }else {
             getLocationPermission(requireContext(), requireActivity());
         }
     }
@@ -121,10 +130,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private void configureViewModel() {
+    /*private void configureViewModel() {
         MapsViewModelFactory mapsViewModelFactory = MapsInjection.provideMapsViewModelFactory();
         MapsViewModel viewModel = new ViewModelProvider(this, mapsViewModelFactory)
                 .get(MapsViewModel.class);
-    }
+    }*/
 
 }

@@ -53,4 +53,5 @@
     <string name="default_info_title">Default Location</string>
     <string name="default_info_snippet">Your location permission is disabled.</string>
     <string name="current_location_null">Current location is null. Using defaults.</string>
+    <string name="user_fragment_banner">Available Workmates</string>
 </resources>
