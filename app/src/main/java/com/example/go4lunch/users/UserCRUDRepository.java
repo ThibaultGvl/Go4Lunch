@@ -68,7 +68,7 @@ public class UserCRUDRepository {
             String email = user.getEmail();
             String imageUrl = (user.getPhotoUrl() != null) ? Objects.requireNonNull(this.getCurrentUser().getPhotoUrl()).toString() : null;
 
-            UserCRUD.createUser(uid, username, email, imageUrl, null).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(aVoid -> {
+            UserCRUD.createUser(uid, username, email, imageUrl, null, null).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(aVoid -> {
                 result.setValue(user);
             });
         }

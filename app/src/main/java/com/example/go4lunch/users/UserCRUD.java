@@ -7,6 +7,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.List;
+
 public class UserCRUD {
 
     private static final String COLLECTION_NAME = "users";
@@ -23,8 +25,8 @@ public class UserCRUD {
         return UserCRUD.getUsersCollection().document(uid).get();
     }
 
-    public static Task<Void> createUser(String uid, String username, String email, String picture, String restaurantId) {
-        User userToCreate = new User(uid, username, email, picture, restaurantId);
+    public static Task<Void> createUser(String uid, String username, String email, String picture, String restaurantId, List<String> restaurantsLiked) {
+        User userToCreate = new User(uid, username, email, picture, restaurantId, restaurantsLiked);
         return UserCRUD.getUsersCollection().document(uid).set(userToCreate);
     }
 
