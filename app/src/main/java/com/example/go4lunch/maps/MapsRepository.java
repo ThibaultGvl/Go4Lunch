@@ -1,11 +1,17 @@
 package com.example.go4lunch.maps;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Location;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -17,9 +23,9 @@ public class MapsRepository {
     private static FusedLocationProviderClient mFusedLocationProviderClient;
     private static final int DEFAULT_ZOOM = 15;
     private static Location mLastKnownLocation;
-    //private static boolean mLocationPermission;
+    private static boolean mLocationPermission;
 
-    /*public static void getLocationPermission(Context context, Activity activity) {
+    public static void getLocationPermission(Context context, Activity activity) {
         mLocationPermission = false;
         if (ContextCompat.checkSelfPermission(context,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -30,10 +36,11 @@ public class MapsRepository {
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSION_ID);
         }
-    }*/
+    }
 
     @SuppressLint("MissingPermission")
-    public static MutableLiveData<Location> getLastLocation() {
+    public static MutableLiveData<Location> getLastLocation(Context context) {
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
         MutableLiveData<Location> locationMutableLiveData = new MutableLiveData<>();
             mFusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
                 mLastKnownLocation = task.getResult();

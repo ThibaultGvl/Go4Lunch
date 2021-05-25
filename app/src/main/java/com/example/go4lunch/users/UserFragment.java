@@ -30,10 +30,6 @@ public class UserFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
 
-    private ActivityMainBinding mActivityMainBinding;
-
-    private Toolbar toolbar;
-
     private int mColumnCount = 1;
 
     private UserViewModel mViewModel;

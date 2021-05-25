@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -37,6 +38,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private final int DEFAULT_ZOOM = 15;
     private Location mLastKnownLocation;
     private boolean mLocationPermission;
+    private MapsViewModel mViewModel;
 
     public static MapsFragment newInstance() {
         return (new MapsFragment());
@@ -48,8 +50,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         mMapsBinding = FragmentMapsBinding.inflate(inflater, container, false);
-        View view = mMapsBinding.getRoot();
-        return view;
+        return mMapsBinding.getRoot();
     }
 
     @Override
@@ -130,10 +131,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    /*private void configureViewModel() {
+    private void configureViewModel() {
         MapsViewModelFactory mapsViewModelFactory = MapsInjection.provideMapsViewModelFactory();
-        MapsViewModel viewModel = new ViewModelProvider(this, mapsViewModelFactory)
+        mViewModel = new ViewModelProvider(this, mapsViewModelFactory)
                 .get(MapsViewModel.class);
-    }*/
+    }
 
 }

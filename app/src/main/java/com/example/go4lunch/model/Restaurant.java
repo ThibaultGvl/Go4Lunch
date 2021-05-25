@@ -7,6 +7,10 @@ import java.sql.Time;
 
 public class Restaurant {
 
+    @SerializedName("id")
+    @Expose
+    private String id;
+
     @SerializedName("name")
     @Expose
     private String name;
@@ -33,11 +37,10 @@ public class Restaurant {
 
     @SerializedName("schedules")
     @Expose
-    private Time schedules;
+    private String schedules;
 
 
-    public Restaurant(String name, String type, String address, int distance, int rank,int mate, long picture, Time schedules) {
-
+    public Restaurant(String name, String address, int distance, int rank,int mate, long picture, String schedules) {
         this.name = name;
         this.address = address;
         this.distance = distance;
@@ -95,11 +98,11 @@ public class Restaurant {
         this.picture = picture;
     }
 
-    public Time getSchedules() {
+    public String getSchedules() {
         return schedules;
     }
 
-    public void setSchedules(Time schedules) {
+    public void setSchedules(String schedules) {
         this.schedules = schedules;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.go4lunch.maps;
 
+import android.content.Context;
 import android.location.Location;
 
 import androidx.lifecycle.ViewModel;
@@ -20,8 +21,8 @@ public class MapsViewModel extends ViewModel {
         mExecutor.execute(MapsRepository::getLastLatLng);
     }
 
-    public Location getLocation() {
-        mExecutor.execute(MapsRepository::getLastLocation);
+    public Location getLocation(Context context) {
+        mExecutor.execute(() -> MapsRepository.getLastLocation(context));
         return null;
     }
 }
