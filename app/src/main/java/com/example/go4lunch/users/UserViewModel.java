@@ -5,7 +5,6 @@ import android.content.Context;
 import androidx.lifecycle.LiveData;
 
 import com.example.go4lunch.model.User;
-import com.example.go4lunch.users.UserCRUDRepository;
 
 import java.util.List;
 import java.util.concurrent.Executor;

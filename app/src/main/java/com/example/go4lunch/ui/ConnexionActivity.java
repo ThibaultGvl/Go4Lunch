@@ -77,6 +77,7 @@ public class ConnexionActivity extends AppCompatActivity {
     }
 
     private void startFacebookSignInActivity() {
+        //Change because deprecated
         startActivityForResult(
                 AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(
                         Arrays.asList(new AuthUI.IdpConfig.FacebookBuilder().build()))

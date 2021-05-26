@@ -1,10 +1,14 @@
 package com.example.go4lunch.maps;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
@@ -13,6 +17,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +34,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 
+import java.util.Objects;
+
+import static android.content.ContentValues.TAG;
+
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -37,6 +46,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private final int DEFAULT_ZOOM = 15;
     private Location mLastKnownLocation;
+    private Observer<Location> mObserver;
     private boolean mLocationPermission;
     private MapsViewModel mViewModel;
 
@@ -60,7 +70,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         Places.initialize(this.requireContext(), String.valueOf(apiKey));
         Places.createClient(this.requireContext());
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient
-                (this.requireContext());
+               (this.requireContext());
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
@@ -94,8 +104,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+
+    /*public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
@@ -104,7 +114,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 getLastLocation();
             }
         }
-    }
+    }*/
 
     @SuppressLint("MissingPermission")
     private void getLastLocation() {
@@ -112,12 +122,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             mFusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
                 mLastKnownLocation = task.getResult();
                 LatLng mLastKnownLocationLatLng = new
-                        LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+                        LatLng(Objects.requireNonNull(mLastKnownLocation).getLatitude(), mLastKnownLocation.getLongitude());
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                         mLastKnownLocationLatLng, DEFAULT_ZOOM));
-                mMap.addMarker(new MarkerOptions().position(mLastKnownLocationLatLng));
-            }
-            );
+            });
         }else {
             getLocationPermission(requireContext(), requireActivity());
         }
@@ -135,6 +143,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         MapsViewModelFactory mapsViewModelFactory = MapsInjection.provideMapsViewModelFactory();
         mViewModel = new ViewModelProvider(this, mapsViewModelFactory)
                 .get(MapsViewModel.class);
+        mViewModel.initLocation(requireContext());
     }
 
 }

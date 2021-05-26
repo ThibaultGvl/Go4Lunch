@@ -11,12 +11,16 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface RetrofitService {
+    @GET("restaurants/{formatted_address,name,opening_hours,photos,place_id,rating}/following")
+    Call<List<Restaurant>> getFollowing(@Path("address,name,schedules,picture,id,rank") String address, String name, String schedules, long picture, String id, int rank);
 
-    @GET("restaurants/{name,opening_hours,photos,place_id,formatted_address,rating}/following")
-    Call<List<Restaurant>> getFollowing(@Path("name,schedules,picture,id,address") String name, String schedules, long picture, String id, String address, int rank);
+    static Retrofit getClient() {
 
-    public static final Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        return retrofit;
+    }
 }
