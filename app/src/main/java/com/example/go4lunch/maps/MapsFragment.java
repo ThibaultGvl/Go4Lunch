@@ -24,6 +24,9 @@ import android.view.ViewGroup;
 
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.FragmentMapsBinding;
+import com.example.go4lunch.utils.NearbyInjection;
+import com.example.go4lunch.utils.NearbyRestaurantViewModel;
+import com.example.go4lunch.utils.NearbyViewModelFactory;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -48,7 +51,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private Location mLastKnownLocation;
     private Observer<Location> mObserver;
     private boolean mLocationPermission;
-    private MapsViewModel mViewModel;
+    private MapsViewModel mMapsViewModel;
+    private NearbyRestaurantViewModel mNearbyRestaurantViewModel;
 
     public static MapsFragment newInstance() {
         return (new MapsFragment());
@@ -67,8 +71,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         int apiKey = R.string.google_maps_key;
-        Places.initialize(this.requireContext(), String.valueOf(apiKey));
-        Places.createClient(this.requireContext());
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient
                (this.requireContext());
         SupportMapFragment mapFragment =
@@ -77,12 +79,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             mapFragment.getMapAsync(this);
         }
         getLastLocation();
-        mMapsBinding.position.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getLastLocation();
-            }
-        });
+        mMapsBinding.position.setOnClickListener(v -> getLastLocation());
     }
 
 
@@ -104,6 +101,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    public void getRestaurantsNear() {
+
+    }
 
     /*public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -139,11 +139,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private void configureViewModel() {
-        MapsViewModelFactory mapsViewModelFactory = MapsInjection.provideMapsViewModelFactory();
-        mViewModel = new ViewModelProvider(this, mapsViewModelFactory)
-                .get(MapsViewModel.class);
-        mViewModel.initLocation(requireContext());
+    private void configureNearbyRestaurantViewModel() {
+        NearbyViewModelFactory nearbyViewModelFactory = NearbyInjection.provideRestaurantViewModel();
+        mNearbyRestaurantViewModel = new ViewModelProvider(this, nearbyViewModelFactory)
+                .get(NearbyRestaurantViewModel.class);
     }
 
 }

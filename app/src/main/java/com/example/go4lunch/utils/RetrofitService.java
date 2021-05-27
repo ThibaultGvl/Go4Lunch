@@ -10,17 +10,18 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
-public interface RetrofitService {
-    @GET("restaurants/{formatted_address,name,opening_hours,photos,place_id,rating}/following")
-    Call<List<Restaurant>> getFollowing(@Path("address,name,schedules,picture,id,rank") String address, String name, String schedules, long picture, String id, int rank);
+public class RetrofitService {
 
-    static Retrofit getClient() {
 
+    private static Retrofit getRetrofit(String url) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/")
+                .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
         return retrofit;
     }
+
+        public static PlacesApiService getPlacesInterface(String url) {
+            return getRetrofit(url).create(PlacesApiService.class);
+        }
 }
