@@ -1,9 +1,10 @@
-package com.example.go4lunch.restaurant;
+package com.example.go4lunch.view;
 
 import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,8 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.go4lunch.databinding.FragmentRestaurantBinding;
+import com.example.go4lunch.location.LocationInjection;
+import com.example.go4lunch.location.LocationViewModel;
+import com.example.go4lunch.location.LocationViewModelFactory;
 import com.example.go4lunch.model.Restaurant;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.example.go4lunch.places.NearbyInjection;
+import com.example.go4lunch.places.NearbyRestaurantViewModel;
+import com.example.go4lunch.places.NearbyViewModelFactory;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -31,11 +37,13 @@ public class RestaurantFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
 
+    private LocationViewModel mLocationViewModel;
+
+    private NearbyRestaurantViewModel mNearbyRestaurantViewModel;
+
     private List<Restaurant> mRestaurants = new ArrayList<>();
 
     private FragmentRestaurantBinding mFragmentRestaurantBinding;
-
-    private AutocompleteSupportFragment autocompleteFragment;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -59,6 +67,8 @@ public class RestaurantFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mFragmentRestaurantBinding = FragmentRestaurantBinding.inflate(getLayoutInflater());
         View view = mFragmentRestaurantBinding.getRoot();
+        configureMapsViewModel();
+        configureNearbyRestaurantViewModel();
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -82,5 +92,17 @@ public class RestaurantFragment extends Fragment {
             recyclerView.setAdapter(new RestaurantRecyclerViewAdapter(mRestaurants));
         }
         return view;
+    }
+
+    private void configureMapsViewModel() {
+        LocationViewModelFactory mapsViewModelFactory = LocationInjection.provideMapsViewModelFactory();
+        mLocationViewModel = new ViewModelProvider(this, mapsViewModelFactory)
+                .get(LocationViewModel.class);
+    }
+
+    private void configureNearbyRestaurantViewModel() {
+        NearbyViewModelFactory nearbyViewModelFactory = NearbyInjection.provideRestaurantViewModel();
+        mNearbyRestaurantViewModel = new ViewModelProvider(this, nearbyViewModelFactory)
+                .get(NearbyRestaurantViewModel.class);
     }
 }

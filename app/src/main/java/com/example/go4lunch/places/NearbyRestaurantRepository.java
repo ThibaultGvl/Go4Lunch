@@ -1,9 +1,9 @@
-package com.example.go4lunch.utils;
+package com.example.go4lunch.places;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.go4lunch.model.Restaurant;
+import com.example.go4lunch.utils.RetrofitService;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -32,8 +32,8 @@ public class NearbyRestaurantRepository {
         placesApiService = RetrofitService.getPlacesInterface(mBaseUrlForNearbySearch);
     }
 
-    public MutableLiveData<List<Restaurant>> getRestaurants(String address, String name) {
-        Call<List<Restaurant>> restaurantsList = placesApiService.getFollowingPlaces(address, name);
+    public MutableLiveData<List<Restaurant>> getRestaurants(String address, String radius, String key) {
+        Call<List<Restaurant>> restaurantsList = placesApiService.getFollowingPlaces(address, radius, key);
         restaurantsList.enqueue(new Callback<List<Restaurant>>() {
             @Override
             public void onResponse(@NotNull Call<List<Restaurant>> call, @NotNull Response<List<Restaurant>> response) {

@@ -1,4 +1,4 @@
-package com.example.go4lunch.restaurant;
+package com.example.go4lunch.view;
 
 import androidx.recyclerview.widget.RecyclerView;
 

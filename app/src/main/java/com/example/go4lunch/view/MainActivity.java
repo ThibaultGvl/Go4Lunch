@@ -1,4 +1,4 @@
-package com.example.go4lunch.ui;
+package com.example.go4lunch.view;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,11 +25,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.ActivityMainBinding;
 import com.example.go4lunch.databinding.ActivityNavHeaderBinding;
-import com.example.go4lunch.maps.MapsFragment;
-import com.example.go4lunch.restaurant.RestaurantFragment;
 import com.example.go4lunch.users.UserInjection;
 import com.example.go4lunch.users.UserViewModelFactory;
-import com.example.go4lunch.users.UserFragment;
 import com.example.go4lunch.users.UserViewModel;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;

@@ -1,23 +1,24 @@
-package com.example.go4lunch.maps;
+package com.example.go4lunch.location;
 
 import android.content.Context;
 import android.location.Location;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.go4lunch.location.LocationRepository;
+
 import java.util.concurrent.Executor;
 
-public class MapsViewModel extends ViewModel {
+public class LocationViewModel extends ViewModel {
 
-    private final MapsRepository mMapsRepository;
+    private final LocationRepository mLocationRepository;
     private final Executor mExecutor;
 
     private MutableLiveData<Location> mLocationLiveData;
 
-    public MapsViewModel(MapsRepository mapsRepository, Executor executor) {
-        this.mMapsRepository = mapsRepository;
+    public LocationViewModel(LocationRepository mapsRepository, Executor executor) {
+        this.mLocationRepository = mapsRepository;
         this.mExecutor = executor;
     }
 
@@ -25,7 +26,7 @@ public class MapsViewModel extends ViewModel {
         if (mLocationLiveData != null) {
             return;
         }
-        mLocationLiveData = mMapsRepository.getLastLocation(context);
+        mLocationLiveData = mLocationRepository.getLastLocation(context);
     }
 
     public MutableLiveData<Location> getLocation(Context context) {

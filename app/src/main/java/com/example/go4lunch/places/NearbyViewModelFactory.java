@@ -1,8 +1,11 @@
-package com.example.go4lunch.utils;
+package com.example.go4lunch.places;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.example.go4lunch.places.NearbyRestaurantRepository;
+import com.example.go4lunch.places.NearbyRestaurantViewModel;
 
 public class NearbyViewModelFactory implements ViewModelProvider.Factory {
 
@@ -18,6 +21,6 @@ public class NearbyViewModelFactory implements ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(NearbyRestaurantRepository.class)) {
             return (T) new NearbyRestaurantViewModel(mNearbyRestaurantRepository);
         }
-        throw new IllegalArgumentException("Unknown ViewModel class");
+        return (T) new NearbyRestaurantViewModel(mNearbyRestaurantRepository);
     }
 }

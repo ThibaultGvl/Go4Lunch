@@ -1,9 +1,8 @@
-package com.example.go4lunch.users;
+package com.example.go4lunch.view;
 
 import android.content.Context;
 import android.os.Bundle;
 
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,10 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.go4lunch.databinding.ActivityMainBinding;
 import com.example.go4lunch.databinding.FragmentUserListBinding;
 import com.example.go4lunch.model.User;
-import com.google.android.material.internal.ToolbarUtils;
+import com.example.go4lunch.users.UserInjection;
+import com.example.go4lunch.users.UserViewModel;
+import com.example.go4lunch.users.UserViewModelFactory;
 
 import org.jetbrains.annotations.NotNull;
 

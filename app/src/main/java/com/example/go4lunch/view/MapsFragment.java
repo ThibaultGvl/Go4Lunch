@@ -1,8 +1,5 @@
-package com.example.go4lunch.maps;
+package com.example.go4lunch.view;
 
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -17,16 +14,18 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.FragmentMapsBinding;
-import com.example.go4lunch.utils.NearbyInjection;
-import com.example.go4lunch.utils.NearbyRestaurantViewModel;
-import com.example.go4lunch.utils.NearbyViewModelFactory;
+import com.example.go4lunch.location.LocationViewModel;
+import com.example.go4lunch.model.Restaurant;
+import com.example.go4lunch.places.NearbyInjection;
+import com.example.go4lunch.places.NearbyRestaurantViewModel;
+import com.example.go4lunch.places.NearbyViewModelFactory;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,23 +34,22 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.libraries.places.api.Places;
 
+import java.util.List;
 import java.util.Objects;
-
-import static android.content.ContentValues.TAG;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private FragmentMapsBinding mMapsBinding;
+    private final int apiKey = R.string.google_maps_key;
     private final int PERMISSION_ID = 26;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private final int DEFAULT_ZOOM = 15;
     private Location mLastKnownLocation;
     private Observer<Location> mObserver;
     private boolean mLocationPermission;
-    private MapsViewModel mMapsViewModel;
+    private LocationViewModel mLocationViewModel;
     private NearbyRestaurantViewModel mNearbyRestaurantViewModel;
 
     public static MapsFragment newInstance() {
@@ -70,7 +68,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        int apiKey = R.string.google_maps_key;
+        configureNearbyRestaurantViewModel();
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient
                (this.requireContext());
         SupportMapFragment mapFragment =
@@ -101,10 +99,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    public void getRestaurantsNear() {
-
-    }
-
     /*public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -131,11 +125,26 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    private void getPlaces() {
+        //mLastKnownLocation == null
+        List<Restaurant> restaurants = mNearbyRestaurantViewModel.getRestaurantsList(mLastKnownLocation.toString(), "1000m", "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4").getValue();
+        if (restaurants != null) {
+            for (Restaurant restaurant : restaurants) {
+                LatLng restaurantLatLng = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
+                mMap.addMarker(new MarkerOptions().position(restaurantLatLng));
+            }
+        }
+        else {
+            Toast.makeText(requireContext(), "There is no restaurants near you", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         if (mLocationPermission) {
             getLastLocation();
+            getPlaces();
         }
     }
 

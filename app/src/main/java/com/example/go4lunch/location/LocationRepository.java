@@ -1,4 +1,4 @@
-package com.example.go4lunch.maps;
+package com.example.go4lunch.location;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -15,7 +15,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
-public class MapsRepository {
+public class LocationRepository {
 
     private static GoogleMap mMap;
     private static final int PERMISSION_ID = 26;

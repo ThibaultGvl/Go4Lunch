@@ -1,9 +1,10 @@
-package com.example.go4lunch.utils;
+package com.example.go4lunch.places;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.go4lunch.model.Restaurant;
+import com.example.go4lunch.places.NearbyRestaurantRepository;
 
 import java.util.List;
 
@@ -16,12 +17,12 @@ public class NearbyRestaurantViewModel extends ViewModel {
         mNearbyRestaurantRepository = nearbyRestaurantRepository;
     }
 
-    public MutableLiveData<List<Restaurant>> getRestaurantsList(String address, String name) {
-        restaurantsList = getRestaurantsListData(address, name);
+    public MutableLiveData<List<Restaurant>> getRestaurantsList(String address, String radius, String key) {
+        restaurantsList = getRestaurantsListData(address, radius, key);
         return restaurantsList;
     }
 
-    private MutableLiveData<List<Restaurant>> getRestaurantsListData(String address, String name) {
-        return mNearbyRestaurantRepository.getRestaurants(address, name);
+    private MutableLiveData<List<Restaurant>> getRestaurantsListData(String address, String radius, String key) {
+        return mNearbyRestaurantRepository.getRestaurants(address, radius, key);
     }
 }

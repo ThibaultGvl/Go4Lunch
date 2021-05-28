@@ -39,8 +39,17 @@ public class Restaurant {
     @Expose
     private String schedules;
 
+    @SerializedName("latitude")
+    @Expose
+    private double latitude;
 
-    public Restaurant(String name, String address, int distance, int rank,int mate, long picture, String schedules) {
+    @SerializedName("longitude")
+    @Expose
+    private double longitude;
+
+
+    public Restaurant(String id ,String name, String address, int distance, int rank,int mate, long picture, String schedules, double latitude, double longitude) {
+        this.id = id;
         this.name = name;
         this.address = address;
         this.distance = distance;
@@ -48,6 +57,16 @@ public class Restaurant {
         this.mate = mate;
         this.picture = picture;
         this.schedules = schedules;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -104,5 +123,21 @@ public class Restaurant {
 
     public void setSchedules(String schedules) {
         this.schedules = schedules;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }
