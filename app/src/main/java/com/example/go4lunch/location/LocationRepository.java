@@ -12,27 +12,48 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+
+import java.util.Objects;
 
 public class LocationRepository {
 
     private static GoogleMap mMap;
     private static final int PERMISSION_ID = 26;
-    @SuppressLint("StaticFieldLeak")
-    private static FusedLocationProviderClient mFusedLocationProviderClient;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
     private Location mLastKnownLocation;
+    private boolean mLocationPermission;
 
 
     @SuppressLint("MissingPermission")
-    public MutableLiveData<Location> getLastLocation(Context context) {
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
+    public MutableLiveData<Location> getLastLocation(Context context, Activity activity) {
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient
+                (context);
         MutableLiveData<Location> locationMutableLiveData = new MutableLiveData<>();
+        if (mLocationPermission) {
             mFusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
                 mLastKnownLocation = task.getResult();
-                locationMutableLiveData.setValue(mLastKnownLocation);
+                locationMutableLiveData.postValue(mLastKnownLocation);
             });
+        }
+        else {
+            getLocationPermission(context, activity);
+        }
             return locationMutableLiveData;
         }
 
+    public void getLocationPermission(Context context, Activity activity) {
+        mLocationPermission = false;
+        if (ContextCompat.checkSelfPermission(context,
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermission = true;
+        } else {
+            ActivityCompat.requestPermissions(activity,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSION_ID);
+        }
+    }
 }

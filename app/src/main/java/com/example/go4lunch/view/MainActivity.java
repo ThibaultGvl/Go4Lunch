@@ -25,6 +25,12 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.ActivityMainBinding;
 import com.example.go4lunch.databinding.ActivityNavHeaderBinding;
+import com.example.go4lunch.location.LocationInjection;
+import com.example.go4lunch.location.LocationViewModel;
+import com.example.go4lunch.location.LocationViewModelFactory;
+import com.example.go4lunch.places.NearbyInjection;
+import com.example.go4lunch.places.NearbyRestaurantViewModel;
+import com.example.go4lunch.places.NearbyViewModelFactory;
 import com.example.go4lunch.users.UserInjection;
 import com.example.go4lunch.users.UserViewModelFactory;
 import com.example.go4lunch.users.UserViewModel;
@@ -49,7 +55,9 @@ public class MainActivity extends AppCompatActivity
     private TextView currentUserName;
     private TextView currentUserEmail;
     private ImageView currentUserImage;
-    private UserViewModel mViewModel;
+    private UserViewModel mUserViewModel;
+    private LocationViewModel mLocationViewModel;
+    private NearbyRestaurantViewModel mNearbyRestaurantViewModel;
 
     private static final int MAPS_FRAGMENT = 0;
     private static final int RESTAURANT_FRAGMENT = 1;
@@ -61,6 +69,8 @@ public class MainActivity extends AppCompatActivity
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         this.configureUserViewModel();
+        this.configureLocationViewModel();
+        this.configureNearbyRestaurantViewModel();
         this.showFragment(MAPS_FRAGMENT);
         this.configureToolBar();
         this.configureBottomView();
@@ -219,13 +229,26 @@ public class MainActivity extends AppCompatActivity
 
             currentUserName.setText(username);
             currentUserEmail.setText(email);
-            this.mViewModel.createCurrentUser(this);
+            this.mUserViewModel.createCurrentUser(this);
         }
     }
+
+    private void configureLocationViewModel() {
+        LocationViewModelFactory locationViewModelFactory = LocationInjection.provideMapsViewModelFactory();
+        mLocationViewModel = new ViewModelProvider(this, locationViewModelFactory)
+                .get(LocationViewModel.class);
+    }
+
     private void configureUserViewModel() {
         UserViewModelFactory mViewModelFactory = UserInjection.provideViewModelFactory();
-        this.mViewModel = new ViewModelProvider(this, mViewModelFactory)
+        this.mUserViewModel = new ViewModelProvider(this, mViewModelFactory)
                 .get(UserViewModel.class);
-        this.mViewModel.initUsers(this);
+        this.mUserViewModel.initUsers(this);
+    }
+
+    private void configureNearbyRestaurantViewModel() {
+        NearbyViewModelFactory nearbyViewModelFactory = NearbyInjection.provideRestaurantViewModel();
+        mNearbyRestaurantViewModel = new ViewModelProvider(this, nearbyViewModelFactory)
+                .get(NearbyRestaurantViewModel.class);
     }
 }

@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
@@ -21,8 +20,11 @@ import android.widget.Toast;
 
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.FragmentMapsBinding;
+import com.example.go4lunch.location.LocationInjection;
 import com.example.go4lunch.location.LocationViewModel;
+import com.example.go4lunch.location.LocationViewModelFactory;
 import com.example.go4lunch.model.Restaurant;
+import com.example.go4lunch.model.restaurant.ResultRestaurant;
 import com.example.go4lunch.places.NearbyInjection;
 import com.example.go4lunch.places.NearbyRestaurantViewModel;
 import com.example.go4lunch.places.NearbyViewModelFactory;
@@ -47,7 +49,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private final int DEFAULT_ZOOM = 15;
     private Location mLastKnownLocation;
-    private Observer<Location> mObserver;
     private boolean mLocationPermission;
     private LocationViewModel mLocationViewModel;
     private NearbyRestaurantViewModel mNearbyRestaurantViewModel;
@@ -62,6 +63,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         mMapsBinding = FragmentMapsBinding.inflate(inflater, container, false);
+        configureLocationViewModel();
+        configureNearbyRestaurantViewModel();
         return mMapsBinding.getRoot();
     }
 
@@ -113,29 +116,42 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @SuppressLint("MissingPermission")
     private void getLastLocation() {
         if (mLocationPermission) {
+            /*mLocationViewModel.getLocation().observe(getViewLifecycleOwner(), this::configureLocation);
+            LatLng latLng = new LatLng(Objects.requireNonNull(mLastKnownLocation).getLatitude(), mLastKnownLocation.getLongitude());
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM))*/
+            mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
             mFusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
                 mLastKnownLocation = task.getResult();
                 LatLng mLastKnownLocationLatLng = new
                         LatLng(Objects.requireNonNull(mLastKnownLocation).getLatitude(), mLastKnownLocation.getLongitude());
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                         mLastKnownLocationLatLng, DEFAULT_ZOOM));
+                getPlaces();
             });
         }else {
             getLocationPermission(requireContext(), requireActivity());
         }
     }
 
+    private void configureLocation(Location location) {
+        mLastKnownLocation = location;
+    }
+
+    private void getLocationByViewModel() {
+        mLocationViewModel.getLocation(requireContext(), requireActivity());
+    }
+
     private void getPlaces() {
         //mLastKnownLocation == null
-        List<Restaurant> restaurants = mNearbyRestaurantViewModel.getRestaurantsList(mLastKnownLocation.toString(), "1000m", "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4").getValue();
+        List<ResultRestaurant> restaurants = mNearbyRestaurantViewModel.getRestaurantsList(mLastKnownLocation.toString(), "10000m", "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4").getValue();
         if (restaurants != null) {
-            for (Restaurant restaurant : restaurants) {
-                LatLng restaurantLatLng = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
+            for (ResultRestaurant restaurant : restaurants) {
+                LatLng restaurantLatLng = new LatLng(restaurant.getGeometry().getLocation().getLat(), restaurant.getGeometry().getLocation().getLng());
                 mMap.addMarker(new MarkerOptions().position(restaurantLatLng));
             }
         }
         else {
-            Toast.makeText(requireContext(), "There is no restaurants near you", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), getString(R.string.no_restaurant_found), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -144,8 +160,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         super.onResume();
         if (mLocationPermission) {
             getLastLocation();
-            getPlaces();
         }
+    }
+
+    private void configureLocationViewModel() {
+        LocationViewModelFactory locationViewModelFactory = LocationInjection.provideMapsViewModelFactory();
+        mLocationViewModel = new ViewModelProvider(this, locationViewModelFactory)
+                .get(LocationViewModel.class);
+        mLocationViewModel.initLocation(requireContext(), requireActivity());
     }
 
     private void configureNearbyRestaurantViewModel() {

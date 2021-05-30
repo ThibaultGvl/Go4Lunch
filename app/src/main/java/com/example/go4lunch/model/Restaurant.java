@@ -3,8 +3,7 @@ package com.example.go4lunch.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.sql.Time;
-
+@SuppressWarnings({"ALL", "unused"})
 public class Restaurant {
 
     @SerializedName("id")

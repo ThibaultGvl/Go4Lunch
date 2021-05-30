@@ -1,47 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/autocomplete_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"/>
 
     <TextView
         android:id="@+id/restaurant_name"
+        android:text="@string/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:textAppearance="?attr/textAppearanceListItem" />
 
     <TextView
         android:id="@+id/restaurant_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
+        android:layout_marginTop="5dp"
+        android:text="address"
+        app:layout_constraintStart_toStartOf="@id/restaurant_name"
+        app:layout_constraintTop_toBottomOf="@id/restaurant_name"
         android:textAppearance="?attr/textAppearanceListItem" />
 
     <TextView
         android:id="@+id/restaurant_schedules"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:textStyle="italic"
+        android:text="open"
+        app:layout_constraintStart_toStartOf="@id/restaurant_name"
+        app:layout_constraintTop_toBottomOf="@id/restaurant_address"/>
 
     <TextView
         android:id="@+id/restaurant_distance"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/restaurant_image"
+        app:layout_constraintBottom_toBottomOf="@id/restaurant_name"/>
 
     <TextView
         android:id="@+id/restaurant_workmate"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/restaurant_distance"
+        app:layout_constraintEnd_toStartOf="@id/restaurant_image"/>
 
     <TextView
         android:id="@+id/restaurant_rank"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/restaurant_workmate"
+        app:layout_constraintEnd_toStartOf="@id/restaurant_image"/>
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/restaurant_image"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="@id/restaurant_name"
+        app:layout_constraintBottom_toBottomOf="@id/restaurant_schedules"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
