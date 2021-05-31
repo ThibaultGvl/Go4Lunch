@@ -33,8 +33,8 @@ public class NearbyRestaurantRepository {
         placesApiService = RetrofitService.getPlacesInterface(mBaseUrlForNearbySearch);
     }
 
-    public MutableLiveData<List<ResultRestaurant>> getRestaurants(String address, String radius, String key) {
-        Call<List<ResultRestaurant>> restaurantsList = placesApiService.getFollowingPlaces(address, radius, key);
+    public MutableLiveData<List<ResultRestaurant>> getRestaurants(String location, String radius, String key) {
+        Call<List<ResultRestaurant>> restaurantsList = placesApiService.getFollowingPlaces(location, radius,"restaurant", key);
         restaurantsList.enqueue(new Callback<List<ResultRestaurant>>() {
             @Override
             public void onResponse(@NotNull Call<List<ResultRestaurant>> call, @NotNull Response<List<ResultRestaurant>> response) {

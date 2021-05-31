@@ -1,15 +1,10 @@
 package com.example.go4lunch.view;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.database.CursorJoiner;
 import android.location.Location;
 import android.os.Bundle;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -26,7 +21,6 @@ import com.example.go4lunch.databinding.FragmentRestaurantBinding;
 import com.example.go4lunch.location.LocationInjection;
 import com.example.go4lunch.location.LocationViewModel;
 import com.example.go4lunch.location.LocationViewModelFactory;
-import com.example.go4lunch.model.Restaurant;
 import com.example.go4lunch.model.restaurant.ResultRestaurant;
 import com.example.go4lunch.places.NearbyInjection;
 import com.example.go4lunch.places.NearbyRestaurantViewModel;
@@ -55,7 +49,7 @@ public class RestaurantFragment extends Fragment {
 
     private NearbyRestaurantViewModel mNearbyRestaurantViewModel;
 
-    private List<ResultRestaurant> mRestaurants = new ArrayList<>();
+    private final List<ResultRestaurant> mRestaurants = new ArrayList<>();
 
     private FragmentRestaurantBinding mFragmentRestaurantBinding;
 
@@ -123,17 +117,20 @@ public class RestaurantFragment extends Fragment {
     private void getPlaces() {
         mFusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
                     mLastKnownLocation = task.getResult();
-            LatLng mLastKnownLocationLatLng = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
-            String mLastKnownLocationString = mLastKnownLocationLatLng.toString();
-            List<ResultRestaurant> restaurants = mNearbyRestaurantViewModel.getRestaurantsList(mLastKnownLocationString, "1000m", "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4").getValue();
-            if (restaurants != null) {
-                mRestaurants.addAll(restaurants);
-                mAdapter.notifyDataSetChanged();
-            }
-            else {
-                Toast.makeText(this.requireContext(), getString(R.string.no_restaurant_found), Toast.LENGTH_SHORT).show();
-            }
-                });
+        });
+        LatLng mLastKnownLocationLatLng = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+        String mLastKnownLocationString = mLastKnownLocationLatLng.toString();
+        mNearbyRestaurantViewModel.getRestaurantsList(mLastKnownLocationString, "10000", "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4").observe(getViewLifecycleOwner(), this::getRestaurants);
+    }
+
+    private void getRestaurants(List<ResultRestaurant> restaurants) {
+        if (restaurants != null) {
+            mRestaurants.addAll(restaurants);
+            mAdapter.notifyDataSetChanged();
+        }
+        else {
+            Toast.makeText(this.requireContext(), getString(R.string.no_restaurant_found), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void configureLocationViewModel() {

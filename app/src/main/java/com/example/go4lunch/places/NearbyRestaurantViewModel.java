@@ -18,12 +18,12 @@ public class NearbyRestaurantViewModel extends ViewModel {
         mNearbyRestaurantRepository = nearbyRestaurantRepository;
     }
 
-    public MutableLiveData<List<ResultRestaurant>> getRestaurantsList(String address, String radius, String key) {
-        restaurantsList = getRestaurantsListData(address, radius, key);
+    public MutableLiveData<List<ResultRestaurant>> getRestaurantsList(String location, String radius, String key) {
+        restaurantsList = getRestaurantsListData(location, radius, key);
         return restaurantsList;
     }
 
-    private MutableLiveData<List<ResultRestaurant>> getRestaurantsListData(String address, String radius, String key) {
-        return mNearbyRestaurantRepository.getRestaurants(address, radius, key);
+    private MutableLiveData<List<ResultRestaurant>> getRestaurantsListData(String location, String radius, String key) {
+        return mNearbyRestaurantRepository.getRestaurants(location, radius, key);
     }
 }

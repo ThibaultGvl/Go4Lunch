@@ -50,15 +50,14 @@ public class RestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Restaura
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public Restaurant mRestaurant;
-        private FragmentRestaurantBinding mFragmentRestaurantBinding;
-        private TextView mRestaurantName;
-        private TextView mRestaurantAddress;
-        private TextView mRestaurantSchedules;
-        private TextView mRestaurantDistance;
-        private TextView mRestaurantWorkmates;
-        private TextView mRestaurantRank;
-        private ImageView mRestaurantImage;
+        private final FragmentRestaurantBinding mFragmentRestaurantBinding;
+        private final TextView mRestaurantName;
+        private final TextView mRestaurantAddress;
+        private final TextView mRestaurantSchedules;
+        private final TextView mRestaurantDistance;
+        private final TextView mRestaurantWorkmates;
+        private final TextView mRestaurantRank;
+        private final ImageView mRestaurantImage;
 
         public ViewHolder(FragmentRestaurantBinding fragmentRestaurantBinding) {
             super(fragmentRestaurantBinding.getRoot());

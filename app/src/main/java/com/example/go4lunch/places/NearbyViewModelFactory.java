@@ -12,7 +12,7 @@ public class NearbyViewModelFactory implements ViewModelProvider.Factory {
     private final NearbyRestaurantRepository mNearbyRestaurantRepository;
 
     public NearbyViewModelFactory(NearbyRestaurantRepository nearbyRestaurantRepository) {
-        mNearbyRestaurantRepository = nearbyRestaurantRepository;
+        mNearbyRestaurantRepository = NearbyRestaurantRepository.getInstance();
     }
 
     @NonNull
