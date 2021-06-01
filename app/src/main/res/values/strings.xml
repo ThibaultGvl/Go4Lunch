@@ -55,4 +55,11 @@
     <string name="current_location_null">Current location is null. Using defaults.</string>
     <string name="user_fragment_banner">Available Workmates</string>
     <string name="no_restaurant_found">There is no restaurants near you</string>
+    <string name="no_name_found">No name found for this restaurant</string>
+    <string name="no_hour_found">No hour found for this restaurant</string>
+    <string name="unknown">Unknown</string>
+    <string name="call">CALL</string>
+    <string name="like">LIKE</string>
+    <string name="website">WEBSITE</string>
+    <string name="restaurant_details">style - address</string>
 </resources>

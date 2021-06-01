@@ -8,13 +8,13 @@ public class OpeningHours {
 
     @SerializedName("open_now")
     @Expose
-    private Boolean openNow;
+    private boolean openNow;
 
-    public Boolean getOpenNow() {
+    public boolean getOpenNow() {
         return openNow;
     }
 
-    public void setOpenNow(Boolean openNow) {
+    public void setOpenNow(boolean openNow) {
         this.openNow = openNow;
     }
 

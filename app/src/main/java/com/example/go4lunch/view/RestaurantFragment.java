@@ -1,10 +1,16 @@
 package com.example.go4lunch.view;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -18,9 +24,11 @@ import android.widget.Toast;
 
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.FragmentRestaurantBinding;
+import com.example.go4lunch.databinding.FragmentRestaurantListBinding;
 import com.example.go4lunch.location.LocationInjection;
 import com.example.go4lunch.location.LocationViewModel;
 import com.example.go4lunch.location.LocationViewModelFactory;
+import com.example.go4lunch.model.restaurant.RestaurantOutputs;
 import com.example.go4lunch.model.restaurant.ResultRestaurant;
 import com.example.go4lunch.places.NearbyInjection;
 import com.example.go4lunch.places.NearbyRestaurantViewModel;
@@ -51,9 +59,7 @@ public class RestaurantFragment extends Fragment {
 
     private final List<ResultRestaurant> mRestaurants = new ArrayList<>();
 
-    private FragmentRestaurantBinding mFragmentRestaurantBinding;
-
-    private RestaurantRecyclerViewAdapter mAdapter;
+    private final RestaurantRecyclerViewAdapter mAdapter = new RestaurantRecyclerViewAdapter(mRestaurants);
 
     private Location mLastKnownLocation;
 
@@ -82,9 +88,7 @@ public class RestaurantFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient
                 (this.requireContext());
-        this.configureNearbyRestaurantViewModel();
-        mFragmentRestaurantBinding = FragmentRestaurantBinding.inflate(getLayoutInflater());
-        View view = mFragmentRestaurantBinding.getRoot();
+        this.getPlaces();
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -93,39 +97,39 @@ public class RestaurantFragment extends Fragment {
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mFragmentRestaurantBinding = FragmentRestaurantBinding.inflate(inflater, container, false);
-        View view = mFragmentRestaurantBinding.getRoot();
+        com.example.go4lunch.databinding.FragmentRestaurantListBinding fragmentRestaurantListBinding = FragmentRestaurantListBinding.inflate(inflater, container, false);
+        View view = fragmentRestaurantListBinding.getRoot();
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.requireContext());
-
-        this.getPlaces();
-
-        // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new RestaurantRecyclerViewAdapter(mRestaurants));
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            recyclerView.setAdapter(mAdapter);
         }
+            this.configureNearbyRestaurantViewModel();
+            this.getPlaces();
         return view;
     }
 
     @SuppressLint("MissingPermission")
     private void getPlaces() {
-        mFusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
-                    mLastKnownLocation = task.getResult();
-        });
-        LatLng mLastKnownLocationLatLng = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
-        String mLastKnownLocationString = mLastKnownLocationLatLng.toString();
-        mNearbyRestaurantViewModel.getRestaurantsList(mLastKnownLocationString, "10000", "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4").observe(getViewLifecycleOwner(), this::getRestaurants);
+        if (mLocationPermission) {
+            mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
+            mFusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
+                mLastKnownLocation = task.getResult();
+                LatLng mLastKnownLocationLatLng = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+                String mLastKnownLocationString = mLastKnownLocationLatLng.toString();
+                mNearbyRestaurantViewModel.getRestaurantsList(mLastKnownLocationString,"1000","AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4").observe(getViewLifecycleOwner(), this::getRestaurants);
+            });
+        }
+        else {
+            getLocationPermission(requireContext(), requireActivity());
+        }
     }
 
-    private void getRestaurants(List<ResultRestaurant> restaurants) {
+    private void getRestaurants(RestaurantOutputs restaurants) {
         if (restaurants != null) {
-            mRestaurants.addAll(restaurants);
+            mRestaurants.addAll(restaurants.getResults());
             mAdapter.notifyDataSetChanged();
         }
         else {
@@ -133,11 +137,31 @@ public class RestaurantFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        configureNearbyRestaurantViewModel();
+        getPlaces();
+    }
+
     private void configureLocationViewModel() {
         LocationViewModelFactory mapsViewModelFactory =
                 LocationInjection.provideMapsViewModelFactory();
         mLocationViewModel = new ViewModelProvider(this, mapsViewModelFactory)
                 .get(LocationViewModel.class);
+    }
+
+    public void getLocationPermission(Context context, Activity activity) {
+        mLocationPermission = false;
+        if (ContextCompat.checkSelfPermission(context,
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermission = true;
+        } else {
+            ActivityCompat.requestPermissions(activity,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSION_ID);
+        }
     }
 
     private void configureNearbyRestaurantViewModel() {

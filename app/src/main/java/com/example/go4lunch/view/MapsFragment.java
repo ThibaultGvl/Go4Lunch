@@ -11,6 +11,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,7 +25,7 @@ import com.example.go4lunch.databinding.FragmentMapsBinding;
 import com.example.go4lunch.location.LocationInjection;
 import com.example.go4lunch.location.LocationViewModel;
 import com.example.go4lunch.location.LocationViewModelFactory;
-import com.example.go4lunch.model.Restaurant;
+import com.example.go4lunch.model.restaurant.RestaurantOutputs;
 import com.example.go4lunch.model.restaurant.ResultRestaurant;
 import com.example.go4lunch.places.NearbyInjection;
 import com.example.go4lunch.places.NearbyRestaurantViewModel;
@@ -37,7 +39,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.List;
 import java.util.Objects;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
@@ -143,16 +144,27 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     private void getPlaces() {
         //mLastKnownLocation == null
-        List<ResultRestaurant> restaurants = mNearbyRestaurantViewModel.getRestaurantsList(mLastKnownLocation.toString(), "10000m", "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4").getValue();
+        String location = mLastKnownLocation.getLatitude() + "," + mLastKnownLocation.getLongitude();
+        mNearbyRestaurantViewModel.getRestaurantsList(location, "10000", "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4").observe(getViewLifecycleOwner(), this::getRestaurants);
+    }
+
+    private void getRestaurants(RestaurantOutputs restaurants) {
+
         if (restaurants != null) {
-            for (ResultRestaurant restaurant : restaurants) {
+            for (ResultRestaurant restaurant : restaurants.getResults()) {
                 LatLng restaurantLatLng = new LatLng(restaurant.getGeometry().getLocation().getLat(), restaurant.getGeometry().getLocation().getLng());
                 mMap.addMarker(new MarkerOptions().position(restaurantLatLng));
             }
         }
         else {
-            Toast.makeText(requireContext(), getString(R.string.no_restaurant_found), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.requireContext(), getString(R.string.no_restaurant_found), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public Bitmap resizeMapIcons(String iconName,int width, int height){
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", "view"));
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
+        return resizedBitmap;
     }
 
     @Override

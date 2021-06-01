@@ -3,15 +3,14 @@ package com.example.go4lunch.view;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.FragmentRestaurantBinding;
-import com.example.go4lunch.model.Restaurant;
 import com.example.go4lunch.model.restaurant.ResultRestaurant;
 
 import org.jetbrains.annotations.NotNull;
@@ -34,14 +33,29 @@ public class RestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Restaura
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NotNull final ViewHolder holder, int position) {
         ResultRestaurant mRestaurant = restaurants.get(position);
-        Glide.with(holder.mRestaurantImage.getContext()).load(mRestaurant.getPhotos()).into(holder.mRestaurantImage);
-        holder.mRestaurantName.setText(mRestaurant.getName());
-        holder.mRestaurantAddress.setText((CharSequence) mRestaurant.getGeometry());
-        holder.mRestaurantSchedules.setText((CharSequence) mRestaurant.getOpeningHours());
-        holder.mRestaurantDistance.setText(mRestaurant.getVicinity());
-        holder.mRestaurantRank.setText(mRestaurant.getRating());
+        double rating = ((mRestaurant.getRating()/5)*3);
+        String ratingString = Double.toString(rating);
+        if (mRestaurant.getPhotos() != null) {
+            Glide.with(holder.mRestaurantImage.getContext()).load(mRestaurant.getPhotos()).into(holder.mRestaurantImage);
+        }
+        else {
+            holder.mRestaurantImage.setColorFilter(R.color.black);
+        }
+        if (mRestaurant.getName() != null) {
+            holder.mRestaurantName.setText(mRestaurant.getName());
+        }
+        else {
+            holder.mRestaurantName.setText(R.string.no_name_found);
+        }
+        if (mRestaurant.getVicinity() != null) {
+            holder.mRestaurantAddress.setText(mRestaurant.getVicinity());
+        }
+        else {
+            holder.mRestaurantAddress.setText(R.string.unknown);
+        }
+        holder.mRestaurantRank.setText(ratingString);
     }
 
     @Override
