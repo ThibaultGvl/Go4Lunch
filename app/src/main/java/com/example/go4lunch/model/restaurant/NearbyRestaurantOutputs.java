@@ -6,7 +6,7 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class RestaurantOutputs {
+public class NearbyRestaurantOutputs {
 
     @SerializedName("html_attributions")
     @Expose
@@ -16,7 +16,7 @@ public class RestaurantOutputs {
     private String nextPageToken;
     @SerializedName("results")
     @Expose
-    private List<ResultRestaurant> results = null;
+    private List<ResultNearbyRestaurant> results = null;
     @SerializedName("status")
     @Expose
     private String status;
@@ -37,11 +37,11 @@ public class RestaurantOutputs {
         this.nextPageToken = nextPageToken;
     }
 
-    public List<ResultRestaurant> getResults() {
+    public List<ResultNearbyRestaurant> getResults() {
         return results;
     }
 
-    public void setResults(List<ResultRestaurant> results) {
+    public void setResults(List<ResultNearbyRestaurant> results) {
         this.results = results;
     }
 

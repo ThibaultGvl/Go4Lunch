@@ -74,42 +74,54 @@ public class UserCRUDRepository {
         }
     }
 
-    public void updateUserUsername(String uid, String username, Context context) {
+    public void updateUserUsername(String username, Context context) {
         MutableLiveData<String> result = new MutableLiveData<>();
-
+        String uid = getCurrentUser().getUid();
         UserCRUD.updateUsername(uid, username).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(aVoid -> {
             Toast.makeText(context, R.string.update, Toast.LENGTH_SHORT).show();
             result.setValue(username);
         });
     }
 
-    public void updateUserEmail(String uid, String email, Context context) {
+    public void updateUserEmail(String email, Context context) {
         MutableLiveData<String> result = new MutableLiveData<>();
-
+        String uid = getCurrentUser().getUid();
         UserCRUD.updateUserEmail(uid, email).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(aVoid -> {
             Toast.makeText(context, R.string.update, Toast.LENGTH_SHORT).show();
             result.setValue(email);
         });
     }
 
-    public void updateUserImage(String uid, String picture, Context context) {
+    public void updateUserImage(String picture, Context context) {
         MutableLiveData<String> result = new MutableLiveData<>();
+        String uid = getCurrentUser().getUid();
         UserCRUD.updateUserImage(uid, picture).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(aVoid -> {
             Toast.makeText(context, R.string.update, Toast.LENGTH_SHORT).show();
             result.setValue(picture);
         });
     }
 
-    public void updateUserRestaurant(String uid, String restaurantId, Context context) {
+    public void updateUserRestaurant(String restaurantId, Context context) {
         MutableLiveData<String> result = new MutableLiveData<>();
+        String uid = getCurrentUser().getUid();
         UserCRUD.updateUserRestaurant(uid, restaurantId).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(aVoid -> {
             Toast.makeText(context, R.string.restaurant_choice, Toast.LENGTH_SHORT).show();
             result.setValue(restaurantId);
         });
     }
 
-    public void deleteUser(String uid, Context context) {
+    public void updateUserRestaurantsLiked(String restaurantId, Context context) {
         MutableLiveData<String> result = new MutableLiveData<>();
+        String uid = getCurrentUser().getUid();
+        UserCRUD.updateUserRestaurantsLike(uid, restaurantId).addOnFailureListener(onFailureListener(context)).addOnCompleteListener(aVoid -> {
+            Toast.makeText(context, R.string.restaurant_choice, Toast.LENGTH_SHORT).show();
+            result.setValue(restaurantId);
+        });
+    }
+
+    public void deleteUser(Context context) {
+        MutableLiveData<String> result = new MutableLiveData<>();
+        String uid = getCurrentUser().getUid();
         UserCRUD.deleteUser(uid).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(aVoid -> {
             Toast.makeText(context, R.string.user_delete, Toast.LENGTH_SHORT).show();
             result.setValue(uid);

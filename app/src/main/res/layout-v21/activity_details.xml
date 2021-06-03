@@ -34,28 +34,22 @@
             android:id="@+id/restaurant_name_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
             android:text="@string/name"
-            android:textColor="@color/white"
-            android:textStyle="bold"/>
+            android:textColor="@color/white"/>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_baseline_star_24"
             app:tint="@color/quantum_yellow"
-            android:layout_toEndOf="@id/restaurant_name_details"
-            android:layout_alignTop="@id/restaurant_name_details"
-            android:layout_marginStart="5dp"/>
+            android:layout_toEndOf="@id/restaurant_name_details"/>
             <TextView
                 android:id="@+id/restaurant_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/restaurant_name_details"
                 android:text="@string/restaurant_details"
-                android:textColor="@color/white"
-                android:layout_marginBottom="15dp"
-                android:layout_marginTop="5dp"/>
+                android:textColor="@color/white" />
 
 
         </RelativeLayout>
@@ -63,7 +57,6 @@
     </androidx.cardview.widget.CardView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_baseline_check_circle_24"
@@ -71,8 +64,8 @@
         app:maxImageSize="30dp"
         app:layout_constraintEnd_toEndOf="@id/restaurant_image"
         app:layout_constraintBottom_toBottomOf="@id/restaurant_info"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="40dp"/>
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="15dp"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/restaurant_contact"
@@ -80,14 +73,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/restaurant_info">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/restaurant_contact_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginEnd="50dp">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
             <ImageButton
                 android:id="@+id/phone_button"
@@ -96,39 +84,38 @@
                 android:background="@color/fui_transparent"
                 android:src="@drawable/fui_ic_phone_white_24dp"
                 app:tint="@color/primary_color"
-                app:layout_constraintStart_toStartOf="@id/phone_name"
-                app:layout_constraintEnd_toEndOf="@id/phone_name"
-                app:layout_constraintTop_toTopOf="parent"/>
+                android:layout_alignStart="@id/phone_name"
+                android:layout_alignEnd="@id/phone_name"/>
 
             <TextView
                 android:id="@+id/phone_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/phone_button"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_below="@id/phone_button"
                 android:text="@string/call"
-                android:textColor="@color/primary_color"/>
+                android:textColor="@color/primary_color"
+                android:layout_marginStart="75dp"/>
 
             <ImageButton
                 android:id="@+id/like_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/phone_button"
                 android:background="@color/fui_transparent"
                 android:src="@drawable/ic_baseline_star_24"
                 app:tint="@color/primary_color"
-                app:layout_constraintStart_toStartOf="@id/like_name"
-                app:layout_constraintEnd_toEndOf="@id/like_name"
-                app:layout_constraintTop_toTopOf="@id/phone_button"/>
+                android:layout_alignStart="@id/like_name"
+                android:layout_alignEnd="@id/like_name"/>
 
             <TextView
                 android:id="@+id/like_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/like_button"
+                android:layout_toEndOf="@id/phone_name"
                 android:text="@string/like"
                 android:textColor="@color/primary_color"
-                app:layout_constraintTop_toTopOf="@id/phone_name"
-                app:layout_constraintStart_toEndOf="@id/phone_name"
-                android:layout_marginStart="100dp"/>
+                android:layout_marginStart="75dp"/>
 
             <ImageButton
                 android:id="@+id/website_button"
@@ -137,9 +124,9 @@
                 android:background="@color/fui_transparent"
                 android:src="@drawable/ic_baseline_language_24"
                 app:tint="@color/primary_color"
-                app:layout_constraintStart_toStartOf="@id/website_name"
-                app:layout_constraintEnd_toEndOf="@id/website_name"
-                app:layout_constraintTop_toTopOf="@id/phone_button"/>
+                android:layout_toEndOf="@id/like_button"
+                android:layout_alignStart="@id/website_name"
+                android:layout_alignEnd="@id/website_name"/>
 
             <TextView
                 android:id="@+id/website_name"
@@ -147,14 +134,13 @@
                 android:layout_height="wrap_content"
                 android:text="@string/website"
                 android:textColor="@color/primary_color"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/phone_name"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_below="@id/website_button"
+                android:layout_toEndOf="@id/like_name"
+                android:layout_marginStart="75dp"/>
+        </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/user_rv_details"
-        tools:listitem="@layout/details_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/restaurant_contact"/>

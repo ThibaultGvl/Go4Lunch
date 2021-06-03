@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.go4lunch.databinding.ActivityConnexionBinding;
-import com.example.go4lunch.view.MainActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,24 +33,18 @@ public class ConnexionActivity extends AppCompatActivity {
         googleBtn = binding.connexionGoogle;
         fbBtn = binding.connexionFb;
         setContentView(view);
-        googleBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isCurrentUserLogged()){
-                    startMainActivity();
-                } else {
-                    startGoogleSignInActivity();
-                }
+        googleBtn.setOnClickListener(v -> {
+            if (isCurrentUserLogged()){
+                startMainActivity();
+            } else {
+                startGoogleSignInActivity();
             }
         });
-        fbBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isCurrentUserLogged()){
-                    startMainActivity();
-                } else {
-                    startFacebookSignInActivity();
-                }
+        fbBtn.setOnClickListener(v -> {
+            if (isCurrentUserLogged()){
+                startMainActivity();
+            } else {
+                startFacebookSignInActivity();
             }
         });
     }

@@ -25,8 +25,8 @@ import com.example.go4lunch.databinding.FragmentMapsBinding;
 import com.example.go4lunch.location.LocationInjection;
 import com.example.go4lunch.location.LocationViewModel;
 import com.example.go4lunch.location.LocationViewModelFactory;
-import com.example.go4lunch.model.restaurant.RestaurantOutputs;
-import com.example.go4lunch.model.restaurant.ResultRestaurant;
+import com.example.go4lunch.model.restaurant.NearbyRestaurantOutputs;
+import com.example.go4lunch.model.restaurant.ResultNearbyRestaurant;
 import com.example.go4lunch.places.NearbyInjection;
 import com.example.go4lunch.places.NearbyRestaurantViewModel;
 import com.example.go4lunch.places.NearbyViewModelFactory;
@@ -143,15 +143,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void getPlaces() {
-        //mLastKnownLocation == null
         String location = mLastKnownLocation.getLatitude() + "," + mLastKnownLocation.getLongitude();
-        mNearbyRestaurantViewModel.getRestaurantsList(location, "10000", "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4").observe(getViewLifecycleOwner(), this::getRestaurants);
+        mNearbyRestaurantViewModel.getRestaurantsList(location, "1000", "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4").observe(getViewLifecycleOwner(), this::getRestaurants);
     }
 
-    private void getRestaurants(RestaurantOutputs restaurants) {
+    private void getRestaurants(NearbyRestaurantOutputs restaurants) {
 
         if (restaurants != null) {
-            for (ResultRestaurant restaurant : restaurants.getResults()) {
+            for (ResultNearbyRestaurant restaurant : restaurants.getResults()) {
                 LatLng restaurantLatLng = new LatLng(restaurant.getGeometry().getLocation().getLat(), restaurant.getGeometry().getLocation().getLng());
                 mMap.addMarker(new MarkerOptions().position(restaurantLatLng));
             }

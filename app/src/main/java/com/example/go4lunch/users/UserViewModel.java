@@ -39,28 +39,32 @@ public class UserViewModel extends androidx.lifecycle.ViewModel {
         executor.execute(() -> mUserCRUDRepository.createUser(context));
     }
 
-    public void updateUsername(String uid, String username, Context context) {
-        executor.execute(() -> mUserCRUDRepository.updateUserUsername(uid, username, context));
+    public void updateUsername(String username, Context context) {
+        executor.execute(() -> mUserCRUDRepository.updateUserUsername(username, context));
     }
 
-    public void updateUserEmail(String uid, String email, Context context) {
-        executor.execute(() -> mUserCRUDRepository.updateUserEmail(uid, email, context));
+    public void updateUserEmail(String email, Context context) {
+        executor.execute(() -> mUserCRUDRepository.updateUserEmail(email, context));
     }
 
-    public void updateUserImage(String uid, String image, Context context) {
-        executor.execute(() -> mUserCRUDRepository.updateUserImage(uid, image, context));
+    public void updateUserImage(String image, Context context) {
+        executor.execute(() -> mUserCRUDRepository.updateUserImage(image, context));
     }
 
-    public void updateUserRestaurant(String uid, String restaurantId, Context context) {
-        executor.execute(() -> mUserCRUDRepository.updateUserRestaurant(uid, restaurantId, context));
+    public void updateUserRestaurant(String restaurantId, Context context) {
+        executor.execute(() -> mUserCRUDRepository.updateUserRestaurant(restaurantId, context));
+    }
+
+    public void updateRestaurantsLiked(String restaurantId, Context context) {
+        executor.execute(() -> mUserCRUDRepository.updateUserRestaurantsLiked(restaurantId, context));
     }
 
     public void getCurrentUser() {
         executor.execute(mUserCRUDRepository::getCurrentUserFirestore);
     }
 
-    public void deleteUser(String uid, Context context) {
-        executor.execute(() -> mUserCRUDRepository.deleteUser(uid, context));
+    public void deleteUser(Context context) {
+        executor.execute(() -> mUserCRUDRepository.deleteUser(context));
     }
 
 }

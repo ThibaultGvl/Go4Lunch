@@ -3,14 +3,10 @@ package com.example.go4lunch.model.restaurant;
 
 import java.util.List;
 
-import com.example.go4lunch.model.restaurant.Geometry;
-import com.example.go4lunch.model.restaurant.OpeningHours;
-import com.example.go4lunch.model.restaurant.Photo;
-import com.example.go4lunch.model.restaurant.PlusCode;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ResultRestaurant {
+public class ResultNearbyRestaurant {
 
     @SerializedName("business_status")
     @Expose
@@ -24,9 +20,6 @@ public class ResultRestaurant {
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("opening_hours")
-    @Expose
-    private OpeningHours openingHours;
     @SerializedName("photos")
     @Expose
     private List<Photo> photos = null;
@@ -88,14 +81,6 @@ public class ResultRestaurant {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public OpeningHours getOpeningHours() {
-        return openingHours;
-    }
-
-    public void setOpeningHours(OpeningHours openingHours) {
-        this.openingHours = openingHours;
     }
 
     public List<Photo> getPhotos() {

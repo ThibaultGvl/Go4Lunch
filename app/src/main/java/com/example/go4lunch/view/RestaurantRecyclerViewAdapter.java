@@ -1,7 +1,10 @@
 package com.example.go4lunch.view;
 
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -11,7 +14,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.FragmentRestaurantBinding;
-import com.example.go4lunch.model.restaurant.ResultRestaurant;
+import com.example.go4lunch.model.restaurant.ResultNearbyRestaurant;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -19,30 +23,32 @@ import java.util.List;
 
 public class RestaurantRecyclerViewAdapter extends RecyclerView.Adapter<RestaurantRecyclerViewAdapter.ViewHolder> {
 
-    private final List<ResultRestaurant> restaurants;
+    private final List<ResultNearbyRestaurant> restaurants;
 
-    public RestaurantRecyclerViewAdapter(List<ResultRestaurant> restaurants) {
+    public RestaurantRecyclerViewAdapter(List<ResultNearbyRestaurant> restaurants) {
         this.restaurants = restaurants;
     }
 
     @NotNull
     @Override
     public ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
-        com.example.go4lunch.databinding.FragmentRestaurantBinding fragmentRestaurantBinding = (FragmentRestaurantBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        com.example.go4lunch.databinding.FragmentRestaurantBinding fragmentRestaurantBinding =
+                (FragmentRestaurantBinding.inflate
+                        (LayoutInflater.from(parent.getContext()), parent, false));
         return new ViewHolder(fragmentRestaurantBinding);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onBindViewHolder(@NotNull final ViewHolder holder, int position) {
-        ResultRestaurant mRestaurant = restaurants.get(position);
+        ResultNearbyRestaurant mRestaurant = restaurants.get(position);
         double rating = ((mRestaurant.getRating()/5)*3);
-        String ratingString = Double.toString(rating);
-        if (mRestaurant.getPhotos() != null) {
-            Glide.with(holder.mRestaurantImage.getContext()).load(mRestaurant.getPhotos()).into(holder.mRestaurantImage);
-        }
-        else {
-            holder.mRestaurantImage.setColorFilter(R.color.black);
-        }
+        LatLng restaurantLatLng = new LatLng(mRestaurant.getGeometry().getLocation().getLat(),
+                mRestaurant.getGeometry().getLocation().getLng());
+        /*String restaurantPhoto = mRestaurant.getPhotos().get(0).getPhotoReference();
+        Glide.with(holder.mRestaurantImage.getContext())
+                    .load(restaurantPhoto).apply(RequestOptions.overrideOf(1000,1000))
+                    .error(R.drawable.ic_logo_go4lunch).into(holder.mRestaurantImage);*/
         if (mRestaurant.getName() != null) {
             holder.mRestaurantName.setText(mRestaurant.getName());
         }
@@ -55,7 +61,26 @@ public class RestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Restaura
         else {
             holder.mRestaurantAddress.setText(R.string.unknown);
         }
-        holder.mRestaurantRank.setText(ratingString);
+        if (rating <= 1) {
+                holder.mRestaurantRank1.setColorFilter(R.color.white);
+                holder.mRestaurantRank2.setColorFilter(R.color.white);
+                holder.mRestaurantRank3.getDisplay();
+        }
+        else if (rating <= 2 && rating > 1) {
+                holder.mRestaurantRank1.setColorFilter(R.color.white);
+                holder.mRestaurantRank2.getDisplay();
+                holder.mRestaurantRank3.getDisplay();
+        }
+        else {
+                holder.mRestaurantRank1.getDisplay();
+                holder.mRestaurantRank2.getDisplay();
+                holder.mRestaurantRank3.getDisplay();
+        }
+        holder.mFragmentRestaurantBinding.getRoot().setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), DetailsActivity.class);
+            intent.putExtra("placeId", mRestaurant.getPlaceId());
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override
@@ -69,8 +94,10 @@ public class RestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Restaura
         private final TextView mRestaurantAddress;
         private final TextView mRestaurantSchedules;
         private final TextView mRestaurantDistance;
-        private final TextView mRestaurantWorkmates;
-        private final TextView mRestaurantRank;
+        private final ImageView mRestaurantWorkmates;
+        private final ImageView mRestaurantRank1;
+        private final ImageView mRestaurantRank2;
+        private final ImageView mRestaurantRank3;
         private final ImageView mRestaurantImage;
 
         public ViewHolder(FragmentRestaurantBinding fragmentRestaurantBinding) {
@@ -81,7 +108,9 @@ public class RestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Restaura
             mRestaurantSchedules = fragmentRestaurantBinding.restaurantSchedules;
             mRestaurantDistance = fragmentRestaurantBinding.restaurantDistance;
             mRestaurantWorkmates = fragmentRestaurantBinding.restaurantWorkmate;
-            mRestaurantRank = fragmentRestaurantBinding.restaurantRank;
+            mRestaurantRank1 = fragmentRestaurantBinding.restaurantRank1;
+            mRestaurantRank2 = fragmentRestaurantBinding.restaurantRank2;
+            mRestaurantRank3 = fragmentRestaurantBinding.restaurantRank3;
             mRestaurantImage = fragmentRestaurantBinding.restaurantImage;
         }
 

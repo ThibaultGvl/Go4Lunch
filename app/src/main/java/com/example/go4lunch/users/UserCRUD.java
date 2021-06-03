@@ -46,6 +46,10 @@ public class UserCRUD {
         return UserCRUD.getUsersCollection().document(uid).update("restaurant_id", restaurantId);
     }
 
+    public static Task<Void> updateUserRestaurantsLike(String uid, String restaurantId) {
+        return UserCRUD.getUsersCollection().document(uid).update("restaurants_Liked", restaurantId);
+    }
+
     public static Task<Void> deleteUser(String uid) {
         return UserCRUD.getUsersCollection().document(uid).delete();
     }

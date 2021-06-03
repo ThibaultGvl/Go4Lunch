@@ -3,7 +3,8 @@ package com.example.go4lunch.places;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.go4lunch.model.restaurant.RestaurantOutputs;
+import com.example.go4lunch.model.details.RestaurantDetails;
+import com.example.go4lunch.model.restaurant.NearbyRestaurantOutputs;
 
 public class NearbyRestaurantViewModel extends ViewModel {
     private final NearbyRestaurantRepository mNearbyRestaurantRepository;
@@ -12,13 +13,13 @@ public class NearbyRestaurantViewModel extends ViewModel {
         mNearbyRestaurantRepository = nearbyRestaurantRepository;
     }
 
-    public MutableLiveData<RestaurantOutputs> getRestaurantsList(String location, String radius, String key) {
-        MutableLiveData<RestaurantOutputs> restaurantsList = mNearbyRestaurantRepository.getRestaurants(location, radius, key);
+    public MutableLiveData<NearbyRestaurantOutputs> getRestaurantsList(String location, String radius, String key) {
+        MutableLiveData<NearbyRestaurantOutputs> restaurantsList = mNearbyRestaurantRepository.getRestaurants(location, radius, key);
         return restaurantsList;
     }
 
-    private MutableLiveData<RestaurantOutputs> getRestaurantDetails(String placeId, String key) {
-        MutableLiveData<RestaurantOutputs> restaurant = mNearbyRestaurantRepository.getRestaurant(placeId, key);
+    public MutableLiveData<RestaurantDetails> getRestaurantDetails(String placeId, String key) {
+        MutableLiveData<RestaurantDetails> restaurant = mNearbyRestaurantRepository.getRestaurant(placeId, key);
         return restaurant;
     }
 }

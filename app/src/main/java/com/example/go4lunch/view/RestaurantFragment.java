@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -13,7 +11,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,13 +20,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.go4lunch.R;
-import com.example.go4lunch.databinding.FragmentRestaurantBinding;
 import com.example.go4lunch.databinding.FragmentRestaurantListBinding;
 import com.example.go4lunch.location.LocationInjection;
 import com.example.go4lunch.location.LocationViewModel;
 import com.example.go4lunch.location.LocationViewModelFactory;
-import com.example.go4lunch.model.restaurant.RestaurantOutputs;
-import com.example.go4lunch.model.restaurant.ResultRestaurant;
+import com.example.go4lunch.model.restaurant.NearbyRestaurantOutputs;
+import com.example.go4lunch.model.restaurant.ResultNearbyRestaurant;
 import com.example.go4lunch.places.NearbyInjection;
 import com.example.go4lunch.places.NearbyRestaurantViewModel;
 import com.example.go4lunch.places.NearbyViewModelFactory;
@@ -57,7 +53,7 @@ public class RestaurantFragment extends Fragment {
 
     private NearbyRestaurantViewModel mNearbyRestaurantViewModel;
 
-    private final List<ResultRestaurant> mRestaurants = new ArrayList<>();
+    private final List<ResultNearbyRestaurant> mRestaurants = new ArrayList<>();
 
     private final RestaurantRecyclerViewAdapter mAdapter = new RestaurantRecyclerViewAdapter(mRestaurants);
 
@@ -127,7 +123,7 @@ public class RestaurantFragment extends Fragment {
         }
     }
 
-    private void getRestaurants(RestaurantOutputs restaurants) {
+    private void getRestaurants(NearbyRestaurantOutputs restaurants) {
         if (restaurants != null) {
             mRestaurants.addAll(restaurants.getResults());
             mAdapter.notifyDataSetChanged();
