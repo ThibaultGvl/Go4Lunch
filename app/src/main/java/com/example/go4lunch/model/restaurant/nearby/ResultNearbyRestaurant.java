@@ -1,8 +1,11 @@
 
-package com.example.go4lunch.model.restaurant;
+package com.example.go4lunch.model.restaurant.nearby;
 
 import java.util.List;
 
+import com.example.go4lunch.model.restaurant.nearby.Geometry;
+import com.example.go4lunch.model.restaurant.nearby.Photo;
+import com.example.go4lunch.model.restaurant.nearby.PlusCode;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

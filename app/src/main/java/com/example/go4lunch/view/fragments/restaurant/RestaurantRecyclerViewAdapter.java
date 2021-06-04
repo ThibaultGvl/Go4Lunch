@@ -1,4 +1,4 @@
-package com.example.go4lunch.view;
+package com.example.go4lunch.view.fragments.restaurant;
 
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,11 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.FragmentRestaurantBinding;
-import com.example.go4lunch.model.restaurant.ResultNearbyRestaurant;
+import com.example.go4lunch.model.restaurant.nearby.ResultNearbyRestaurant;
+import com.example.go4lunch.view.activity.details.DetailsActivity;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.jetbrains.annotations.NotNull;
@@ -43,6 +42,7 @@ public class RestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Restaura
     public void onBindViewHolder(@NotNull final ViewHolder holder, int position) {
         ResultNearbyRestaurant mRestaurant = restaurants.get(position);
         double rating = ((mRestaurant.getRating()/5)*3);
+        String placeId = mRestaurant.getPlaceId();
         LatLng restaurantLatLng = new LatLng(mRestaurant.getGeometry().getLocation().getLat(),
                 mRestaurant.getGeometry().getLocation().getLng());
         /*String restaurantPhoto = mRestaurant.getPhotos().get(0).getPhotoReference();
@@ -78,7 +78,7 @@ public class RestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Restaura
         }
         holder.mFragmentRestaurantBinding.getRoot().setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), DetailsActivity.class);
-            intent.putExtra("placeId", mRestaurant.getPlaceId());
+            intent.putExtra("placeId", placeId);
             v.getContext().startActivity(intent);
         });
     }

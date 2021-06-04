@@ -1,8 +1,8 @@
 
-package com.example.go4lunch.model.restaurant;
+package com.example.go4lunch.model.restaurant.nearby;
 
-import com.example.go4lunch.model.restaurant.Northeast;
-import com.example.go4lunch.model.restaurant.Southwest;
+import com.example.go4lunch.model.restaurant.nearby.Northeast;
+import com.example.go4lunch.model.restaurant.nearby.Southwest;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

@@ -1,22 +1,18 @@
 
-package com.example.go4lunch.model.restaurant;
+package com.example.go4lunch.model.restaurant.details;
 
 import java.util.List;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class NearbyRestaurantOutputs {
+public class RestaurantDetails {
 
     @SerializedName("html_attributions")
     @Expose
     private List<Object> htmlAttributions = null;
-    @SerializedName("next_page_token")
+    @SerializedName("result")
     @Expose
-    private String nextPageToken;
-    @SerializedName("results")
-    @Expose
-    private List<ResultNearbyRestaurant> results = null;
+    private ResultDetails result;
     @SerializedName("status")
     @Expose
     private String status;
@@ -29,20 +25,12 @@ public class NearbyRestaurantOutputs {
         this.htmlAttributions = htmlAttributions;
     }
 
-    public String getNextPageToken() {
-        return nextPageToken;
+    public ResultDetails getResult() {
+        return result;
     }
 
-    public void setNextPageToken(String nextPageToken) {
-        this.nextPageToken = nextPageToken;
-    }
-
-    public List<ResultNearbyRestaurant> getResults() {
-        return results;
-    }
-
-    public void setResults(List<ResultNearbyRestaurant> results) {
-        this.results = results;
+    public void setResult(ResultDetails result) {
+        this.result = result;
     }
 
     public String getStatus() {

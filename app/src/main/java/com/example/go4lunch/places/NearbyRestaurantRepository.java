@@ -2,8 +2,8 @@ package com.example.go4lunch.places;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.go4lunch.model.details.RestaurantDetails;
-import com.example.go4lunch.model.restaurant.NearbyRestaurantOutputs;
+import com.example.go4lunch.model.restaurant.details.RestaurantDetails;
+import com.example.go4lunch.model.restaurant.nearby.NearbyRestaurantOutputs;
 import com.example.go4lunch.utils.RetrofitService;
 
 import org.jetbrains.annotations.NotNull;

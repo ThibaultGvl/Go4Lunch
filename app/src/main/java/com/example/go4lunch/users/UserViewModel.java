@@ -1,9 +1,11 @@
 package com.example.go4lunch.users;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 
+import com.example.go4lunch.R;
 import com.example.go4lunch.model.User;
 
 import java.util.List;
@@ -53,6 +55,7 @@ public class UserViewModel extends androidx.lifecycle.ViewModel {
 
     public void updateUserRestaurant(String restaurantId, Context context) {
         executor.execute(() -> mUserCRUDRepository.updateUserRestaurant(restaurantId, context));
+        Toast.makeText(context, R.string.resturant_choice, Toast.LENGTH_SHORT).show();
     }
 
     public void updateRestaurantsLiked(String restaurantId, Context context) {

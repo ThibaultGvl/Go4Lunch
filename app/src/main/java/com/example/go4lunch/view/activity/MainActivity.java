@@ -1,4 +1,4 @@
-package com.example.go4lunch.view;
+package com.example.go4lunch.view.activity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,6 +34,11 @@ import com.example.go4lunch.places.NearbyViewModelFactory;
 import com.example.go4lunch.users.UserInjection;
 import com.example.go4lunch.users.UserViewModelFactory;
 import com.example.go4lunch.users.UserViewModel;
+import com.example.go4lunch.view.activity.ConnexionActivity;
+import com.example.go4lunch.view.fragments.MapsFragment;
+import com.example.go4lunch.view.fragments.SettingsFragment;
+import com.example.go4lunch.view.fragments.restaurant.RestaurantFragment;
+import com.example.go4lunch.view.fragments.user.UserFragment;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;

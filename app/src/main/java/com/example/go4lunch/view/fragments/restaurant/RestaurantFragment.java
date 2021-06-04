@@ -1,4 +1,4 @@
-package com.example.go4lunch.view;
+package com.example.go4lunch.view.fragments.restaurant;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -24,8 +24,8 @@ import com.example.go4lunch.databinding.FragmentRestaurantListBinding;
 import com.example.go4lunch.location.LocationInjection;
 import com.example.go4lunch.location.LocationViewModel;
 import com.example.go4lunch.location.LocationViewModelFactory;
-import com.example.go4lunch.model.restaurant.NearbyRestaurantOutputs;
-import com.example.go4lunch.model.restaurant.ResultNearbyRestaurant;
+import com.example.go4lunch.model.restaurant.nearby.NearbyRestaurantOutputs;
+import com.example.go4lunch.model.restaurant.nearby.ResultNearbyRestaurant;
 import com.example.go4lunch.places.NearbyInjection;
 import com.example.go4lunch.places.NearbyRestaurantViewModel;
 import com.example.go4lunch.places.NearbyViewModelFactory;

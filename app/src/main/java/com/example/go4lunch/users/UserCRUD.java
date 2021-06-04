@@ -43,11 +43,11 @@ public class UserCRUD {
     }
 
     public static Task<Void> updateUserRestaurant(String uid, String restaurantId) {
-        return UserCRUD.getUsersCollection().document(uid).update("restaurant_id", restaurantId);
+        return UserCRUD.getUsersCollection().document(uid).update("restaurant", restaurantId);
     }
 
     public static Task<Void> updateUserRestaurantsLike(String uid, String restaurantId) {
-        return UserCRUD.getUsersCollection().document(uid).update("restaurants_Liked", restaurantId);
+        return UserCRUD.getUsersCollection().document(uid).update("restaurantsLiked", restaurantId);
     }
 
     public static Task<Void> deleteUser(String uid) {

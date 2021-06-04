@@ -1,5 +1,5 @@
 
-package com.example.go4lunch.model.restaurant;
+package com.example.go4lunch.model.restaurant.nearby;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

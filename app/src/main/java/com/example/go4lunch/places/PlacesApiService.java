@@ -1,7 +1,7 @@
 package com.example.go4lunch.places;
 
-import com.example.go4lunch.model.details.RestaurantDetails;
-import com.example.go4lunch.model.restaurant.NearbyRestaurantOutputs;
+import com.example.go4lunch.model.restaurant.details.RestaurantDetails;
+import com.example.go4lunch.model.restaurant.nearby.NearbyRestaurantOutputs;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

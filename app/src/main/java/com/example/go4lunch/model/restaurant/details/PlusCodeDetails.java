@@ -1,10 +1,10 @@
 
-package com.example.go4lunch.model.restaurant;
+package com.example.go4lunch.model.restaurant.details;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PlusCode {
+public class PlusCodeDetails {
 
     @SerializedName("compound_code")
     @Expose

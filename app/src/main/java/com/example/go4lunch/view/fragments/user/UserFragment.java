@@ -1,4 +1,4 @@
-package com.example.go4lunch.view;
+package com.example.go4lunch.view.fragments.user;
 
 import android.content.Context;
 import android.os.Bundle;
