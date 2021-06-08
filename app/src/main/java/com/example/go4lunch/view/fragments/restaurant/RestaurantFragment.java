@@ -124,11 +124,11 @@ public class RestaurantFragment extends Fragment {
     }
 
     private void getRestaurants(NearbyRestaurantOutputs restaurants) {
-        if (restaurants != null) {
+        if (restaurants != null && !mRestaurants.containsAll(restaurants.getResults())) {
             mRestaurants.addAll(restaurants.getResults());
             mAdapter.notifyDataSetChanged();
         }
-        else {
+        else if (restaurants == null){
             Toast.makeText(this.requireContext(), getString(R.string.no_restaurant_found), Toast.LENGTH_SHORT).show();
         }
     }

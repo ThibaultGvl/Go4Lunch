@@ -23,23 +23,33 @@ public class User {
     @Expose
     private String picture;
 
-    @SerializedName("restaurant_id")
+    @SerializedName("restaurantId")
     @Expose
     private String restaurantId;
 
-    @SerializedName("restaurants_liked")
+    @SerializedName("restaurantsLiked")
     @Expose
     private List<String> restaurantsLiked;
 
+    @SerializedName("restaurantName")
+    @Expose
+    private String restaurantName;
+
+    @SerializedName("restaurantAddress")
+    @Expose
+    private String restaurantAddress;
+
     public User() { }
 
-    public User(String uid, String username, String email, String picture, String restaurantId, List<String> restaurantsLiked) {
+    public User(String uid, String username, String email, String picture, String restaurantId, List<String> restaurantsLiked, String restaurantName, String restaurantAddress) {
         this.uid = uid;
         this.username = username;
         this.email = email;
         this.picture = picture;
         this.restaurantId = restaurantId;
         this.restaurantsLiked = restaurantsLiked;
+        this.restaurantName = restaurantName;
+        this.restaurantAddress = restaurantAddress;
     }
 
     public String getUsername() {
@@ -86,11 +96,31 @@ public class User {
         return restaurantsLiked;
     }
 
+    public void setRestaurantsLiked(List<String> restaurantsLiked) {
+        this.restaurantsLiked = restaurantsLiked;
+    }
+
     public void addRestaurantLike(String restaurantToLike) {
         restaurantsLiked.add(restaurantToLike);
     }
 
     public void deleteRestaurantLike(String restaurantToDislike) {
         restaurantsLiked.remove(restaurantToDislike);
+    }
+
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    public void setRestaurantName(String restaurantName) {
+        this.restaurantName = restaurantName;
+    }
+
+    public String getRestaurantAddress() {
+        return restaurantAddress;
+    }
+
+    public void setRestaurantAddress(String restaurantAddress) {
+        this.restaurantAddress = restaurantAddress;
     }
 }

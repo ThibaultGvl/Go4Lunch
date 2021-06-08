@@ -28,5 +28,4 @@ public class LocationDetails {
     public void setLng(Double lng) {
         this.lng = lng;
     }
-
 }

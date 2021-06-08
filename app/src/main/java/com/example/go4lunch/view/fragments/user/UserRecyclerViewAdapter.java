@@ -2,9 +2,11 @@ package com.example.go4lunch.view.fragments.user;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,6 +16,12 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.FragmentUserBinding;
 import com.example.go4lunch.model.User;
+import com.example.go4lunch.model.restaurant.details.RestaurantDetails;
+import com.example.go4lunch.model.restaurant.details.ResultDetails;
+import com.example.go4lunch.model.restaurant.nearby.NearbyRestaurantOutputs;
+import com.example.go4lunch.model.restaurant.nearby.ResultNearbyRestaurant;
+import com.example.go4lunch.places.NearbyRestaurantViewModel;
+import com.example.go4lunch.view.activity.details.DetailsActivity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -22,6 +30,8 @@ import java.util.List;
 public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.ViewHolder> {
 
     private final List<User> users;
+
+    private final List<ResultNearbyRestaurant> mResultNearbyRestaurants = new NearbyRestaurantOutputs().getResults();
 
     public UserRecyclerViewAdapter(List<User> users) {
         this.users = users;
@@ -37,22 +47,28 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     @Override
     public void onBindViewHolder(@NotNull final ViewHolder holder, int position) {
         User user = users.get(position);
-        String userKnowWhatEatingText = user.getUsername() + " is eating ";
-        String userDoestKnowWhatEating = user.getUsername() + " hasn't decided yet";
+        String placeId = user.getRestaurant();
         if(user.getPicture() != null) {
             Glide.with(holder.userImage.getContext()).load(user.getPicture()).apply(RequestOptions.circleCropTransform()).into(holder.userImage);
         }
         else {
             holder.userImage.setColorFilter(R.color.primary_color);
         }
-        if(user.getRestaurant() != null) {
-            holder.userEating.setText(userKnowWhatEatingText);
-        }
+        if(user.getRestaurantName() != null) {
+                    String userKnowWhatEatingText = user.getUsername() + " is eating " + user.getRestaurantName();
+                    holder.userEating.setText(userKnowWhatEatingText);
+            }
         else {
+            String userDoestKnowWhatEating = user.getUsername() + " hasn't decided yet";
             holder.userEating.setText(userDoestKnowWhatEating);
             holder.userEating.setTypeface(holder.userEating.getTypeface(), Typeface.ITALIC);
             holder.userEating.setTextColor(Color.GRAY);
         }
+        holder.mFragmentUserBinding.getRoot().setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), DetailsActivity.class);
+            intent.putExtra("placeId", placeId);
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override

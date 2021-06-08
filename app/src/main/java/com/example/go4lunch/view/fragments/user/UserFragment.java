@@ -30,8 +30,6 @@ public class UserFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
 
-    private int mColumnCount = 1;
-
     private UserViewModel mViewModel;
 
     private final List<User> users = new ArrayList<>();
@@ -60,7 +58,7 @@ public class UserFragment extends Fragment {
         this.configureViewModel();
         this.getUsers();
         if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            getArguments().getInt(ARG_COLUMN_COUNT);
         }
     }
 

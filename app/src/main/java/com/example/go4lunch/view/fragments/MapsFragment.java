@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -11,6 +12,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -34,6 +37,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -121,9 +125,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
             mFusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
                 mLastKnownLocation = task.getResult();
-                mMap.clear();
                 LatLng mLastKnownLocationLatLng = new
-                        LatLng(Objects.requireNonNull(mLastKnownLocation).getLatitude(), mLastKnownLocation.getLongitude());
+                        LatLng(Objects.requireNonNull(mLastKnownLocation).getLatitude(),
+                        mLastKnownLocation.getLongitude());
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                         mLastKnownLocationLatLng, DEFAULT_ZOOM));
                 getPlaces();
@@ -143,15 +147,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     private void getPlaces() {
         String location = mLastKnownLocation.getLatitude() + "," + mLastKnownLocation.getLongitude();
-        mNearbyRestaurantViewModel.getRestaurantsList(location, "1000", "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4").observe(getViewLifecycleOwner(), this::getRestaurants);
+        mNearbyRestaurantViewModel.getRestaurantsList(location, "1000",
+                "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4").observe(getViewLifecycleOwner(),
+                this::getRestaurants);
     }
 
     private void getRestaurants(NearbyRestaurantOutputs restaurants) {
         if (restaurants != null) {
             for (ResultNearbyRestaurant restaurant : restaurants.getResults()) {
-                LatLng restaurantLatLng = new LatLng(restaurant.getGeometry().getLocation().getLat(), restaurant.getGeometry().getLocation().getLng());
+                LatLng restaurantLatLng = new LatLng(restaurant.getGeometry().getLocation().getLat()
+                        , restaurant.getGeometry().getLocation().getLng());
                 MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.draggable(true);
                 markerOptions.position(restaurantLatLng);
+                        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createBitmap(R.drawable.marker_green)));
                 mMap.addMarker(markerOptions);
             }
         }
@@ -160,6 +169,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    private Bitmap createBitmap(int drawableId) {
+        @SuppressLint("UseCompatLoadingForDrawables") BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(drawableId);
+        Bitmap b = bitmapdraw.getBitmap();
+        Bitmap smallMarker = Bitmap.createScaledBitmap(b, 100, 120, false);
+        return smallMarker;
+    }
 
     @Override
     public void onResume() {

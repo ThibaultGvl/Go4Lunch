@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:openDrawer="start"
-    tools:context=".view.MainActivity">
+    tools:context=".view.activity.MainActivity">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -70,7 +70,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
-            app:menu="@menu/bottom_nav"/>
+            app:menu="@menu/bottom_nav"
+            app:itemIconTint="@animator/bottom_navigation_selector"
+            app:itemTextColor="@animator/bottom_navigation_selector"/>
     </RelativeLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

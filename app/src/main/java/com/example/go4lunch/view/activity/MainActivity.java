@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -28,13 +29,14 @@ import com.example.go4lunch.databinding.ActivityNavHeaderBinding;
 import com.example.go4lunch.location.LocationInjection;
 import com.example.go4lunch.location.LocationViewModel;
 import com.example.go4lunch.location.LocationViewModelFactory;
+import com.example.go4lunch.model.User;
 import com.example.go4lunch.places.NearbyInjection;
 import com.example.go4lunch.places.NearbyRestaurantViewModel;
 import com.example.go4lunch.places.NearbyViewModelFactory;
 import com.example.go4lunch.users.UserInjection;
 import com.example.go4lunch.users.UserViewModelFactory;
 import com.example.go4lunch.users.UserViewModel;
-import com.example.go4lunch.view.activity.ConnexionActivity;
+import com.example.go4lunch.view.activity.details.DetailsActivity;
 import com.example.go4lunch.view.fragments.MapsFragment;
 import com.example.go4lunch.view.fragments.SettingsFragment;
 import com.example.go4lunch.view.fragments.restaurant.RestaurantFragment;
@@ -45,6 +47,8 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity
@@ -63,6 +67,7 @@ public class MainActivity extends AppCompatActivity
     private UserViewModel mUserViewModel;
     private LocationViewModel mLocationViewModel;
     private NearbyRestaurantViewModel mNearbyRestaurantViewModel;
+    private User currentUser = new User();
 
     private static final int MAPS_FRAGMENT = 0;
     private static final int RESTAURANT_FRAGMENT = 1;
@@ -196,7 +201,7 @@ public class MainActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.your_lunch :
-
+                getYourLunch();
                 break;
             case R.id.settings :
                 showSettingsFragment();
@@ -216,9 +221,11 @@ public class MainActivity extends AppCompatActivity
 
     protected Boolean isCurrentUserLogged(){ return (this.getCurrentUser() != null); }
 
-    private void updateUIWhenCreating(){
+    private void updateUIWhenCreating() {
 
-        if (isCurrentUserLogged()){
+        mUserViewModel.getUser(getCurrentUser().getUid(), this).observe(this, this::getUser);
+
+        if (isCurrentUserLogged()) {
 
             if (Objects.requireNonNull(this.getCurrentUser()).getPhotoUrl() != null) {
                 Glide.with(this)
@@ -231,27 +238,45 @@ public class MainActivity extends AppCompatActivity
                     getString(R.string.info_no_email_found) : this.getCurrentUser().getEmail();
             String username = TextUtils.isEmpty(this.getCurrentUser().getDisplayName()) ?
                     getString(R.string.info_no_username_found) : this.getCurrentUser().getDisplayName();
-
             currentUserName.setText(username);
             currentUserEmail.setText(email);
-            this.mUserViewModel.createCurrentUser(this);
+
+            if (currentUser.getUid() == null) {
+                this.mUserViewModel.createCurrentUser(this);
+            }
         }
     }
 
-    private void configureLocationViewModel() {
+    private void getYourLunch() {
+        mUserViewModel.getUser(Objects.requireNonNull(getCurrentUser()).getUid(), this).observe(this, this::getUser);
+        if (currentUser.getRestaurant() != null) {
+            String placeId = currentUser.getRestaurant();
+            Intent intent = new Intent(this, DetailsActivity.class);
+            intent.putExtra("placeId", placeId);
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "You don't have choose a restaurant !", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void getUser(User user) {
+        this.currentUser = user;
+    }
+
+    private void configureLocationViewModel () {
         LocationViewModelFactory locationViewModelFactory = LocationInjection.provideMapsViewModelFactory();
         mLocationViewModel = new ViewModelProvider(this, locationViewModelFactory)
                 .get(LocationViewModel.class);
     }
 
-    private void configureUserViewModel() {
+    private void configureUserViewModel () {
         UserViewModelFactory mViewModelFactory = UserInjection.provideViewModelFactory();
         this.mUserViewModel = new ViewModelProvider(this, mViewModelFactory)
                 .get(UserViewModel.class);
         this.mUserViewModel.initUsers(this);
     }
 
-    private void configureNearbyRestaurantViewModel() {
+    private void configureNearbyRestaurantViewModel () {
         NearbyViewModelFactory nearbyViewModelFactory = NearbyInjection.provideRestaurantViewModel();
         mNearbyRestaurantViewModel = new ViewModelProvider(this, nearbyViewModelFactory)
                 .get(NearbyRestaurantViewModel.class);
