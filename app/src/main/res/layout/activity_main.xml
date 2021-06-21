@@ -82,8 +82,8 @@
         android:background="@color/primary_color"
         android:layout_gravity="start"
         app:menu="@menu/navigation_drawer_menu"
-        app:itemTextColor="@color/white"
-        app:itemIconTint="@color/white"
+        app:itemTextColor="@drawable/bottom_navigation_selector"
+        app:itemIconTint="@drawable/bottom_navigation_selector"
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView

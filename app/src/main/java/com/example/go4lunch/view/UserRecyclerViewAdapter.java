@@ -37,7 +37,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     @Override
     public void onBindViewHolder(@NotNull final ViewHolder holder, int position) {
         User user = users.get(position);
-        String userKnowWhatEatingText = user.getUsername() + " is eating ";
+        String userKnowWhatEatingText = user.getUsername() + " is eating " + user.getRestaurantName();
         String userDoestKnowWhatEating = user.getUsername() + " hasn't decided yet";
         if(user.getPicture() != null) {
             Glide.with(holder.userImage.getContext()).load(user.getPicture()).apply(RequestOptions.circleCropTransform()).into(holder.userImage);

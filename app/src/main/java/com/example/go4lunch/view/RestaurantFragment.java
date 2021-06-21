@@ -25,9 +25,6 @@ import android.widget.Toast;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.FragmentRestaurantBinding;
 import com.example.go4lunch.databinding.FragmentRestaurantListBinding;
-import com.example.go4lunch.location.LocationInjection;
-import com.example.go4lunch.location.LocationViewModel;
-import com.example.go4lunch.location.LocationViewModelFactory;
 import com.example.go4lunch.model.restaurant.RestaurantOutputs;
 import com.example.go4lunch.model.restaurant.ResultRestaurant;
 import com.example.go4lunch.places.NearbyInjection;
@@ -52,8 +49,6 @@ public class RestaurantFragment extends Fragment {
     private int mColumnCount = 1;
 
     private FusedLocationProviderClient mFusedLocationProviderClient;
-
-    private LocationViewModel mLocationViewModel;
 
     private NearbyRestaurantViewModel mNearbyRestaurantViewModel;
 
@@ -142,13 +137,6 @@ public class RestaurantFragment extends Fragment {
         super.onResume();
         configureNearbyRestaurantViewModel();
         getPlaces();
-    }
-
-    private void configureLocationViewModel() {
-        LocationViewModelFactory mapsViewModelFactory =
-                LocationInjection.provideMapsViewModelFactory();
-        mLocationViewModel = new ViewModelProvider(this, mapsViewModelFactory)
-                .get(LocationViewModel.class);
     }
 
     public void getLocationPermission(Context context, Activity activity) {

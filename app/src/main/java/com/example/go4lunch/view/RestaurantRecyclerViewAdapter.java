@@ -2,9 +2,11 @@ package com.example.go4lunch.view;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -16,6 +18,8 @@ import com.example.go4lunch.model.restaurant.ResultRestaurant;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+
+import static androidx.core.content.ContextCompat.startActivity;
 
 public class RestaurantRecyclerViewAdapter extends RecyclerView.Adapter<RestaurantRecyclerViewAdapter.ViewHolder> {
 
@@ -36,9 +40,10 @@ public class RestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Restaura
     public void onBindViewHolder(@NotNull final ViewHolder holder, int position) {
         ResultRestaurant mRestaurant = restaurants.get(position);
         double rating = ((mRestaurant.getRating()/5)*3);
-        String ratingString = Double.toString(rating);
+        String placeId = mRestaurant.getPlaceId();
         if (mRestaurant.getPhotos() != null) {
-            Glide.with(holder.mRestaurantImage.getContext()).load(mRestaurant.getPhotos()).into(holder.mRestaurantImage);
+            String photoUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + mRestaurant.getPhotos().get(0).getPhotoReference() + "&key=AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4";
+            Glide.with(holder.mRestaurantImage.getContext()).load(photoUrl).into(holder.mRestaurantImage);
         }
         else {
             holder.mRestaurantImage.setColorFilter(R.color.black);
@@ -55,7 +60,12 @@ public class RestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Restaura
         else {
             holder.mRestaurantAddress.setText(R.string.unknown);
         }
-        holder.mRestaurantRank.setText(ratingString);
+        holder.mRestaurantRank.setRating((float) rating);
+        holder.mFragmentRestaurantBinding.getRoot().setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), DetailsActivity.class);
+            intent.putExtra("placeId", placeId);
+            startActivity(v.getContext(), intent, null);
+        });
     }
 
     @Override
@@ -70,7 +80,7 @@ public class RestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Restaura
         private final TextView mRestaurantSchedules;
         private final TextView mRestaurantDistance;
         private final TextView mRestaurantWorkmates;
-        private final TextView mRestaurantRank;
+        private final RatingBar mRestaurantRank;
         private final ImageView mRestaurantImage;
 
         public ViewHolder(FragmentRestaurantBinding fragmentRestaurantBinding) {

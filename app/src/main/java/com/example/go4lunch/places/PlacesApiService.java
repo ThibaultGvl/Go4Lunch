@@ -1,5 +1,6 @@
 package com.example.go4lunch.places;
 
+import com.example.go4lunch.model.details.RestaurantDetails;
 import com.example.go4lunch.model.restaurant.RestaurantOutputs;
 import com.example.go4lunch.model.restaurant.ResultRestaurant;
 
@@ -16,5 +17,5 @@ public interface PlacesApiService {
     Call<RestaurantOutputs> getFollowingPlaces(@Query("location") String location, @Query("radius") String radius, @Query("type") String type, @Query("key") String key);
 
     @GET("details/json?")
-    Call<RestaurantOutputs> getFollowingDetails(@Query("place_id") String placeId, @Query("key") String key);
+    Call<RestaurantDetails> getFollowingDetails(@Query("place_id") String placeId, @Query("key") String key);
 }

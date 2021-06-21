@@ -19,15 +19,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.ActivityMainBinding;
 import com.example.go4lunch.databinding.ActivityNavHeaderBinding;
-import com.example.go4lunch.location.LocationInjection;
-import com.example.go4lunch.location.LocationViewModel;
-import com.example.go4lunch.location.LocationViewModelFactory;
+import com.example.go4lunch.model.User;
 import com.example.go4lunch.places.NearbyInjection;
 import com.example.go4lunch.places.NearbyRestaurantViewModel;
 import com.example.go4lunch.places.NearbyViewModelFactory;
@@ -56,8 +55,8 @@ public class MainActivity extends AppCompatActivity
     private TextView currentUserEmail;
     private ImageView currentUserImage;
     private UserViewModel mUserViewModel;
-    private LocationViewModel mLocationViewModel;
     private NearbyRestaurantViewModel mNearbyRestaurantViewModel;
+    private User mUser;
 
     private static final int MAPS_FRAGMENT = 0;
     private static final int RESTAURANT_FRAGMENT = 1;
@@ -69,7 +68,6 @@ public class MainActivity extends AppCompatActivity
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         this.configureUserViewModel();
-        this.configureLocationViewModel();
         this.configureNearbyRestaurantViewModel();
         this.showFragment(MAPS_FRAGMENT);
         this.configureToolBar();
@@ -191,7 +189,7 @@ public class MainActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.your_lunch :
-
+                startDetailsMyRestaurant();
                 break;
             case R.id.settings :
                 showSettingsFragment();
@@ -204,6 +202,22 @@ public class MainActivity extends AppCompatActivity
         this.drawerLayout.closeDrawer(GravityCompat.START);
 
         return true;
+    }
+
+    private void startDetailsMyRestaurant() {
+        mUserViewModel.getUser(Objects.requireNonNull(getCurrentUser()).getUid(), this).observe(this, this::setUser);
+        String placeId = mUser.getRestaurant();
+        if (placeId != null) {
+            Intent intent = new Intent(this, DetailsActivity.class);
+            intent.putExtra("placeId", placeId);
+        }
+        else {
+            Toast.makeText(this, "Please choose a restaurant !", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void setUser(User user) {
+        mUser = user;
     }
 
     @Nullable
@@ -231,12 +245,6 @@ public class MainActivity extends AppCompatActivity
             currentUserEmail.setText(email);
             this.mUserViewModel.createCurrentUser(this);
         }
-    }
-
-    private void configureLocationViewModel() {
-        LocationViewModelFactory locationViewModelFactory = LocationInjection.provideMapsViewModelFactory();
-        mLocationViewModel = new ViewModelProvider(this, locationViewModelFactory)
-                .get(LocationViewModel.class);
     }
 
     private void configureUserViewModel() {

@@ -25,8 +25,8 @@ public class UserCRUD {
         return UserCRUD.getUsersCollection().document(uid).get();
     }
 
-    public static Task<Void> createUser(String uid, String username, String email, String picture, String restaurantId, List<String> restaurantsLiked) {
-        User userToCreate = new User(uid, username, email, picture, restaurantId, restaurantsLiked);
+    public static Task<Void> createUser(String uid, String username, String email, String picture, String restaurantId, List<String> restaurantsLiked, String restaurantName, String restaurantAddress) {
+        User userToCreate = new User(uid, username, email, picture, restaurantId, restaurantsLiked, restaurantName, restaurantAddress);
         return UserCRUD.getUsersCollection().document(uid).set(userToCreate);
     }
 
@@ -44,6 +44,18 @@ public class UserCRUD {
 
     public static Task<Void> updateUserRestaurant(String uid, String restaurantId) {
         return UserCRUD.getUsersCollection().document(uid).update("restaurant_id", restaurantId);
+    }
+
+    public static Task<Void> updateRestaurantName(String uid, String name) {
+        return UserCRUD.getUsersCollection().document(uid).update("restaurantName", name);
+    }
+
+    public static Task<Void> updateRestaurantAddress(String uid, String address) {
+        return UserCRUD.getUsersCollection().document(uid).update("restaurantAddress", address);
+    }
+
+    public static Task<Void> addToListFavorites(String uid, String restaurant) {
+        return UserCRUD.getUsersCollection().document(uid).update("restaurantsLiked", restaurant);
     }
 
     public static Task<Void> deleteUser(String uid) {

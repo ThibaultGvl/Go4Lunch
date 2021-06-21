@@ -2,6 +2,7 @@ package com.example.go4lunch.places;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.go4lunch.model.details.RestaurantDetails;
 import com.example.go4lunch.model.restaurant.RestaurantOutputs;
 import com.example.go4lunch.utils.RetrofitService;
 
@@ -46,17 +47,17 @@ public class NearbyRestaurantRepository {
         return sRestaurants;
     }
 
-    public MutableLiveData<RestaurantOutputs> getRestaurant(String placeId, String key) {
-        MutableLiveData<RestaurantOutputs> restaurantOutputsMutableLiveData = new MutableLiveData<>();
-        Call<RestaurantOutputs> restaurantOutputsCall = placesApiService.getFollowingDetails(placeId, key);
-        restaurantOutputsCall.enqueue(new Callback<RestaurantOutputs>() {
+    public MutableLiveData<RestaurantDetails> getRestaurant(String placeId, String key) {
+        MutableLiveData<RestaurantDetails> restaurantOutputsMutableLiveData = new MutableLiveData<>();
+        Call<RestaurantDetails> restaurantOutputsCall = placesApiService.getFollowingDetails(placeId, key);
+        restaurantOutputsCall.enqueue(new Callback<RestaurantDetails>() {
             @Override
-            public void onResponse(Call<RestaurantOutputs> call, Response<RestaurantOutputs> response) {
+            public void onResponse(Call<RestaurantDetails> call, Response<RestaurantDetails> response) {
                 restaurantOutputsMutableLiveData.setValue(response.body());
             }
 
             @Override
-            public void onFailure(Call<RestaurantOutputs> call, Throwable t) {
+            public void onFailure(Call<RestaurantDetails> call, Throwable t) {
                 restaurantOutputsMutableLiveData.postValue(null);
             }
         });

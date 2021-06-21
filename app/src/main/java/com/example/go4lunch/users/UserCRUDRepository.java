@@ -68,7 +68,7 @@ public class UserCRUDRepository {
             String email = user.getEmail();
             String imageUrl = (user.getPhotoUrl() != null) ? Objects.requireNonNull(this.getCurrentUser().getPhotoUrl()).toString() : null;
 
-            UserCRUD.createUser(uid, username, email, imageUrl, null, null).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(aVoid -> {
+            UserCRUD.createUser(uid, username, email, imageUrl, null, null, null, null).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(aVoid -> {
                 result.setValue(user);
             });
         }
@@ -106,6 +106,20 @@ public class UserCRUDRepository {
             Toast.makeText(context, R.string.restaurant_choice, Toast.LENGTH_SHORT).show();
             result.setValue(restaurantId);
         });
+    }
+
+    public void updateUserRestaurantName(String uid, String restaurantName, Context context) {
+        MutableLiveData<String> result = new MutableLiveData<>();
+        UserCRUD.updateRestaurantName(uid, restaurantName).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
+                aVoid -> { result.setValue(restaurantName);
+                });
+    }
+
+    public void updateUserRestaurantAddress(String uid, String restaurantAddress, Context context) {
+        MutableLiveData<String> result = new MutableLiveData<>();
+        UserCRUD.updateRestaurantName(uid, restaurantAddress).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
+                aVoid -> { result.setValue(restaurantAddress);
+                });
     }
 
     public void deleteUser(String uid, Context context) {

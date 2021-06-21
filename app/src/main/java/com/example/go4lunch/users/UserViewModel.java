@@ -31,8 +31,8 @@ public class UserViewModel extends androidx.lifecycle.ViewModel {
 
     public LiveData<List<User>> getUsers() {return users;}
 
-    public void getUser(String uid, Context context) {
-        executor.execute(() -> mUserCRUDRepository.getUser(uid, context));
+    public LiveData<User> getUser(String uid, Context context) {
+        return mUserCRUDRepository.getUser(uid, context);
     }
 
     public void createCurrentUser(Context context) {
@@ -53,6 +53,14 @@ public class UserViewModel extends androidx.lifecycle.ViewModel {
 
     public void updateUserRestaurant(String uid, String restaurantId, Context context) {
         executor.execute(() -> mUserCRUDRepository.updateUserRestaurant(uid, restaurantId, context));
+    }
+
+    public void updateUserRestaurantAddress(String uid, String restaurantAddress, Context context) {
+        executor.execute(() -> mUserCRUDRepository.updateUserRestaurantAddress(uid, restaurantAddress, context));
+    }
+
+    public void updateUserRestaurantName(String uid, String restaurantToLike, Context context) {
+        executor.execute(() -> mUserCRUDRepository.updateUserRestaurantName(uid, restaurantToLike, context));
     }
 
     public void getCurrentUser() {

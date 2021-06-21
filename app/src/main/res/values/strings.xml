@@ -39,6 +39,8 @@
     <string name="slogan">Find a nice restaurant and invite your co-worker for lunch</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="sign_in_with_facebook">Sign in with Facebook</string>
+    <string name="sign_in_with_email">Sign in with Email</string>
+    <string name="sign_in_with_twitter">Sign in with Twitter</string>
     <string name="name">Name</string>
     <string name="email">Email</string>
     <string name="what_workmate_eat">What workmate eat</string>
@@ -62,4 +64,5 @@
     <string name="like">LIKE</string>
     <string name="website">WEBSITE</string>
     <string name="restaurant_details">style - address</string>
+    <string name="no_details">No details found for this restaurant</string>
 </resources>
