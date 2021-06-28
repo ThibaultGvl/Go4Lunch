@@ -23,7 +23,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Go4Lunch">
-        <activity android:name=".view.DetailsActivity"></activity>
+        <activity android:name=".view.PlaceAutoCompleteActivity"></activity>
+        <activity android:name=".view.DetailsActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -43,6 +44,13 @@
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider236492571581756"
             android:exported="true" />
+
+        <service
+            android:name=".utils.NotificationsService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
 
         <activity
             android:name=".view.ConnexionActivity"

@@ -43,7 +43,7 @@ public class UserCRUD {
     }
 
     public static Task<Void> updateUserRestaurant(String uid, String restaurantId) {
-        return UserCRUD.getUsersCollection().document(uid).update("restaurant_id", restaurantId);
+        return UserCRUD.getUsersCollection().document(uid).update("restaurant", restaurantId);
     }
 
     public static Task<Void> updateRestaurantName(String uid, String name) {

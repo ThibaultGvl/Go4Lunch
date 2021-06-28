@@ -83,7 +83,8 @@ public class UserFragment extends Fragment {
 
     private void configureViewModel() {
         UserViewModelFactory mViewModelFactory = UserInjection.provideViewModelFactory();
-        this.mViewModel = new ViewModelProvider(this, mViewModelFactory).get(UserViewModel.class);
+        this.mViewModel = new ViewModelProvider(this, mViewModelFactory)
+                .get(UserViewModel.class);
         this.mViewModel.initUsers(this.getContext());
     }
 

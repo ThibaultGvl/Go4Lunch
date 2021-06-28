@@ -2,9 +2,11 @@ package com.example.go4lunch.view;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,6 +20,8 @@ import com.example.go4lunch.model.User;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+
+import static androidx.core.content.ContextCompat.startActivity;
 
 public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.ViewHolder> {
 
@@ -39,13 +43,14 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         User user = users.get(position);
         String userKnowWhatEatingText = user.getUsername() + " is eating " + user.getRestaurantName();
         String userDoestKnowWhatEating = user.getUsername() + " hasn't decided yet";
+        String placeId = user.getRestaurant();
         if(user.getPicture() != null) {
             Glide.with(holder.userImage.getContext()).load(user.getPicture()).apply(RequestOptions.circleCropTransform()).into(holder.userImage);
         }
         else {
             holder.userImage.setColorFilter(R.color.primary_color);
         }
-        if(user.getRestaurant() != null) {
+        if(user.getRestaurantName() != null) {
             holder.userEating.setText(userKnowWhatEatingText);
         }
         else {
@@ -53,6 +58,11 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
             holder.userEating.setTypeface(holder.userEating.getTypeface(), Typeface.ITALIC);
             holder.userEating.setTextColor(Color.GRAY);
         }
+        holder.mFragmentUserBinding.getRoot().setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), DetailsActivity.class);
+            intent.putExtra("placeId", placeId);
+            startActivity(v.getContext(), intent, null);
+        });
     }
 
     @Override

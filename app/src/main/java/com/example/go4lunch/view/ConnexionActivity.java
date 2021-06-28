@@ -26,6 +26,10 @@ public class ConnexionActivity extends AppCompatActivity {
 
     private Button googleBtn;
 
+    private Button emailBtn;
+
+    private Button twitterBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,25 +37,37 @@ public class ConnexionActivity extends AppCompatActivity {
         View view = binding.getRoot();
         googleBtn = binding.connexionGoogle;
         fbBtn = binding.connexionFb;
+        emailBtn = binding.connexionEmail;
+        twitterBtn = binding.connexionTwitter;
         setContentView(view);
-        googleBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isCurrentUserLogged()){
-                    startMainActivity();
-                } else {
-                    startGoogleSignInActivity();
-                }
+        googleBtn.setOnClickListener(v -> {
+            if (isCurrentUserLogged()){
+                startMainActivity();
+            } else {
+                startGoogleSignInActivity();
             }
         });
-        fbBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isCurrentUserLogged()){
-                    startMainActivity();
-                } else {
-                    startFacebookSignInActivity();
-                }
+        fbBtn.setOnClickListener(v -> {
+            if (isCurrentUserLogged()){
+                startMainActivity();
+            } else {
+                startFacebookSignInActivity();
+            }
+        });
+        emailBtn.setOnClickListener(v -> {
+            if (isCurrentUserLogged()) {
+                startMainActivity();
+            }
+            else {
+                startEmailSignInActivity();
+            }
+        });
+        twitterBtn.setOnClickListener(v -> {
+            if (isCurrentUserLogged()) {
+                startMainActivity();
+            }
+            else {
+                startTwitterSignInActivity();
             }
         });
     }
@@ -72,10 +88,27 @@ public class ConnexionActivity extends AppCompatActivity {
     }
 
     private void startFacebookSignInActivity() {
-        //Change because deprecated
         startActivityForResult(
                 AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(
                         Arrays.asList(new AuthUI.IdpConfig.FacebookBuilder().build()))
+                        .setIsSmartLockEnabled(false, true)
+                        .build(),
+                RC_SIGN_IN);
+    }
+
+    private void startEmailSignInActivity() {
+        startActivityForResult(
+                AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(
+                        Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build()))
+                        .setIsSmartLockEnabled(false, true)
+                        .build(),
+                RC_SIGN_IN);
+    }
+
+    private void startTwitterSignInActivity() {
+        startActivityForResult(
+                AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(
+                        Arrays.asList(new AuthUI.IdpConfig.TwitterBuilder().build()))
                         .setIsSmartLockEnabled(false, true)
                         .build(),
                 RC_SIGN_IN);

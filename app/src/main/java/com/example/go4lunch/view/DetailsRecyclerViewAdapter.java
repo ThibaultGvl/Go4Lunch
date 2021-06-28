@@ -33,7 +33,7 @@ public class DetailsRecyclerViewAdapter extends RecyclerView.Adapter<UserRecycle
     @Override
     public void onBindViewHolder(@NonNull @NotNull UserRecyclerViewAdapter.ViewHolder holder, int position) {
         User user = users.get(position);
-        String userJoining = user.getUsername() + "is joining";
+        String userJoining = user.getUsername() + "is joining!";
         holder.userEating.setText(userJoining);
         Glide.with(holder.userImage).load(user.getPicture()).into(holder.userImage);
     }

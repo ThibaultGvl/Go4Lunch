@@ -117,7 +117,7 @@ public class UserCRUDRepository {
 
     public void updateUserRestaurantAddress(String uid, String restaurantAddress, Context context) {
         MutableLiveData<String> result = new MutableLiveData<>();
-        UserCRUD.updateRestaurantName(uid, restaurantAddress).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
+        UserCRUD.updateRestaurantAddress(uid, restaurantAddress).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
                 aVoid -> { result.setValue(restaurantAddress);
                 });
     }

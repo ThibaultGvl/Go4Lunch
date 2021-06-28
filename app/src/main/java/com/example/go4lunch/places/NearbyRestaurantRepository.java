@@ -2,6 +2,7 @@ package com.example.go4lunch.places;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.go4lunch.model.Autocomplete.RestaurantAutoComplete;
 import com.example.go4lunch.model.details.RestaurantDetails;
 import com.example.go4lunch.model.restaurant.RestaurantOutputs;
 import com.example.go4lunch.utils.RetrofitService;
@@ -62,5 +63,22 @@ public class NearbyRestaurantRepository {
             }
         });
         return restaurantOutputsMutableLiveData;
+    }
+
+    public MutableLiveData<RestaurantAutoComplete> getRestaurantBySearch(String input, String key) {
+        MutableLiveData<RestaurantAutoComplete> restaurantAutoCompleteMutableLiveData = new MutableLiveData<>();
+        Call<RestaurantAutoComplete> restaurantAutoCompleteCall = placesApiService.getFollowingAutocomplete(input, key);
+        restaurantAutoCompleteCall.enqueue(new Callback<RestaurantAutoComplete>() {
+            @Override
+            public void onResponse(Call<RestaurantAutoComplete> call, Response<RestaurantAutoComplete> response) {
+                restaurantAutoCompleteMutableLiveData.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<RestaurantAutoComplete> call, Throwable t) {
+                restaurantAutoCompleteMutableLiveData.setValue(null);
+            }
+        });
+        return restaurantAutoCompleteMutableLiveData;
     }
 }

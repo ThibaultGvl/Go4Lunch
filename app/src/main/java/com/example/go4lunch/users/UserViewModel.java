@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import com.example.go4lunch.model.User;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 
 public class UserViewModel extends androidx.lifecycle.ViewModel {

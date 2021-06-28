@@ -65,4 +65,6 @@
     <string name="website">WEBSITE</string>
     <string name="restaurant_details">style - address</string>
     <string name="no_details">No details found for this restaurant</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

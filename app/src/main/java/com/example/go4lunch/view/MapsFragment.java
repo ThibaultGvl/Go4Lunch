@@ -10,10 +10,12 @@ import androidx.lifecycle.ViewModelProvider;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +36,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -49,6 +54,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private Location mLastKnownLocation;
     private boolean mLocationPermission;
     private NearbyRestaurantViewModel mNearbyRestaurantViewModel;
+    private double placeLatitude;
+    private double placeLongitude;
+    private LatLng placePosition;
+    private String placeIdFromSearch;
 
     public static MapsFragment newInstance() {
         return (new MapsFragment());
@@ -61,6 +70,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                              @Nullable Bundle savedInstanceState) {
         mMapsBinding = FragmentMapsBinding.inflate(inflater, container, false);
         configureNearbyRestaurantViewModel();
+        placeLatitude = getArguments().getDouble("placeLatitude");
+        placeLongitude = getArguments().getDouble("placeLongitude");
+        placeIdFromSearch = getArguments().getString("placeId");
+        placePosition = new LatLng(placeLatitude, placeLongitude);
         return mMapsBinding.getRoot();
     }
 
@@ -75,7 +88,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
-        getLastLocation();
+        else {
+            getLastLocation();
+        }
         mMapsBinding.position.setOnClickListener(v -> getLastLocation());
     }
 
@@ -126,6 +141,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    private void getPlaceSearched() {
+        mMap.addMarker(new MarkerOptions().position(placePosition));
+        mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) marker -> {
+            Intent intent = new Intent(this.getContext(), DetailsActivity.class);
+            intent.putExtra("placeId", placeIdFromSearch);
+            startActivity(intent);
+            return false;
+        });
+    }
+
     private void getPlaces() {
         String location = mLastKnownLocation.getLatitude() + "," + mLastKnownLocation.getLongitude();
         mNearbyRestaurantViewModel.getRestaurantsList(location, "1000", "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4").observe(getViewLifecycleOwner(), this::getRestaurants);
@@ -135,8 +160,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         if (restaurants != null) {
             for (ResultRestaurant restaurant : restaurants.getResults()) {
+                String placeId = restaurant.getPlaceId();
                 LatLng restaurantLatLng = new LatLng(restaurant.getGeometry().getLocation().getLat(), restaurant.getGeometry().getLocation().getLng());
                 mMap.addMarker(new MarkerOptions().position(restaurantLatLng));
+                mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) marker -> {
+                    Intent intent = new Intent(this.getContext(), DetailsActivity.class);
+                    intent.putExtra("placeId", placeId);
+                    startActivity(intent);
+                    return false;
+                });
             }
         }
         else {

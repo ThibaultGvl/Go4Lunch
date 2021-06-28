@@ -23,11 +23,11 @@ public class User {
     @Expose
     private String picture;
 
-    @SerializedName("restaurant_id")
+    @SerializedName("restaurant")
     @Expose
     private String restaurantId;
 
-    @SerializedName("restaurants_liked")
+    @SerializedName("restaurantsLiked")
     @Expose
     private List<String> restaurantsLiked;
 
