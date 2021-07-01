@@ -1,13 +1,13 @@
-package com.example.go4lunch.users;
+package com.example.go4lunch.viewmodel.users;
 
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.go4lunch.model.User;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.Executor;
 
 public class UserViewModel extends androidx.lifecycle.ViewModel {
@@ -32,8 +32,16 @@ public class UserViewModel extends androidx.lifecycle.ViewModel {
 
     public LiveData<List<User>> getUsers() {return users;}
 
-    public LiveData<User> getUser(String uid, Context context) {
-        return mUserCRUDRepository.getUser(uid, context);
+    public MutableLiveData<User> getUser(String uid, Context context) {
+        MutableLiveData<User> user = new MutableLiveData<>();
+        user = mUserCRUDRepository.getUser(uid, context);
+        return user;
+    }
+
+    public MutableLiveData<List<User>> getUserByPlaceId(String placeId, Context context) {
+        MutableLiveData<List<User>> users = new MutableLiveData<>();
+        users = mUserCRUDRepository.getUserByPlaceId(placeId, context);
+        return users;
     }
 
     public void createCurrentUser(Context context) {

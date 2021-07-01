@@ -1,4 +1,4 @@
-package com.example.go4lunch.view;
+package com.example.go4lunch.view.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,9 +14,10 @@ import android.view.ViewGroup;
 
 import com.example.go4lunch.databinding.FragmentUserListBinding;
 import com.example.go4lunch.model.User;
-import com.example.go4lunch.users.UserInjection;
-import com.example.go4lunch.users.UserViewModel;
-import com.example.go4lunch.users.UserViewModelFactory;
+import com.example.go4lunch.view.adapter.UserRecyclerViewAdapter;
+import com.example.go4lunch.viewmodel.users.UserInjection;
+import com.example.go4lunch.viewmodel.users.UserViewModel;
+import com.example.go4lunch.viewmodel.users.UserViewModelFactory;
 
 import org.jetbrains.annotations.NotNull;
 

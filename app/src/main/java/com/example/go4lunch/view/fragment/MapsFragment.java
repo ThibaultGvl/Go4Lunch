@@ -1,9 +1,11 @@
-package com.example.go4lunch.view;
+package com.example.go4lunch.view.fragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -13,9 +15,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,21 +29,22 @@ import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.FragmentMapsBinding;
 import com.example.go4lunch.model.restaurant.RestaurantOutputs;
 import com.example.go4lunch.model.restaurant.ResultRestaurant;
-import com.example.go4lunch.places.NearbyInjection;
-import com.example.go4lunch.places.NearbyRestaurantViewModel;
-import com.example.go4lunch.places.NearbyViewModelFactory;
+import com.example.go4lunch.view.activity.DetailsActivity;
+import com.example.go4lunch.viewmodel.places.NearbyInjection;
+import com.example.go4lunch.viewmodel.places.NearbyRestaurantViewModel;
+import com.example.go4lunch.viewmodel.places.NearbyViewModelFactory;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.jetbrains.annotations.NotNull;
-
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
@@ -70,10 +74,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                              @Nullable Bundle savedInstanceState) {
         mMapsBinding = FragmentMapsBinding.inflate(inflater, container, false);
         configureNearbyRestaurantViewModel();
-        placeLatitude = getArguments().getDouble("placeLatitude");
-        placeLongitude = getArguments().getDouble("placeLongitude");
-        placeIdFromSearch = getArguments().getString("placeId");
-        placePosition = new LatLng(placeLatitude, placeLongitude);
+        if (savedInstanceState != null) {
+            placeLatitude = requireArguments().getDouble("placeLatitude");
+            placeLongitude = requireArguments().getDouble("placeLongitude");
+            placeIdFromSearch = requireArguments().getString("placeId");
+            placePosition = new LatLng(placeLatitude, placeLongitude);
+        }
         return mMapsBinding.getRoot();
     }
 
@@ -88,9 +94,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
-        else {
             getLastLocation();
-        }
         mMapsBinding.position.setOnClickListener(v -> getLastLocation());
     }
 
@@ -98,6 +102,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
+        getLastLocation();
+        if (placePosition != null) {
+            getPlaceSearched();
+        }
     }
 
     public void getLocationPermission(Context context, Activity activity) {
@@ -142,6 +150,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void getPlaceSearched() {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(placePosition, DEFAULT_ZOOM));
         mMap.addMarker(new MarkerOptions().position(placePosition));
         mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) marker -> {
             Intent intent = new Intent(this.getContext(), DetailsActivity.class);
@@ -156,13 +165,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         mNearbyRestaurantViewModel.getRestaurantsList(location, "1000", "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4").observe(getViewLifecycleOwner(), this::getRestaurants);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void getRestaurants(RestaurantOutputs restaurants) {
 
         if (restaurants != null) {
             for (ResultRestaurant restaurant : restaurants.getResults()) {
                 String placeId = restaurant.getPlaceId();
                 LatLng restaurantLatLng = new LatLng(restaurant.getGeometry().getLocation().getLat(), restaurant.getGeometry().getLocation().getLng());
-                mMap.addMarker(new MarkerOptions().position(restaurantLatLng));
+                mMap.addMarker(new MarkerOptions().position(restaurantLatLng).icon(getBitmapDescriptor(R.drawable.marker_orange)));
+                //Marker markerDefault = mMap.addMarker(new MarkerOptions().position(restaurantLatLng).icon(getBitmapDescriptor(R.drawable.marker_orange)));
                 mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) marker -> {
                     Intent intent = new Intent(this.getContext(), DetailsActivity.class);
                     intent.putExtra("placeId", placeId);
@@ -176,17 +187,25 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    public Bitmap resizeMapIcons(String iconName,int width, int height){
-        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", "view"));
-        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
-        return resizedBitmap;
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private BitmapDescriptor getBitmapDescriptor(int id) {
+        Drawable vectorDrawable = ResourcesCompat.getDrawable(getResources(), id, null);
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
+                vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.setBounds(0, 0, 75, 100);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (mLocationPermission) {
+        if (mLocationPermission && placePosition == null) {
             getLastLocation();
+        }
+        else if (placePosition != null) {
+            getPlaceSearched();
         }
     }
 

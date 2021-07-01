@@ -7,8 +7,8 @@
     android:name="com.example.go4lunch.ui.UserFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:layout_marginLeft="@dimen/recycler_view_margin"
+    android:layout_marginRight="@dimen/recycler_view_margin"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".view.UserFragment"
+    tools:context=".view.fragment.UserFragment"
     tools:listitem="@layout/fragment_user" />

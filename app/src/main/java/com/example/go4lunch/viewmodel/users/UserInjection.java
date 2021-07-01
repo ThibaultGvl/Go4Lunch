@@ -1,4 +1,4 @@
-package com.example.go4lunch.users;
+package com.example.go4lunch.viewmodel.users;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;

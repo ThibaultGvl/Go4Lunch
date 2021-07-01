@@ -1,4 +1,4 @@
-package com.example.go4lunch.users;
+package com.example.go4lunch.viewmodel.users;
 
 import com.example.go4lunch.model.User;
 import com.google.android.gms.tasks.Task;
@@ -25,8 +25,8 @@ public class UserCRUD {
         return UserCRUD.getUsersCollection().document(uid).get();
     }
 
-    public static Task<Void> createUser(String uid, String username, String email, String picture, String restaurantId, List<String> restaurantsLiked, String restaurantName, String restaurantAddress) {
-        User userToCreate = new User(uid, username, email, picture, restaurantId, restaurantsLiked, restaurantName, restaurantAddress);
+    public static Task<Void> createUser(String uid, String username, String email, String picture, String restaurant, List<String> restaurantsLiked, String restaurantName, String restaurantAddress) {
+        User userToCreate = new User(uid, username, email, picture, restaurant, restaurantsLiked, restaurantName, restaurantAddress);
         return UserCRUD.getUsersCollection().document(uid).set(userToCreate);
     }
 
@@ -42,8 +42,8 @@ public class UserCRUD {
         return UserCRUD.getUsersCollection().document(uid).update("picture", picture);
     }
 
-    public static Task<Void> updateUserRestaurant(String uid, String restaurantId) {
-        return UserCRUD.getUsersCollection().document(uid).update("restaurant", restaurantId);
+    public static Task<Void> updateUserRestaurant(String uid, String restaurant) {
+        return UserCRUD.getUsersCollection().document(uid).update("restaurant", restaurant);
     }
 
     public static Task<Void> updateRestaurantName(String uid, String name) {

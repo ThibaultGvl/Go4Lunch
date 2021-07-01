@@ -1,8 +1,6 @@
 package com.example.go4lunch.utils;
 
-import com.example.go4lunch.places.PlacesApiService;
-
-import java.util.logging.Level;
+import com.example.go4lunch.viewmodel.places.PlacesApiService;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;

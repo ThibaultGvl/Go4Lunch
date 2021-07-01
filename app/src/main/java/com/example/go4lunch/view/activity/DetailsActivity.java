@@ -1,4 +1,4 @@
-package com.example.go4lunch.view;
+package com.example.go4lunch.view.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -13,7 +13,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.go4lunch.R;
@@ -21,12 +20,13 @@ import com.example.go4lunch.databinding.ActivityDetailsBinding;
 import com.example.go4lunch.model.User;
 import com.example.go4lunch.model.details.RestaurantDetails;
 import com.example.go4lunch.model.details.Result;
-import com.example.go4lunch.places.NearbyInjection;
-import com.example.go4lunch.places.NearbyRestaurantViewModel;
-import com.example.go4lunch.places.NearbyViewModelFactory;
-import com.example.go4lunch.users.UserInjection;
-import com.example.go4lunch.users.UserViewModel;
-import com.example.go4lunch.users.UserViewModelFactory;
+import com.example.go4lunch.view.adapter.DetailsRecyclerViewAdapter;
+import com.example.go4lunch.viewmodel.places.NearbyInjection;
+import com.example.go4lunch.viewmodel.places.NearbyRestaurantViewModel;
+import com.example.go4lunch.viewmodel.places.NearbyViewModelFactory;
+import com.example.go4lunch.viewmodel.users.UserInjection;
+import com.example.go4lunch.viewmodel.users.UserViewModel;
+import com.example.go4lunch.viewmodel.users.UserViewModelFactory;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -56,31 +56,23 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mActivityBinding = ActivityDetailsBinding.inflate(getLayoutInflater());
         View view = mActivityBinding.getRoot();
+        Intent getIntent = getIntent();
+        placeId = getIntent.getStringExtra("placeId");
         configureUI();
         configureUserViewModel();
         configureNearbyRestaurantViewModel();
-        RecyclerView recyclerView = mActivityBinding.recyclerviewDetails;
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(mAdapter);
-        Intent getIntent = getIntent();
-        placeId = getIntent.getStringExtra("placeId");
         mRestaurantViewModel.getRestaurantDetails(placeId,
                 "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4").observe(this, this::setRestaurant);
+        configureUsers();
+        RecyclerView recyclerView = mActivityBinding.userRvDetails;
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(mAdapter);
         setContentView(view);
     }
 
     private void setRestaurant(RestaurantDetails restaurant) {
             Result mRestaurant = restaurant.getResult();
             updateWithRestaurant(mRestaurant);
-    }
-
-    private void setUsers(List<User> users) {
-        for (User user: users) {
-            if (user.getRestaurant().equals(placeId)) {
-                mUsers.add(user);
-            }
-            mAdapter.notifyDataSetChanged();
-        }
     }
 
     private void updateWithRestaurant(Result mRestaurant) {
@@ -104,7 +96,7 @@ public class DetailsActivity extends AppCompatActivity {
             });
             mLikeButton.setOnClickListener(v -> { });
             mWebButton.setOnClickListener(v -> {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mRestaurant.getUrl()));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mRestaurant.getWebsite()));
                 startActivity(intent);
             });
             mFab.setOnClickListener(v -> updateRestaurantChoose(mRestaurant));
@@ -128,6 +120,16 @@ public class DetailsActivity extends AppCompatActivity {
         mUserViewModel.updateUserRestaurantName(currentUserId, mRestaurant.getName(), this);
         mUserViewModel.updateUserRestaurantAddress(currentUserId, mRestaurant.getAdrAddress(),
                 this);
+    }
+
+    private void configureUsers() {
+        mUserViewModel.getUserByPlaceId(placeId, this).observe(this, this::setUsersList);
+    }
+
+    private void setUsersList(List<User> users) {
+        mUsers.clear();
+        mUsers.addAll(users);
+        mAdapter.notifyDataSetChanged();
     }
 
     private void configureUserViewModel() {

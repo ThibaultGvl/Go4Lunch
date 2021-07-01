@@ -23,8 +23,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Go4Lunch">
-        <activity android:name=".view.PlaceAutoCompleteActivity"></activity>
-        <activity android:name=".view.DetailsActivity" />
+        <activity android:name=".view.activity.DetailsActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -53,7 +52,7 @@
         </service>
 
         <activity
-            android:name=".view.ConnexionActivity"
+            android:name=".view.activity.ConnexionActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.Go4Lunch">
             <intent-filter>
@@ -62,7 +61,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.MainActivity" />
+        <activity android:name=".view.activity.MainActivity" />
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.example.go4lunch.view;
+package com.example.go4lunch.view.activity;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,7 +9,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.go4lunch.databinding.ActivityConnexionBinding;
-import com.example.go4lunch.view.MainActivity;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,6 +36,8 @@ public class ConnexionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityConnexionBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
         googleBtn = binding.connexionGoogle;
         fbBtn = binding.connexionFb;
         emailBtn = binding.connexionEmail;

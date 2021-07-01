@@ -1,9 +1,8 @@
-package com.example.go4lunch.places;
+package com.example.go4lunch.viewmodel.places;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.go4lunch.model.Autocomplete.RestaurantAutoComplete;
 import com.example.go4lunch.model.details.RestaurantDetails;
 import com.example.go4lunch.model.restaurant.RestaurantOutputs;
 
@@ -21,11 +20,6 @@ public class NearbyRestaurantViewModel extends ViewModel {
 
     public MutableLiveData<RestaurantDetails> getRestaurantDetails(String placeId, String key) {
         MutableLiveData<RestaurantDetails> restaurant = mNearbyRestaurantRepository.getRestaurant(placeId, key);
-        return restaurant;
-    }
-    
-    public MutableLiveData<RestaurantAutoComplete> getRestaurantBySearch(String input, String key) {
-        MutableLiveData<RestaurantAutoComplete> restaurant = mNearbyRestaurantRepository.getRestaurantBySearch(input, key);
         return restaurant;
     }
 }

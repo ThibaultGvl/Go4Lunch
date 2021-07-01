@@ -1,4 +1,4 @@
-package com.example.go4lunch.view;
+package com.example.go4lunch.view.adapter;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,6 +15,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.FragmentUserBinding;
 import com.example.go4lunch.model.User;
+import com.example.go4lunch.view.activity.DetailsActivity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -41,28 +41,28 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     @Override
     public void onBindViewHolder(@NotNull final ViewHolder holder, int position) {
         User user = users.get(position);
-        String userKnowWhatEatingText = user.getUsername() + " is eating " + user.getRestaurantName();
-        String userDoestKnowWhatEating = user.getUsername() + " hasn't decided yet";
+        String userKnowWhatEatingText = user.getUsername() + holder.mFragmentUserBinding.getRoot().getContext().getString(R.string.is_eating) + user.getRestaurantName();
+        String userDoestKnowWhatEating = user.getUsername() + holder.mFragmentUserBinding.getRoot().getContext().getString(R.string.hasnot_decided);
         String placeId = user.getRestaurant();
         if(user.getPicture() != null) {
-            Glide.with(holder.userImage.getContext()).load(user.getPicture()).apply(RequestOptions.circleCropTransform()).into(holder.userImage);
+            Glide.with(holder.userImage.getContext()).load(user.getPicture()).error(R.color.primary_color).apply(RequestOptions.circleCropTransform()).into(holder.userImage);
         }
         else {
             holder.userImage.setColorFilter(R.color.primary_color);
         }
-        if(user.getRestaurantName() != null) {
+        if(user.getRestaurantName() != null && !user.getRestaurantName().equals("")) {
             holder.userEating.setText(userKnowWhatEatingText);
+            holder.mFragmentUserBinding.getRoot().setOnClickListener(v -> {
+                Intent intent = new Intent(v.getContext(), DetailsActivity.class);
+                intent.putExtra("placeId", placeId);
+                startActivity(v.getContext(), intent, null);
+            });
         }
         else {
             holder.userEating.setText(userDoestKnowWhatEating);
             holder.userEating.setTypeface(holder.userEating.getTypeface(), Typeface.ITALIC);
             holder.userEating.setTextColor(Color.GRAY);
         }
-        holder.mFragmentUserBinding.getRoot().setOnClickListener(v -> {
-            Intent intent = new Intent(v.getContext(), DetailsActivity.class);
-            intent.putExtra("placeId", placeId);
-            startActivity(v.getContext(), intent, null);
-        });
     }
 
     @Override

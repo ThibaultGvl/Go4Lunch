@@ -1,11 +1,8 @@
-package com.example.go4lunch.users;
+package com.example.go4lunch.viewmodel.users;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-
-import com.example.go4lunch.users.UserCRUDRepository;
-import com.example.go4lunch.users.UserViewModel;
 
 import org.jetbrains.annotations.NotNull;
 

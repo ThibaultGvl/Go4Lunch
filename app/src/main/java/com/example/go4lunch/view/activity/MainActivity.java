@@ -1,10 +1,9 @@
-package com.example.go4lunch.view;
+package com.example.go4lunch.view.activity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -17,11 +16,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,19 +28,22 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.ActivityMainBinding;
 import com.example.go4lunch.databinding.ActivityNavHeaderBinding;
-import com.example.go4lunch.model.Autocomplete.Prediction;
-import com.example.go4lunch.model.Autocomplete.RestaurantAutoComplete;
 import com.example.go4lunch.model.User;
-import com.example.go4lunch.places.NearbyInjection;
-import com.example.go4lunch.places.NearbyRestaurantViewModel;
-import com.example.go4lunch.places.NearbyViewModelFactory;
-import com.example.go4lunch.users.UserInjection;
-import com.example.go4lunch.users.UserViewModelFactory;
-import com.example.go4lunch.users.UserViewModel;
+import com.example.go4lunch.view.fragment.MapsFragment;
+import com.example.go4lunch.view.fragment.RestaurantFragment;
+import com.example.go4lunch.view.fragment.SettingsFragment;
+import com.example.go4lunch.view.fragment.UserFragment;
+import com.example.go4lunch.viewmodel.places.NearbyInjection;
+import com.example.go4lunch.viewmodel.places.NearbyRestaurantViewModel;
+import com.example.go4lunch.viewmodel.places.NearbyViewModelFactory;
+import com.example.go4lunch.viewmodel.users.UserInjection;
+import com.example.go4lunch.viewmodel.users.UserViewModelFactory;
+import com.example.go4lunch.viewmodel.users.UserViewModel;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
@@ -77,8 +76,7 @@ public class MainActivity extends AppCompatActivity
     private ImageButton mSearchBtn;
     private UserViewModel mUserViewModel;
     private NearbyRestaurantViewModel mNearbyRestaurantViewModel;
-    private User mUser = new User(null, null, null, null, null, null, null, null);
-    private List<Prediction> mPrediction = new ArrayList<>();
+    private User mUser = new User("", "", "", "", "", null, "", "");
     private int mFragmentIdentifier;
 
     private static final int MAPS_FRAGMENT = 0;
@@ -226,7 +224,7 @@ public class MainActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.your_lunch :
-                startDetailsMyRestaurant();
+                getYourLunch();
                 break;
             case R.id.settings :
                 showSettingsFragment();
@@ -309,24 +307,11 @@ public class MainActivity extends AppCompatActivity
 
 
     public void onSearchCalled() {
-        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
-
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.TYPES);
         Intent intent = new Autocomplete.IntentBuilder(
-                AutocompleteActivityMode.FULLSCREEN, fields).setCountry("FR").setHint("Search restaurant")
+                AutocompleteActivityMode.OVERLAY, fields).setCountry("FR").setHint(getString(R.string.hint_search_bar)).setTypeFilter(TypeFilter.ESTABLISHMENT)
                 .build(this);
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
-    }
-
-    private void startDetailsMyRestaurant() {
-        mUserViewModel.getUser(Objects.requireNonNull(getCurrentUser()).getUid(), this).observe(this, this::setUser);
-        String placeId = mUser.getRestaurant();
-        if (placeId != null) {
-            Intent intent = new Intent(this, DetailsActivity.class);
-            intent.putExtra("placeId", placeId);
-        }
-        else {
-            Toast.makeText(this, "Please choose a restaurant !", Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void setUser(User user) {
@@ -340,9 +325,9 @@ public class MainActivity extends AppCompatActivity
 
     private void updateUIWhenCreating(){
 
-        if (isCurrentUserLogged()){
+        mUserViewModel.getUser(Objects.requireNonNull(getCurrentUser()).getUid(), this).observe(this, this::setUser);
 
-            mUserViewModel.getUser(Objects.requireNonNull(getCurrentUser()).getUid(), this);
+        if (isCurrentUserLogged()){
 
             if (Objects.requireNonNull(this.getCurrentUser()).getPhotoUrl() != null) {
                 Glide.with(this)
@@ -358,8 +343,26 @@ public class MainActivity extends AppCompatActivity
 
             currentUserName.setText(username);
             currentUserEmail.setText(email);
-            this.mUserViewModel.createCurrentUser(this);
+            if (mUser.getUid() == null) {
+                this.mUserViewModel.createCurrentUser(this);
+            }
         }
+    }
+
+    private void getYourLunch() {
+       if (mUser.getRestaurant() != null) {
+           String placeId = mUser.getRestaurant();
+           Intent intent = new Intent(this, DetailsActivity.class);
+           intent.putExtra("placeId", placeId);
+           startActivity(intent);
+       }
+       Toast.makeText(getApplicationContext(), R.string.choose_restaurant, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onResume() {
+       super.onResume();
+       updateUIWhenCreating();
     }
 
     private void configureUserViewModel() {

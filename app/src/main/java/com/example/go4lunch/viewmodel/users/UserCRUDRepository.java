@@ -1,4 +1,4 @@
-package com.example.go4lunch.users;
+package com.example.go4lunch.viewmodel.users;
 
 import android.content.Context;
 import android.widget.Toast;
@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.go4lunch.R;
 import com.example.go4lunch.model.User;
-import com.example.go4lunch.users.UserCRUD;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,6 +24,21 @@ public class UserCRUDRepository {
             List<User> users = new ArrayList<>();
             for (DocumentSnapshot documentSnapshot : documentSnapshots.getDocuments()) {
                 if(documentSnapshot != null && !documentSnapshot.getId().equals(getCurrentUser().getUid())) {
+                    User user = documentSnapshot.toObject(User.class);
+                    users.add(user);
+                }
+            }
+            result.setValue(users);
+        });
+        return result;
+    }
+
+    public MutableLiveData<List<User>> getUserByPlaceId(String placeId, Context context) {
+        MutableLiveData<List<User>> result = new MutableLiveData<>();
+        UserCRUD.getUsers().addOnFailureListener(onFailureListener(context)).addOnSuccessListener(documentSnapshots -> {
+           List<User> users =  new ArrayList<>();
+            for (DocumentSnapshot documentSnapshot : documentSnapshots.getDocuments()) {
+                if (Objects.equals(documentSnapshot.get("restaurant"), placeId) && !documentSnapshot.getId().equals(getCurrentUser().getUid())) {
                     User user = documentSnapshot.toObject(User.class);
                     users.add(user);
                 }

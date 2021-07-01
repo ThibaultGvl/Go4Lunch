@@ -1,11 +1,8 @@
-package com.example.go4lunch.places;
+package com.example.go4lunch.viewmodel.places;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-
-import com.example.go4lunch.places.NearbyRestaurantRepository;
-import com.example.go4lunch.places.NearbyRestaurantViewModel;
 
 public class NearbyViewModelFactory implements ViewModelProvider.Factory {
 

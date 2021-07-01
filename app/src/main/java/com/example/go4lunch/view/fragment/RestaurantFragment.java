@@ -1,11 +1,9 @@
-package com.example.go4lunch.view;
+package com.example.go4lunch.view.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -13,7 +11,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,13 +20,13 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.go4lunch.R;
-import com.example.go4lunch.databinding.FragmentRestaurantBinding;
 import com.example.go4lunch.databinding.FragmentRestaurantListBinding;
 import com.example.go4lunch.model.restaurant.RestaurantOutputs;
 import com.example.go4lunch.model.restaurant.ResultRestaurant;
-import com.example.go4lunch.places.NearbyInjection;
-import com.example.go4lunch.places.NearbyRestaurantViewModel;
-import com.example.go4lunch.places.NearbyViewModelFactory;
+import com.example.go4lunch.view.adapter.RestaurantRecyclerViewAdapter;
+import com.example.go4lunch.viewmodel.places.NearbyInjection;
+import com.example.go4lunch.viewmodel.places.NearbyRestaurantViewModel;
+import com.example.go4lunch.viewmodel.places.NearbyViewModelFactory;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;

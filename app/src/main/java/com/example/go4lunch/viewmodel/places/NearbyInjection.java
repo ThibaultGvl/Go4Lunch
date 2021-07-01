@@ -1,4 +1,4 @@
-package com.example.go4lunch.places;
+package com.example.go4lunch.viewmodel.places;
 
 public class NearbyInjection {
 

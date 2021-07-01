@@ -1,8 +1,7 @@
-package com.example.go4lunch.places;
+package com.example.go4lunch.viewmodel.places;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.go4lunch.model.Autocomplete.RestaurantAutoComplete;
 import com.example.go4lunch.model.details.RestaurantDetails;
 import com.example.go4lunch.model.restaurant.RestaurantOutputs;
 import com.example.go4lunch.utils.RetrofitService;
@@ -33,7 +32,7 @@ public class NearbyRestaurantRepository {
     }
 
     public MutableLiveData<RestaurantOutputs> getRestaurants(String location, String radius, String key) {
-        Call<RestaurantOutputs> restaurantsList = placesApiService.getFollowingPlaces(location, radius,"restaurant", key);
+        Call<RestaurantOutputs> restaurantsList = placesApiService.getFollowingPlaces(location, radius, "restaurant", key);
         restaurantsList.enqueue(new Callback<RestaurantOutputs>() {
             @Override
             public void onResponse(@NotNull Call<RestaurantOutputs> call, @NotNull Response<RestaurantOutputs> response) {
@@ -63,22 +62,5 @@ public class NearbyRestaurantRepository {
             }
         });
         return restaurantOutputsMutableLiveData;
-    }
-
-    public MutableLiveData<RestaurantAutoComplete> getRestaurantBySearch(String input, String key) {
-        MutableLiveData<RestaurantAutoComplete> restaurantAutoCompleteMutableLiveData = new MutableLiveData<>();
-        Call<RestaurantAutoComplete> restaurantAutoCompleteCall = placesApiService.getFollowingAutocomplete(input, key);
-        restaurantAutoCompleteCall.enqueue(new Callback<RestaurantAutoComplete>() {
-            @Override
-            public void onResponse(Call<RestaurantAutoComplete> call, Response<RestaurantAutoComplete> response) {
-                restaurantAutoCompleteMutableLiveData.setValue(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<RestaurantAutoComplete> call, Throwable t) {
-                restaurantAutoCompleteMutableLiveData.setValue(null);
-            }
-        });
-        return restaurantAutoCompleteMutableLiveData;
     }
 }

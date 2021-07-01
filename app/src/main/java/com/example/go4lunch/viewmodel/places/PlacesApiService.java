@@ -1,15 +1,10 @@
-package com.example.go4lunch.places;
+package com.example.go4lunch.viewmodel.places;
 
-import com.example.go4lunch.model.Autocomplete.RestaurantAutoComplete;
 import com.example.go4lunch.model.details.RestaurantDetails;
 import com.example.go4lunch.model.restaurant.RestaurantOutputs;
-import com.example.go4lunch.model.restaurant.ResultRestaurant;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface PlacesApiService {
@@ -19,7 +14,4 @@ public interface PlacesApiService {
 
     @GET("details/json?")
     Call<RestaurantDetails> getFollowingDetails(@Query("place_id") String placeId, @Query("key") String key);
-
-    @GET("autocomplete/json?types=establishment&")
-    Call<RestaurantAutoComplete> getFollowingAutocomplete(@Query("input") String input, @Query("key") String key);
 }

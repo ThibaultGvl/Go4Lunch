@@ -1,4 +1,4 @@
-package com.example.go4lunch.view;
+package com.example.go4lunch.view.adapter;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.FragmentUserBinding;
 import com.example.go4lunch.model.User;
 
@@ -33,9 +35,10 @@ public class DetailsRecyclerViewAdapter extends RecyclerView.Adapter<UserRecycle
     @Override
     public void onBindViewHolder(@NonNull @NotNull UserRecyclerViewAdapter.ViewHolder holder, int position) {
         User user = users.get(position);
-        String userJoining = user.getUsername() + "is joining!";
+        String userJoining = user.getUsername() + holder.mFragmentUserBinding.getRoot()
+                .getContext().getString(R.string.is_joining);
         holder.userEating.setText(userJoining);
-        Glide.with(holder.userImage).load(user.getPicture()).into(holder.userImage);
+        Glide.with(holder.userImage).load(user.getPicture()).apply(RequestOptions.circleCropTransform()).into(holder.userImage);
     }
 
     @Override

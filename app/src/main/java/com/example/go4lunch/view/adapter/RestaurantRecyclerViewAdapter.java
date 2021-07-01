@@ -1,4 +1,4 @@
-package com.example.go4lunch.view;
+package com.example.go4lunch.view.adapter;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,10 +10,10 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.FragmentRestaurantBinding;
 import com.example.go4lunch.model.restaurant.ResultRestaurant;
+import com.example.go4lunch.view.activity.DetailsActivity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -59,6 +59,16 @@ public class RestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Restaura
         }
         else {
             holder.mRestaurantAddress.setText(R.string.unknown);
+        }
+        if (mRestaurant.getOpeningHours() != null) {
+            if (mRestaurant.getOpeningHours().getOpenNow()) {
+                holder.mRestaurantSchedules.setText(R.string.open);
+            } else {
+                holder.mRestaurantSchedules.setText(R.string.close);
+            }
+        }
+        else {
+            holder.mRestaurantSchedules.setText(R.string.unknown);
         }
         holder.mRestaurantRank.setRating((float) rating);
         holder.mFragmentRestaurantBinding.getRoot().setOnClickListener(v -> {
