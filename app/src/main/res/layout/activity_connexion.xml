@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".view.ConnexionActivity">
+    tools:context=".view.activity.ConnexionActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,14 +20,14 @@
 
     <ImageView
         android:id="@+id/connexion_logo"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="@dimen/logo_dimension_size"
+        android:layout_height="@dimen/logo_dimension_size"
         android:src="@drawable/ic_logo_go4lunch"
         app:tint="@color/white"
         android:layout_alignTop="@id/connexion_background"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/bottom_bar_height"
-        android:paddingStart="10dp"/>
+        android:paddingStart="@dimen/connexion_logo_padding_start"/>
 
     <TextView
         android:id="@+id/connexion_app_name"
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:text="@string/app_name"
         android:textColor="@color/white"
-        android:textSize="75sp"
+        android:textSize="@dimen/connexion_appname_size"
         android:textStyle="bold"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/connexion_logo"/>
@@ -53,9 +53,9 @@
     <Button
         android:id="@+id/connexion_fb"
         android:layout_width="match_parent"
-        android:layout_height="65dp"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="100dp"
+        android:layout_height="@dimen/connexion_btn_height"
+        android:layout_marginStart="@dimen/connexion_btn_margin_start"
+        android:layout_marginTop="@dimen/margin_top"
         android:text="@string/sign_in_with_facebook"
         android:textColor="@color/white"
         android:drawableTint="@color/white"
@@ -67,9 +67,9 @@
     <Button
         android:id="@+id/connexion_google"
         android:layout_width="wrap_content"
-        android:layout_height="65dp"
-        android:layout_marginTop="20dp"
-        android:paddingStart="15dp"
+        android:layout_height="@dimen/connexion_btn_height"
+        android:layout_marginTop="@dimen/connexion_margin_top"
+        android:paddingStart="@dimen/connexion_btn_padding_start"
         android:textColor="@color/white"
         android:text="@string/sign_in_with_google"
         android:drawableStart="@drawable/ic_google_button"
@@ -80,6 +80,37 @@
         android:layout_below="@id/connexion_fb"
         android:layout_centerHorizontal="true"/>
 
+        <Button
+            android:id="@+id/connexion_email"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/connexion_btn_height"
+            android:layout_marginTop="@dimen/connexion_margin_top"
+            android:paddingStart="@dimen/connexion_btn_padding_start"
+            android:textColor="@color/white"
+            android:text="@string/sign_in_with_email"
+            android:drawableStart="@drawable/ic_baseline_email_24"
+            android:drawableTint="@color/white"
+            android:backgroundTint="@color/quantum_grey"
+            android:layout_alignStart="@id/connexion_fb"
+            android:layout_alignEnd="@id/connexion_fb"
+            android:layout_below="@id/connexion_google"
+            android:layout_centerHorizontal="true"/>
+
+        <Button
+            android:id="@+id/connexion_twitter"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/connexion_btn_height"
+            android:layout_marginTop="@dimen/connexion_margin_top"
+            android:paddingStart="@dimen/connexion_btn_padding_start"
+            android:textColor="@color/white"
+            android:text="@string/sign_in_with_twitter"
+            android:drawableStart="@drawable/ic_twitter_logo_shape_svgrepo_com"
+            android:drawableTint="@color/white"
+            android:backgroundTint="@color/twitter_color"
+            android:layout_alignStart="@id/connexion_fb"
+            android:layout_alignEnd="@id/connexion_fb"
+            android:layout_below="@id/connexion_email"
+            android:layout_centerHorizontal="true"/>
     </RelativeLayout>
 
 </ScrollView>

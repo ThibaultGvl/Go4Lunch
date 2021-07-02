@@ -8,9 +8,31 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="bottom_bar_height">50dp</dimen>
     <dimen name="padding_item">15dp</dimen>
+    <dimen name="recycler_view_margin">16dp</dimen>
+    <!-- activity_connexion dimension -->
+    <dimen name="connexion_appname_size">75sp</dimen>
+    <dimen name="connexion_btn_height">65dp</dimen>
+    <dimen name="connexion_btn_margin_start">100dp</dimen>
+    <dimen name="connexion_margin_top">20dp</dimen>
+    <dimen name="connexion_btn_padding_start">15dp</dimen>
+    <dimen name="connexion_logo_padding_start">10dp</dimen>
+    <dimen name="logo_dimension_size">200dp</dimen>
+    <dimen name="margin_top">50dp</dimen>
+    <!-- activity_main dimension -->
     <dimen name="logo_size">125dp</dimen>
     <dimen name="banner_text_size">20sp</dimen>
     <dimen name="banner_margin_size">15dp</dimen>
     <dimen name="logo_margin_size">100dp</dimen>
+    <!-- activity_nav_header dimension -->
+    <dimen name="nav_header_appname_size">30sp</dimen>
+    <dimen name="nav_header_margin_size">15dp</dimen>
+    <!-- fragment_restaurant dimension -->
+    <dimen name="fragment_restaurant_margin">5dp</dimen>
+    <dimen name="fragment_restaurant_image_size">75dp</dimen>
+    <dimen name="fragment_restaurant_margin_end">15dp</dimen>
+    <!-- fragment_user dimension -->
     <dimen name="user_image_size">60dp</dimen>
+    <!-- activity_details dimension -->
+    <dimen name="image_details_size">300dp</dimen>
+    <dimen name="details_fab_max_size">30dp</dimen>
 </resources>

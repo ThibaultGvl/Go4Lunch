@@ -38,8 +38,9 @@
                 android:layout_gravity="center_vertical"/>
 
             <ImageButton
-                android:layout_width="wrap_content"
+                android:id="@+id/search_btn"
                 android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
                 android:src="@drawable/ic_baseline_search_24"
                 android:background="@color/primary_color"
                 android:layout_marginEnd="@dimen/banner_margin_size"
@@ -70,9 +71,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
-            app:menu="@menu/bottom_nav"
-            app:itemIconTint="@animator/bottom_navigation_selector"
-            app:itemTextColor="@animator/bottom_navigation_selector"/>
+            app:itemTextColor="@drawable/bottom_navigation_selector"
+            app:itemIconTint="@drawable/bottom_navigation_selector"
+            app:menu="@menu/bottom_nav"/>
     </RelativeLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

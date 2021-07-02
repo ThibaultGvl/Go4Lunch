@@ -4,7 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.activity.details.DetailsActivity">
+    tools:context=".view.activity.DetailsActivity">
+
+    <ImageButton
+        android:id="@+id/arrow_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/ic_baseline_arrow_back_24"
+        android:tint="@color/white"
+        android:backgroundTint="@color/fui_transparent"/>
 
     <RelativeLayout
         android:id="@+id/restaurant_image"
@@ -15,7 +25,7 @@
     <ImageView
         android:id="@+id/restaurant_image_view"
         android:layout_width="match_parent"
-        android:layout_height="300dp"/>
+        android:layout_height="@dimen/image_details_size"/>
 
     </RelativeLayout>
 
@@ -28,34 +38,32 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp">
 
         <TextView
             android:id="@+id/restaurant_name_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
             android:text="@string/name"
-            android:textColor="@color/white"
-            android:textStyle="bold"/>
+            android:textColor="@color/white"/>
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatRatingBar
+            android:id="@+id/rating_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_star_24"
             app:tint="@color/quantum_yellow"
-            android:layout_toEndOf="@id/restaurant_name_details"
-            android:layout_alignTop="@id/restaurant_name_details"
-            android:layout_marginStart="5dp"/>
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:numStars="3"
+            android:layout_toEndOf="@id/restaurant_name_details"/>
             <TextView
                 android:id="@+id/restaurant_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/restaurant_name_details"
                 android:text="@string/restaurant_details"
-                android:textColor="@color/white"
-                android:layout_marginBottom="15dp"
-                android:layout_marginTop="5dp"/>
+                android:textColor="@color/white" />
 
 
         </RelativeLayout>
@@ -68,10 +76,10 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_baseline_check_circle_24"
         android:backgroundTint="@color/white"
-        app:maxImageSize="30dp"
+        app:maxImageSize="@dimen/details_fab_max_size"
         app:layout_constraintEnd_toEndOf="@id/restaurant_image"
         app:layout_constraintBottom_toBottomOf="@id/restaurant_info"
-        android:layout_marginEnd="40dp"
+        android:layout_marginEnd="@dimen/details_fab_max_size"
         android:layout_marginBottom="40dp"/>
 
     <androidx.cardview.widget.CardView

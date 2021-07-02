@@ -23,9 +23,9 @@ public class User {
     @Expose
     private String picture;
 
-    @SerializedName("restaurantId")
+    @SerializedName("restaurant")
     @Expose
-    private String restaurantId;
+    private String restaurant;
 
     @SerializedName("restaurantsLiked")
     @Expose
@@ -41,12 +41,12 @@ public class User {
 
     public User() { }
 
-    public User(String uid, String username, String email, String picture, String restaurantId, List<String> restaurantsLiked, String restaurantName, String restaurantAddress) {
+    public User(String uid, String username, String email, String picture, String restaurant, List<String> restaurantsLiked, String restaurantName, String restaurantAddress) {
         this.uid = uid;
         this.username = username;
         this.email = email;
         this.picture = picture;
-        this.restaurantId = restaurantId;
+        this.restaurant = restaurant;
         this.restaurantsLiked = restaurantsLiked;
         this.restaurantName = restaurantName;
         this.restaurantAddress = restaurantAddress;
@@ -85,19 +85,15 @@ public class User {
     }
 
     public String getRestaurant() {
-        return restaurantId;
+        return restaurant;
     }
 
-    public void setRestaurantId(String restaurantId) {
-        this.restaurantId = restaurantId;
+    public void setRestaurantId(String restaurant) {
+        this.restaurant = restaurant;
     }
 
     public List<String> getRestaurantsLiked() {
         return restaurantsLiked;
-    }
-
-    public void setRestaurantsLiked(List<String> restaurantsLiked) {
-        this.restaurantsLiked = restaurantsLiked;
     }
 
     public void addRestaurantLike(String restaurantToLike) {
