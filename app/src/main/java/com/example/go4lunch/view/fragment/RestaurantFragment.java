@@ -120,7 +120,7 @@ public class RestaurantFragment extends Fragment {
     }
 
     private void getRestaurants(RestaurantOutputs restaurants) {
-        if (restaurants != null) {
+        if (restaurants != null && !mRestaurants.containsAll(restaurants.getResults())) {
             mRestaurants.addAll(restaurants.getResults());
             mAdapter.notifyDataSetChanged();
         }

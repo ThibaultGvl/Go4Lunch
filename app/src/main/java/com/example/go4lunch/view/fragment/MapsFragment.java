@@ -81,15 +81,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mMapsBinding = FragmentMapsBinding.inflate(inflater, container, false);
-        configureNearbyRestaurantViewModel();
-        configureUserViewModel();
         if (savedInstanceState != null) {
             placeLatitude = requireArguments().getDouble("placeLatitude");
             placeLongitude = requireArguments().getDouble("placeLongitude");
             placeIdFromSearch = requireArguments().getString("placeId");
             placePosition = new LatLng(placeLatitude, placeLongitude);
         }
+        mMapsBinding = FragmentMapsBinding.inflate(inflater, container, false);
+        configureNearbyRestaurantViewModel();
+        configureUserViewModel();
         return mMapsBinding.getRoot();
     }
 
@@ -113,9 +113,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-        getLastLocation();
         if (placePosition != null) {
             getPlaceSearched();
+        }
+        else {
+            getLastLocation();
         }
     }
 
@@ -182,9 +184,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         if (restaurants != null) {
             List<ResultRestaurant> restaurantsList = restaurants.getResults();
             for (ResultRestaurant restaurant : restaurantsList) {
-                placeId = restaurant.getPlaceId();
+                String placeId = restaurant.getPlaceId();
                 mUserViewModel.getUserByPlaceId(placeId, requireContext()).observe(this, this::setUsers);
                 LatLng restaurantLatLng = new LatLng(restaurant.getGeometry().getLocation().getLat(), restaurant.getGeometry().getLocation().getLng());
+
                 if (mUsers.size() == 0) {
                     mMap.addMarker(new MarkerOptions().position(restaurantLatLng).icon(getBitmapDescriptor(R.drawable.marker_orange)));
                 }

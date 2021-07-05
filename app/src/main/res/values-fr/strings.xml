@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="menu_home">Accueil</string>
+    <string name="menu_gallery">Gallerie</string>
+    <string name="map_view">Carte</string>
+    <string name="list_view">Liste</string>
+    <string name="workmates">Collègues</string>
+    <string name="your_lunch">TON RESTO</string>
+    <string name="settings">PARAMETRES</string>
+    <string name="logout">DECONNEXION</string>
+    <!-- Preference Titles -->
+    <string name="preferences">Paramètres</string>
+
+    <!-- Messages Preferences -->
+    <string name="notifications">Notifications alertes</string>
+    <string name="language">"Choisis ta langue "</string>
+
+    <!-- Sync Preferences -->
+    <string name="slogan">Trouvez le bon resto pour manger avec vos collègues</string>
+    <string name="sign_in_with_google">Se connecter avec Google</string>
+    <string name="sign_in_with_facebook">Se connecter avec Facebook</string>
+    <string name="sign_in_with_email">Se connecter avec Email</string>
+    <string name="sign_in_with_twitter">Se connecter avec Twitter</string>
+    <string name="name">Nom</string>
+    <string name="email">Email</string>
+    <string name="what_workmate_eat">Ce que mange vos collègues</string>
+    <string name="info_no_email_found">Pas d\'email trouvé</string>
+    <string name="info_no_username_found">Pas de nom trouvé</string>
+    <string name="user_created">Cet utilisateur vient d\'être créé</string>
+    <string name="restaurant_choice">Votre choix a été pris en compte</string>
+    <string name="update">Les informations ont étés mise à jour</string>
+    <string name="user_delete">Votre compte a été supprimé</string>
+    <string name="default_info_title">Localisation par défaut</string>
+    <string name="default_info_snippet">Votre localisation est désctivée.</string>
+    <string name="current_location_null">Localisation actuelle est nulle. Utiliser celle par défaut</string>
+    <string name="user_fragment_banner">Collègues Disponibles</string>
+    <string name="no_restaurant_found">Aucun restaurant autour de vous</string>
+    <string name="no_hour_found">Aucun horraire disponible</string>
+    <string name="unknown">Inconnu</string>
+    <string name="call">APPELER</string>
+    <string name="like">FAVORIS</string>
+    <string name="website">SITE</string>
+    <string name="restaurant_details">style - adresse</string>
+    <string name="no_details">Aucun détails pour ce restaurant</string>
+    <string name="hint_search_bar">Chercher un restaurant</string>
+    <string name="choose_restaurant">Choississez un restaurant !</string>
+    <string name="hasnot_decided">\ n\'a pas encore décidé </string>
+    <string name="address">adresse</string>
+    <string name="open">Ouvert</string>
+    <string name="close">Fermé</string>
+    <string name="default_banner">Un petit creux ?</string>
+    <string name="no_name_found">Aucun nom trouvé pour ce restaurant</string>
+    <string name="is_joining">\ y sera!</string>
+    <string name="is_eating">\ mange \</string>
+    <string name="french">Français</string>
+    <string name="english">Anglais</string>
+    <string name="select_a_language">Choississez un Langage</string>
+    <string name="delete_your_account">SUPPRIMEZ VOTRE COMPTE</string>
+</resources>

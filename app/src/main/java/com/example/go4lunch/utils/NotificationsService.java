@@ -12,6 +12,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.example.go4lunch.R;
 import com.example.go4lunch.model.User;
+import com.example.go4lunch.view.activity.ConnexionActivity;
 import com.example.go4lunch.view.activity.MainActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -25,14 +26,14 @@ public class NotificationsService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         if (remoteMessage.getNotification() != null) {
-            String message = remoteMessage.getNotification().getBody();
+            String message = "You'll eat at" + mUser.getRestaurantName() + " which is at" + mUser.getRestaurantAddress() + " with" + "Workmates";
             this.sendVisualNotification(message);
         }
     }
 
     private void sendVisualNotification(String messageBody) {
 
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, ConnexionActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();

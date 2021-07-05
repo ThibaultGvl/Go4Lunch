@@ -11,7 +11,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -53,9 +55,9 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
@@ -76,8 +78,10 @@ public class MainActivity extends AppCompatActivity
     private ImageButton mSearchBtn;
     private UserViewModel mUserViewModel;
     private NearbyRestaurantViewModel mNearbyRestaurantViewModel;
-    private User mUser = new User("", "", "", "", "", null, "", "");
+    private User mUser = new User("", "", "", "", "",
+            null, "", "");
     private int mFragmentIdentifier;
+    //private String mLanguageChoose;
 
     private static final int MAPS_FRAGMENT = 0;
     private static final int RESTAURANT_FRAGMENT = 1;
@@ -89,6 +93,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
+        //Intent intent = getIntent();
+        //mLanguageChoose = intent.getStringExtra("mLanguageChoose");
         Places.initialize(this, "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4");
         PlacesClient placesClient = Places.createClient(this);
         this.configureUserViewModel();
@@ -251,7 +257,8 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 Status status = Autocomplete.getStatusFromIntent(data);
-                Toast.makeText(this, "Error: " + status.getStatusMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Error: " + status.getStatusMessage(),
+                        Toast.LENGTH_LONG).show();
                 Log.i(TAG, status.getStatusMessage());
             }
             else if (resultCode == RESULT_OK && mFragmentIdentifier == MAPS_FRAGMENT) {
@@ -272,9 +279,13 @@ public class MainActivity extends AppCompatActivity
 
 
     public void onSearchCalled() {
-        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.TYPES);
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME,
+                Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.TYPES);
+        Place.Type filter = Place.Type.RESTAURANT;
         Intent intent = new Autocomplete.IntentBuilder(
-                AutocompleteActivityMode.OVERLAY, fields).setCountry("FR").setHint(getString(R.string.hint_search_bar)).setTypeFilter(TypeFilter.ESTABLISHMENT).setInitialQuery("restaurant")
+                AutocompleteActivityMode.OVERLAY, fields).setCountry("FR")
+                .setHint(getString(R.string.hint_search_bar)).setTypeFilter(TypeFilter.ESTABLISHMENT)
+                .setInitialQuery("restaurant")
                 .build(this);
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
     }
@@ -290,7 +301,8 @@ public class MainActivity extends AppCompatActivity
 
     private void updateUIWhenCreating(){
 
-        mUserViewModel.getUser(Objects.requireNonNull(getCurrentUser()).getUid(), this).observe(this, this::setUser);
+        mUserViewModel.getUser(Objects.requireNonNull(getCurrentUser()).getUid(), this)
+                .observe(this, this::setUser);
 
         if (isCurrentUserLogged()){
 
@@ -322,8 +334,18 @@ public class MainActivity extends AppCompatActivity
            startActivity(intent);
        }
        else {
-       Toast.makeText(getApplicationContext(), R.string.choose_restaurant, Toast.LENGTH_SHORT).show();
+       Toast.makeText(getApplicationContext(), R.string.choose_restaurant, Toast.LENGTH_SHORT)
+               .show();
        }
+    }
+
+    private void setLanguage(Context context, String languageToLoad) {
+        Locale locale = new Locale(languageToLoad);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        context.createConfigurationContext(config);
+        context.getResources().updateConfiguration(config,getResources().getDisplayMetrics());
     }
 
     @Override

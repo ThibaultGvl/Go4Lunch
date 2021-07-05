@@ -138,6 +138,7 @@ public class UserCRUDRepository {
 
     public void deleteUser(String uid, Context context) {
         MutableLiveData<String> result = new MutableLiveData<>();
+        FirebaseAuth.getInstance().getCurrentUser().delete();
         UserCRUD.deleteUser(uid).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(aVoid -> {
             Toast.makeText(context, R.string.user_delete, Toast.LENGTH_SHORT).show();
             result.setValue(uid);
