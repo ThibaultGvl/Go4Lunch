@@ -51,7 +51,8 @@ public class RestaurantFragment extends Fragment {
 
     private final List<ResultRestaurant> mRestaurants = new ArrayList<>();
 
-    private final RestaurantRecyclerViewAdapter mAdapter = new RestaurantRecyclerViewAdapter(mRestaurants);
+    private final RestaurantRecyclerViewAdapter mAdapter = new RestaurantRecyclerViewAdapter
+            (mRestaurants);
 
     private Location mLastKnownLocation;
 
@@ -89,9 +90,11 @@ public class RestaurantFragment extends Fragment {
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        com.example.go4lunch.databinding.FragmentRestaurantListBinding fragmentRestaurantListBinding = FragmentRestaurantListBinding.inflate(inflater, container, false);
+        com.example.go4lunch.databinding.FragmentRestaurantListBinding fragmentRestaurantListBinding
+                = FragmentRestaurantListBinding.inflate(inflater, container, false);
         View view = fragmentRestaurantListBinding.getRoot();
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.requireContext());
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient
+                (this.requireContext());
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
@@ -106,12 +109,16 @@ public class RestaurantFragment extends Fragment {
     @SuppressLint("MissingPermission")
     private void getPlaces() {
         if (mLocationPermission) {
-            mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
+            mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient
+                    (requireContext());
             mFusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
                 mLastKnownLocation = task.getResult();
-                LatLng mLastKnownLocationLatLng = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+                LatLng mLastKnownLocationLatLng = new LatLng(mLastKnownLocation.getLatitude(),
+                        mLastKnownLocation.getLongitude());
                 String mLastKnownLocationString = mLastKnownLocationLatLng.toString();
-                mNearbyRestaurantViewModel.getRestaurantsList(mLastKnownLocationString,"1000","AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4").observe(getViewLifecycleOwner(), this::getRestaurants);
+                mNearbyRestaurantViewModel.getRestaurantsList(mLastKnownLocationString,"1000"
+                        ,"AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4")
+                        .observe(getViewLifecycleOwner(), this::getRestaurants);
             });
         }
         else {
@@ -120,12 +127,15 @@ public class RestaurantFragment extends Fragment {
     }
 
     private void getRestaurants(RestaurantOutputs restaurants) {
-        if (restaurants != null && !mRestaurants.containsAll(restaurants.getResults())) {
-            mRestaurants.addAll(restaurants.getResults());
-            mAdapter.notifyDataSetChanged();
+        if (restaurants != null) {
+            if (!mRestaurants.containsAll(restaurants.getResults())) {
+                mRestaurants.addAll(restaurants.getResults());
+                mAdapter.notifyDataSetChanged();
+            }
         }
         else {
-            Toast.makeText(this.requireContext(), getString(R.string.no_restaurant_found), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.requireContext(), getString(R.string.no_restaurant_found),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 

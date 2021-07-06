@@ -19,11 +19,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.FragmentSettingsBinding;
+import com.example.go4lunch.view.activity.ConnexionActivity;
 import com.example.go4lunch.view.activity.MainActivity;
 import com.example.go4lunch.viewmodel.users.UserInjection;
 import com.example.go4lunch.viewmodel.users.UserViewModel;
 import com.example.go4lunch.viewmodel.users.UserViewModelFactory;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -38,24 +40,19 @@ public class SettingsFragment extends Fragment {
 
     private UserViewModel mUserViewModel;
 
-    private AutoCompleteTextView mLanguage;
-
-    private SwitchCompat mNotificationsAlert;
-
     private Button mSuppressButton;
 
-    private Button mValidationButton;
-
-    private String currentUserId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-
-    private String mLanguageChoose;
+    private final FirebaseUser currentUser = Objects.requireNonNull(FirebaseAuth.getInstance()
+            .getCurrentUser());
 
 
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mFragmentSettingsBinding = FragmentSettingsBinding.inflate(inflater, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        mFragmentSettingsBinding = FragmentSettingsBinding.inflate(inflater, container,
+                false);
         createUI();
         parametersListeners();
         return mFragmentSettingsBinding.getRoot();
@@ -68,43 +65,18 @@ public class SettingsFragment extends Fragment {
     }
 
     private void createUI() {
-        mLanguage = mFragmentSettingsBinding.languageActv;
-        mNotificationsAlert = mFragmentSettingsBinding.notificationSwitch;
         mSuppressButton = mFragmentSettingsBinding.suppressButton;
-        mValidationButton = mFragmentSettingsBinding.validationButton;
     }
 
     public void parametersListeners() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_dropdown_item_1line, mLanguages);
-        mLanguage.setAdapter(adapter);
-        if (mLanguage.getText().toString().equals(String.valueOf(R.string.english))){
-            mLanguageChoose = "en";
-        }
-        else {
-            mLanguageChoose = "fr";
-        }
-        mSuppressButton.setOnClickListener(v -> mUserViewModel.deleteUser(currentUserId, this.getContext()));
-        mValidationButton.setOnClickListener(v -> {
-            if (mLanguageChoose != null) {
-                setLanguage(this.requireContext(), mLanguageChoose);
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.putExtra("mLanguageChoose", mLanguageChoose);
-                startActivity(intent);
-            }
+        String currentUserId = currentUser.getUid();
+        mSuppressButton.setOnClickListener(v -> {
+            currentUser.delete();
+            mUserViewModel.deleteUser(currentUserId, this.getContext());
+            Intent intent = new Intent(this.getActivity(), ConnexionActivity.class);
+            startActivity(intent);
+            FirebaseAuth.getInstance().signOut();
         });
-    }
-
-    private static final String[] mLanguages = new String[] {
-            "English", "French"
-    };
-
-    private void setLanguage(Context context, String languageToLoad) {
-        Locale locale = new Locale(languageToLoad);
-        Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        config.locale = locale;
-        context.createConfigurationContext(config);
-        context.getResources().updateConfiguration(config,getResources().getDisplayMetrics());
     }
 
     private void configureUserViewModel() {

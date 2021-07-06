@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
@@ -17,6 +18,8 @@ import com.example.go4lunch.view.activity.MainActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import org.jetbrains.annotations.NotNull;
+
 public class NotificationsService extends FirebaseMessagingService {
 
     private final int mNotificationId = 26;
@@ -24,33 +27,30 @@ public class NotificationsService extends FirebaseMessagingService {
     private User mUser = new User("093094", "Name", "email", "picture", "restaurant", null, "Chez oim", "3 chemin de l'hélianthe");
 
     @Override
-    public void onMessageReceived(RemoteMessage remoteMessage) {
+    public void onMessageReceived(@NotNull RemoteMessage remoteMessage) {
+        super.onMessageReceived(remoteMessage);
         if (remoteMessage.getNotification() != null) {
-            String message = "You'll eat at" + mUser.getRestaurantName() + " which is at" + mUser.getRestaurantAddress() + " with" + "Workmates";
-            this.sendVisualNotification(message);
+            this.sendVisualNotification(remoteMessage.getNotification());
+            Log.e("TAG", String.valueOf(remoteMessage.getNotification()));
         }
     }
 
-    private void sendVisualNotification(String messageBody) {
+    private void sendVisualNotification(RemoteMessage.Notification notification) {
 
         Intent intent = new Intent(this, ConnexionActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-
-        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-        inboxStyle.setBigContentTitle(getString(R.string.app_name));
-        inboxStyle.addLine(messageBody);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 26, intent, PendingIntent.FLAG_ONE_SHOT);
 
         String channelId = "password";
+        String message = "You'll eat at" + mUser.getRestaurantName() + " which is at" + mUser.getRestaurantAddress() + " with" + "Workmates";
 
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.drawable.ic_logo_go4lunch)
-                        .setContentTitle(getString(R.string.app_name))
-                        .setContentText("You'll eat at" + mUser.getRestaurantName() + " which is at" + mUser.getRestaurantAddress() + " with" + "Workmates")
+                        .setContentTitle(notification.getTitle())
+                        .setContentText(message)
                         .setAutoCancel(true)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                        .setContentIntent(pendingIntent)
-                        .setStyle(inboxStyle);
+                        .setContentIntent(pendingIntent);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -61,6 +61,6 @@ public class NotificationsService extends FirebaseMessagingService {
             notificationManager.createNotificationChannel(mChannel);
         }
 
-        notificationManager.notify(mNotificationId, notificationBuilder.build());
+        notificationManager.notify(String.valueOf(R.string.app_name), mNotificationId, notificationBuilder.build());
     }
 }

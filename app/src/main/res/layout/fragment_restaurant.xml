@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/text_margin"
         android:textStyle="bold"
+        android:textSize="@dimen/restaurant_name_size"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:maxLines="1"
@@ -22,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/fragment_restaurant_margin"
         android:text="@string/address"
+        android:textSize="@dimen/address_restaurant_size"
         app:layout_constraintStart_toStartOf="@id/restaurant_name"
         app:layout_constraintTop_toBottomOf="@id/restaurant_name"
         android:maxLines="1"
@@ -46,12 +48,20 @@
         app:layout_constraintBottom_toBottomOf="@id/restaurant_name"
         android:maxLines="1"/>
 
+    <ImageView
+        android:id="@+id/restaurant_workmate_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_supervisor_account_24"
+        app:layout_constraintStart_toStartOf="@id/restaurant_rank"
+        app:layout_constraintTop_toTopOf="@id/restaurant_address"/>
+
     <TextView
         android:id="@+id/restaurant_workmate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/restaurant_distance"
-        app:layout_constraintEnd_toStartOf="@id/restaurant_image"
+        app:layout_constraintTop_toTopOf="@id/restaurant_workmate_image"
+        app:layout_constraintStart_toEndOf="@id/restaurant_workmate_image"
         android:maxLines="1"/>
 
     <androidx.appcompat.widget.AppCompatRatingBar

@@ -35,4 +35,8 @@
     <!-- activity_details dimension -->
     <dimen name="image_details_size">300dp</dimen>
     <dimen name="details_fab_max_size">30dp</dimen>
+    <dimen name="restaurant_name_size">15sp</dimen>
+    <dimen name="address_restaurant_size">12sp</dimen>
+    <dimen name="settings_margin_top">50dp</dimen>
+    <dimen name="settings_margin_default">100dp</dimen>
 </resources>

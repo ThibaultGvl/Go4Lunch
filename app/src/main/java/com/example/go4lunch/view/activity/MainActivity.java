@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity
     private User mUser = new User("", "", "", "", "",
             null, "", "");
     private int mFragmentIdentifier;
-    //private String mLanguageChoose;
+    private String mLanguageChoose;
 
     private static final int MAPS_FRAGMENT = 0;
     private static final int RESTAURANT_FRAGMENT = 1;
@@ -93,8 +93,6 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
-        //Intent intent = getIntent();
-        //mLanguageChoose = intent.getStringExtra("mLanguageChoose");
         Places.initialize(this, "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4");
         PlacesClient placesClient = Places.createClient(this);
         this.configureUserViewModel();
@@ -337,15 +335,6 @@ public class MainActivity extends AppCompatActivity
        Toast.makeText(getApplicationContext(), R.string.choose_restaurant, Toast.LENGTH_SHORT)
                .show();
        }
-    }
-
-    private void setLanguage(Context context, String languageToLoad) {
-        Locale locale = new Locale(languageToLoad);
-        Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        config.locale = locale;
-        context.createConfigurationContext(config);
-        context.getResources().updateConfiguration(config,getResources().getDisplayMetrics());
     }
 
     @Override

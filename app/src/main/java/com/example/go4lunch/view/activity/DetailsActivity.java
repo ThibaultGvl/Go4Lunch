@@ -87,9 +87,14 @@ public class DetailsActivity extends AppCompatActivity {
                 mName.setText(R.string.info_no_username_found);
             }
             mAddress.setText(mRestaurant.getVicinity());
-            if (mRestaurant.getPhotos().get(0) != null) {
-            String photoUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + mRestaurant.getPhotos().get(0).getPhotoReference() + "&key=AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4";
-            Glide.with(mImage).load(photoUrl).into(mImage);
+            if (mRestaurant.getPhotos() != null) {
+                if (mRestaurant.getPhotos().get(0) != null) {
+                    String photoUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + mRestaurant.getPhotos().get(0).getPhotoReference() + "&key=AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4";
+                    Glide.with(mImage).load(photoUrl).into(mImage);
+                }
+            }
+            else {
+                Glide.with(mImage).load(R.drawable.ic_logo_go4lunch).into(mImage);
             }
             if (mRestaurant.getRating() != null) {
                 double rating = ((mRestaurant.getRating() / 5) * 3);
@@ -101,8 +106,10 @@ public class DetailsActivity extends AppCompatActivity {
             });
             mLikeButton.setOnClickListener(v -> { });
             mWebButton.setOnClickListener(v -> {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mRestaurant.getWebsite()));
-                startActivity(intent);
+                if (mRestaurant.getWebsite() != null) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mRestaurant.getWebsite()));
+                    startActivity(intent);
+                }
             });
             mFab.setOnClickListener(v -> updateRestaurantChoose(mRestaurant));
         }
