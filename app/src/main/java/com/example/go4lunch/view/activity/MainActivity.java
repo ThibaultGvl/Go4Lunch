@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -78,11 +79,9 @@ public class MainActivity extends AppCompatActivity
     private ImageButton mSearchBtn;
     private UserViewModel mUserViewModel;
     private NearbyRestaurantViewModel mNearbyRestaurantViewModel;
+    private int mFragmentIdentifier;
     private User mUser = new User("", "", "", "", "",
             null, "", "");
-    private int mFragmentIdentifier;
-    private String mLanguageChoose;
-
     private static final int MAPS_FRAGMENT = 0;
     private static final int RESTAURANT_FRAGMENT = 1;
     private static final int USER_FRAGMENT = 2;
@@ -248,11 +247,16 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK && mFragmentIdentifier == RESTAURANT_FRAGMENT) {
-                Place place = Autocomplete.getPlaceFromIntent(data);
-                String placeId = place.getId();
-                Intent intent = new Intent(this, DetailsActivity.class);
-                intent.putExtra("placeId", placeId);
-                startActivity(intent);
+                if (Autocomplete.getPlaceFromIntent(data).getTypes().contains(Place.Type.RESTAURANT)) {
+                    Place place = Autocomplete.getPlaceFromIntent(data);
+                    String placeId = place.getId();
+                    Intent intent = new Intent(this, DetailsActivity.class);
+                    intent.putExtra("placeId", placeId);
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(this, R.string.choose_restaurant, Toast.LENGTH_SHORT).show();
+                }
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 Status status = Autocomplete.getStatusFromIntent(data);
                 Toast.makeText(this, "Error: " + status.getStatusMessage(),
@@ -260,17 +264,22 @@ public class MainActivity extends AppCompatActivity
                 Log.i(TAG, status.getStatusMessage());
             }
             else if (resultCode == RESULT_OK && mFragmentIdentifier == MAPS_FRAGMENT) {
-                Place place = Autocomplete.getPlaceFromIntent(data);
-                double placeLatitude = place.getLatLng().latitude;
-                double placeLongitude = place.getLatLng().longitude;
-                String placeId = place.getId();
-                Bundle bundle = new Bundle();
-                bundle.putDouble("placeLatitude", placeLatitude);
-                bundle.putDouble("placeLongitude", placeLongitude);
-                bundle.putString("placeId", placeId);
-                MapsFragment mapsFragment = new MapsFragment();
-                mapsFragment.setArguments(bundle);
-                startTransactionFragment(mapsFragment);
+                if (Autocomplete.getPlaceFromIntent(data).getTypes().contains(Place.Type.RESTAURANT)) {
+                    Place place = Autocomplete.getPlaceFromIntent(data);
+                    double placeLatitude = Objects.requireNonNull(place.getLatLng()).latitude;
+                    double placeLongitude = place.getLatLng().longitude;
+                    String placeId = place.getId();
+                    Bundle bundle = new Bundle();
+                    bundle.putDouble("placeLatitude", placeLatitude);
+                    bundle.putDouble("placeLongitude", placeLongitude);
+                    bundle.putString("placeId", placeId);
+                    MapsFragment mapsFragment = new MapsFragment();
+                    mapsFragment.setArguments(bundle);
+                    startTransactionFragment(mapsFragment);
+                }
+                else {
+                    Toast.makeText(this, R.string.choose_restaurant, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
@@ -279,7 +288,7 @@ public class MainActivity extends AppCompatActivity
     public void onSearchCalled() {
         List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME,
                 Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.TYPES);
-        Place.Type filter = Place.Type.RESTAURANT;
+
         Intent intent = new Autocomplete.IntentBuilder(
                 AutocompleteActivityMode.OVERLAY, fields).setCountry("FR")
                 .setHint(getString(R.string.hint_search_bar)).setTypeFilter(TypeFilter.ESTABLISHMENT)
@@ -288,19 +297,20 @@ public class MainActivity extends AppCompatActivity
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
     }
 
-    private void setUser(User user) {
-        mUser = user;
-    }
-
     @Nullable
     protected FirebaseUser getCurrentUser(){ return FirebaseAuth.getInstance().getCurrentUser(); }
 
     protected Boolean isCurrentUserLogged(){ return (this.getCurrentUser() != null); }
 
+    private void setUser(User user) {
+        mUser = user;
+    }
+
     private void updateUIWhenCreating(){
 
-        mUserViewModel.getUser(Objects.requireNonNull(getCurrentUser()).getUid(), this)
-                .observe(this, this::setUser);
+        String uid = Objects.requireNonNull(getCurrentUser()).getUid();
+
+        this.mUserViewModel.getUser(uid, this).observe(this, this::setUser);
 
         if (isCurrentUserLogged()){
 
@@ -318,6 +328,7 @@ public class MainActivity extends AppCompatActivity
 
             currentUserName.setText(username);
             currentUserEmail.setText(email);
+
             if (mUser.getUid() == null || mUser.getUid().equals("")) {
                 this.mUserViewModel.createCurrentUser(this);
             }
@@ -354,5 +365,9 @@ public class MainActivity extends AppCompatActivity
         NearbyViewModelFactory nearbyViewModelFactory = NearbyInjection.provideRestaurantViewModel();
         mNearbyRestaurantViewModel = new ViewModelProvider(this, nearbyViewModelFactory)
                 .get(NearbyRestaurantViewModel.class);
+    }
+
+    public User getUserInformations() {
+        return mUser;
     }
 }

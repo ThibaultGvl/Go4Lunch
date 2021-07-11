@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.go4lunch.R;
@@ -63,7 +64,8 @@ public class DetailsActivity extends AppCompatActivity {
         configureUserViewModel();
         configureNearbyRestaurantViewModel();
         mRestaurantViewModel.getRestaurantDetails(placeId,
-                "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4").observe(this, this::setRestaurant);
+                "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4")
+                .observe(this, this::setRestaurant);
         configureUsers();
         RecyclerView recyclerView = mActivityBinding.userRvDetails;
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -89,7 +91,9 @@ public class DetailsActivity extends AppCompatActivity {
             mAddress.setText(mRestaurant.getVicinity());
             if (mRestaurant.getPhotos() != null) {
                 if (mRestaurant.getPhotos().get(0) != null) {
-                    String photoUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + mRestaurant.getPhotos().get(0).getPhotoReference() + "&key=AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4";
+                    String photoUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth" +
+                            "=400&photoreference=" + mRestaurant.getPhotos().get(0)
+                            .getPhotoReference() + "&key=AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4";
                     Glide.with(mImage).load(photoUrl).into(mImage);
                 }
             }
@@ -104,14 +108,15 @@ public class DetailsActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(phone));
                 startActivity(intent);
             });
-            mLikeButton.setOnClickListener(v -> { });
             mWebButton.setOnClickListener(v -> {
                 if (mRestaurant.getWebsite() != null) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mRestaurant.getWebsite()));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri
+                            .parse(mRestaurant.getWebsite()));
                     startActivity(intent);
                 }
             });
             mFab.setOnClickListener(v -> updateRestaurantChoose(mRestaurant));
+            mLikeButton.setOnClickListener(v -> updateRestaurantsLiked(mRestaurant.getPlaceId()));
         }
     }
 
@@ -134,8 +139,16 @@ public class DetailsActivity extends AppCompatActivity {
                 this);
     }
 
+    public void updateRestaurantsLiked(String placeId) {
+        mLikeButton.setOnClickListener(v -> mUserViewModel
+                .updateRestaurantsFavouritesList(currentUserId, placeId, this));
+        Toast.makeText(this, "This restaurant has been had to favorites",
+                Toast.LENGTH_SHORT).show();
+    }
+
     private void configureUsers() {
-        mUserViewModel.getUserByPlaceId(placeId, this).observe(this, this::setUsersList);
+        mUserViewModel.getUserByPlaceId(placeId, this)
+                .observe(this, this::setUsersList);
     }
 
     private void setUsersList(List<User> users) {

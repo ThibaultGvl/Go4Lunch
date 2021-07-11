@@ -42,11 +42,11 @@ public class RestaurantRecyclerViewAdapter
 
     private UserViewModel mUserViewModel;
 
-    private List<User> mUsers = new ArrayList<>();
-
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
     private Location mLastKnownLocation;
+
+    private final List<User> mUsers = new ArrayList<>();
 
     public RestaurantRecyclerViewAdapter(List<ResultRestaurant> restaurants) {
         this.restaurants = restaurants;
@@ -67,8 +67,8 @@ public class RestaurantRecyclerViewAdapter
     @Override
     public void onBindViewHolder(@NotNull final ViewHolder holder, int position) {
         ResultRestaurant mRestaurant = restaurants.get(position);
-        if (ContextCompat.checkSelfPermission(holder.mFragmentRestaurantBinding.getRoot()
-                        .getContext(),
+        Context context = holder.mFragmentRestaurantBinding.getRoot().getContext();
+        if (ContextCompat.checkSelfPermission(context,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mFusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
@@ -119,9 +119,8 @@ public class RestaurantRecyclerViewAdapter
             holder.mRestaurantSchedules.setText(R.string.unknown);
         }
         holder.mRestaurantRank.setRating((float) rating);
-            mUserViewModel.getUserByPlaceId(placeId, holder.mFragmentRestaurantBinding.getRoot()
-                    .getContext()).observe((LifecycleOwner) holder.mFragmentRestaurantBinding
-                    .getRoot().getContext(), this::setUsers);
+            mUserViewModel.getUserByPlaceId(placeId, context)
+                    .observe((LifecycleOwner) context, this::setUsers);
             String workmatesText = "(" + mUsers.size() + ")";
             if (mUsers.size() == 0) {
                 holder.mRestaurantWorkmatesImage.setColorFilter(R.color.white);
@@ -137,7 +136,8 @@ public class RestaurantRecyclerViewAdapter
     }
 
     private void setUsers(List<User> users) {
-        mUsers = users;
+        mUsers.clear();
+        mUsers.addAll(users);
     }
 
     private void configureUserViewModel(Context context) {

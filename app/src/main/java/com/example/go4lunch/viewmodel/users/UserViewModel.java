@@ -32,15 +32,19 @@ public class UserViewModel extends androidx.lifecycle.ViewModel {
 
     public LiveData<List<User>> getUsers() {return users;}
 
-    public MutableLiveData<User> getUser(String uid, Context context) {
-        MutableLiveData<User> user = new MutableLiveData<>();
-        user = mUserCRUDRepository.getUser(uid, context);
+    public LiveData<User> getUser(String uid, Context context) {
+        LiveData<User> user = mUserCRUDRepository.getUser(uid, context);
         return user;
     }
 
-    public MutableLiveData<List<User>> getUserByPlaceId(String placeId, Context context) {
-        MutableLiveData<List<User>> users = new MutableLiveData<>();
-        users = mUserCRUDRepository.getUserByPlaceId(placeId, context);
+    public MutableLiveData<User> getCurrentUser(Context context) {
+        MutableLiveData<User> user = new MutableLiveData<>();
+        user = mUserCRUDRepository.getCurrentUserFirestore(context);
+        return user;
+    }
+
+    public LiveData<List<User>> getUserByPlaceId(String placeId, Context context) {
+        LiveData<List<User>> users = mUserCRUDRepository.getUserByPlaceId(placeId, context);
         return users;
     }
 
@@ -68,12 +72,12 @@ public class UserViewModel extends androidx.lifecycle.ViewModel {
         executor.execute(() -> mUserCRUDRepository.updateUserRestaurantAddress(uid, restaurantAddress, context));
     }
 
-    public void updateUserRestaurantName(String uid, String restaurantToLike, Context context) {
-        executor.execute(() -> mUserCRUDRepository.updateUserRestaurantName(uid, restaurantToLike, context));
+    public void updateRestaurantsFavouritesList(String uid, String restaurantToLike, Context context) {
+        executor.execute(() -> mUserCRUDRepository.updateRestaurantsFavouritesList(uid, restaurantToLike, context));
     }
 
-    public void getCurrentUser() {
-        executor.execute(mUserCRUDRepository::getCurrentUserFirestore);
+    public void updateUserRestaurantName(String uid, String restaurantToLike, Context context) {
+        executor.execute(() -> mUserCRUDRepository.updateUserRestaurantName(uid, restaurantToLike, context));
     }
 
     public void deleteUser(String uid, Context context) {

@@ -104,8 +104,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             placeIdFromSearch = requireArguments().getString("placeId");
             placePosition = new LatLng(placeLatitude, placeLongitude);
         }
-        configureNearbyRestaurantViewModel();
         configureUserViewModel();
+        configureNearbyRestaurantViewModel();
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient
                (this.requireContext());
         SupportMapFragment mapFragment =
@@ -113,11 +113,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
-            getLastLocation();
+        getLastLocation();
         mMapsBinding.position.setOnClickListener(v -> getLastLocation());
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
@@ -156,14 +157,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @SuppressLint("MissingPermission")
     private void getLastLocation() {
         if (mLocationPermission) {
-            mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
+            mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient
+                    (requireContext());
             mFusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
                 mLastKnownLocation = task.getResult();
                 LatLng mLastKnownLocationLatLng = new
-                        LatLng(Objects.requireNonNull(mLastKnownLocation).getLatitude(), mLastKnownLocation.getLongitude());
+                         LatLng(Objects.requireNonNull(mLastKnownLocation).getLatitude(),
+                        mLastKnownLocation.getLongitude());
+                getPlaces();
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                         mLastKnownLocationLatLng, DEFAULT_ZOOM));
-                getPlaces();
             });
         }else {
             getLocationPermission(requireContext(), requireActivity());
@@ -177,7 +180,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             setMarker(placePosition, placeIdFromSearch);
             mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) marker -> {
                 Intent intent = new Intent(this.getContext(), DetailsActivity.class);
-                intent.putExtra("placeId", marker.getTag().toString());
+                intent.putExtra("placeId", Objects.requireNonNull(marker.getTag()).toString());
                 startActivity(intent);
                 return false;
             });
@@ -186,7 +189,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     private void getPlaces() {
         String location = mLastKnownLocation.getLatitude() + "," + mLastKnownLocation.getLongitude();
-        mNearbyRestaurantViewModel.getRestaurantsList(location, "1000", "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4").observe(getViewLifecycleOwner(), this::getRestaurants);
+        mNearbyRestaurantViewModel.getRestaurantsList(location, "1000",
+                "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4").observe(getViewLifecycleOwner(),
+                this::getRestaurants);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -196,39 +201,45 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             List<ResultRestaurant> restaurantsList = restaurants.getResults();
             for (ResultRestaurant restaurant : restaurantsList) {
                 placeId = restaurant.getPlaceId();
-                mUserViewModel.getUserByPlaceId(placeId, requireContext()).observe(this, this::setUsers);
-                LatLng restaurantLatLng = new LatLng(restaurant.getGeometry().getLocation().getLat(), restaurant.getGeometry().getLocation().getLng());
+                LatLng restaurantLatLng = new LatLng(restaurant.getGeometry().getLocation().getLat()
+                        , restaurant.getGeometry().getLocation().getLng());
                 setMarker(restaurantLatLng, placeId);
             }
             mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(@NonNull Marker marker) {
                     Intent intent = new Intent(requireContext(), DetailsActivity.class);
-                    intent.putExtra("placeId", Objects.requireNonNull(marker.getTag()).toString());
+                    intent.putExtra("placeId", Objects.requireNonNull(marker.getTag())
+                            .toString());
                     startActivity(intent);
                     return false;
                 }
             });
         }
         else {
-            Toast.makeText(this.requireContext(), getString(R.string.no_restaurant_found), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.requireContext(), getString(R.string.no_restaurant_found),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setMarker(LatLng latLng, String id) {
-        if (mUsers.size() == 0) {
-            Objects.requireNonNull(mMap.addMarker(new MarkerOptions().position(latLng).icon(getBitmapDescriptor(R.drawable.marker_orange)))).setTag(id);
-        }
-        else {
-            Objects.requireNonNull(mMap.addMarker(new MarkerOptions().position(latLng).icon(getBitmapDescriptor(R.drawable.marker_green)))).setTag(id);
-        }
+            Marker marker = mMap.addMarker(new MarkerOptions().position(latLng));
+            Objects.requireNonNull(marker).setTag(id);
+            mUserViewModel.getUserByPlaceId(Objects.requireNonNull(marker.getTag()).toString(),
+                    this.requireContext()).observe(this, this::setUsers);
+            if (mUsers.size() == 0) {
+                marker.setIcon(getBitmapDescriptor(R.drawable.marker_orange));
+            } else {
+                marker.setIcon(getBitmapDescriptor(R.drawable.marker_green));
+            }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private BitmapDescriptor getBitmapDescriptor(int id) {
         Drawable vectorDrawable = ResourcesCompat.getDrawable(getResources(), id, null);
-        Bitmap bitmap = Bitmap.createBitmap(Objects.requireNonNull(vectorDrawable).getIntrinsicWidth(),
+        Bitmap bitmap = Bitmap.createBitmap(Objects.requireNonNull(vectorDrawable)
+                        .getIntrinsicWidth(),
                 vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         vectorDrawable.setBounds(0, 0, 75, 100);
@@ -237,7 +248,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void setUsers(List<User> users) {
-        mUsers = users;
+        mUsers.clear();
+        mUsers.addAll(users);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

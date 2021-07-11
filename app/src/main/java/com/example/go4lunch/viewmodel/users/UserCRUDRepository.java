@@ -18,12 +18,15 @@ import java.util.Objects;
 
 public class UserCRUDRepository {
 
+
     public MutableLiveData<List<User>> getUsers(Context context) {
         MutableLiveData<List<User>> result = new MutableLiveData<>();
-        UserCRUD.getUsers().addOnFailureListener(onFailureListener(context)).addOnSuccessListener(documentSnapshots -> {
+        UserCRUD.getUsers().addOnFailureListener(onFailureListener(context)).addOnSuccessListener
+                (documentSnapshots -> {
             List<User> users = new ArrayList<>();
             for (DocumentSnapshot documentSnapshot : documentSnapshots.getDocuments()) {
-                if(documentSnapshot != null && !documentSnapshot.getId().equals(getCurrentUser().getUid())) {
+                if(documentSnapshot != null && !documentSnapshot.getId().equals(getCurrentUser()
+                        .getUid())) {
                     User user = documentSnapshot.toObject(User.class);
                     users.add(user);
                 }
@@ -35,10 +38,12 @@ public class UserCRUDRepository {
 
     public MutableLiveData<List<User>> getUserByPlaceId(String placeId, Context context) {
         MutableLiveData<List<User>> result = new MutableLiveData<>();
-        UserCRUD.getUsers().addOnFailureListener(onFailureListener(context)).addOnSuccessListener(documentSnapshots -> {
+        UserCRUD.getUsers().addOnFailureListener(onFailureListener(context)).addOnSuccessListener
+                (documentSnapshots -> {
            List<User> users =  new ArrayList<>();
             for (DocumentSnapshot documentSnapshot : documentSnapshots.getDocuments()) {
-                if (Objects.equals(documentSnapshot.get("restaurant"), placeId) && !documentSnapshot.getId().equals(getCurrentUser().getUid())) {
+                if (Objects.equals(documentSnapshot.get("restaurant"), placeId) && !documentSnapshot
+                        .getId().equals(getCurrentUser().getUid())) {
                     User user = documentSnapshot.toObject(User.class);
                     users.add(user);
                 }
@@ -48,10 +53,12 @@ public class UserCRUDRepository {
         return result;
     }
 
-    public MutableLiveData<User> getCurrentUserFirestore() {
+    public MutableLiveData<User> getCurrentUserFirestore(Context context) {
         MutableLiveData<User> result = new MutableLiveData<>();
-        UserCRUD.getUser(getCurrentUser().getUid()).addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot != null) {
+        String uid = getCurrentUser().getUid();
+        UserCRUD.getUser(uid).addOnFailureListener(onFailureListener(context))
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot != null) {
                 User user = documentSnapshot.toObject(User.class);
                 result.setValue(user);
             }
@@ -61,7 +68,8 @@ public class UserCRUDRepository {
 
     public MutableLiveData<User> getUser(String uid, Context context) {
         MutableLiveData<User> result = new MutableLiveData<>();
-        UserCRUD.getUser(uid).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(documentSnapshot -> {
+        UserCRUD.getUser(uid).addOnFailureListener(onFailureListener(context)).addOnSuccessListener
+                (documentSnapshot -> {
             if(documentSnapshot != null) {
                 User user = documentSnapshot.toObject(User.class);
                 result.setValue(user);
@@ -80,9 +88,12 @@ public class UserCRUDRepository {
             String uid = user.getUid();
             String username = user.getDisplayName();
             String email = user.getEmail();
-            String imageUrl = (user.getPhotoUrl() != null) ? Objects.requireNonNull(this.getCurrentUser().getPhotoUrl()).toString() : null;
+            String imageUrl = (user.getPhotoUrl() != null) ? Objects.requireNonNull
+                    (this.getCurrentUser().getPhotoUrl()).toString() : null;
 
-            UserCRUD.createUser(uid, username, email, imageUrl, null, null, null, null).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(aVoid -> {
+            UserCRUD.createUser(uid, username, email, imageUrl, null, null,
+                    null, null).addOnFailureListener
+                    (onFailureListener(context)).addOnSuccessListener(aVoid -> {
                 result.setValue(user);
             });
         }
@@ -91,7 +102,8 @@ public class UserCRUDRepository {
     public void updateUserUsername(String uid, String username, Context context) {
         MutableLiveData<String> result = new MutableLiveData<>();
 
-        UserCRUD.updateUsername(uid, username).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(aVoid -> {
+        UserCRUD.updateUsername(uid, username).addOnFailureListener(onFailureListener(context))
+                .addOnSuccessListener(aVoid -> {
             Toast.makeText(context, R.string.update, Toast.LENGTH_SHORT).show();
             result.setValue(username);
         });
@@ -100,7 +112,8 @@ public class UserCRUDRepository {
     public void updateUserEmail(String uid, String email, Context context) {
         MutableLiveData<String> result = new MutableLiveData<>();
 
-        UserCRUD.updateUserEmail(uid, email).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(aVoid -> {
+        UserCRUD.updateUserEmail(uid, email).addOnFailureListener(onFailureListener(context))
+                .addOnSuccessListener(aVoid -> {
             Toast.makeText(context, R.string.update, Toast.LENGTH_SHORT).show();
             result.setValue(email);
         });
@@ -108,7 +121,8 @@ public class UserCRUDRepository {
 
     public void updateUserImage(String uid, String picture, Context context) {
         MutableLiveData<String> result = new MutableLiveData<>();
-        UserCRUD.updateUserImage(uid, picture).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(aVoid -> {
+        UserCRUD.updateUserImage(uid, picture).addOnFailureListener(onFailureListener(context))
+                .addOnSuccessListener(aVoid -> {
             Toast.makeText(context, R.string.update, Toast.LENGTH_SHORT).show();
             result.setValue(picture);
         });
@@ -116,7 +130,8 @@ public class UserCRUDRepository {
 
     public void updateUserRestaurant(String uid, String restaurantId, Context context) {
         MutableLiveData<String> result = new MutableLiveData<>();
-        UserCRUD.updateUserRestaurant(uid, restaurantId).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(aVoid -> {
+        UserCRUD.updateUserRestaurant(uid, restaurantId).addOnFailureListener(onFailureListener
+                (context)).addOnSuccessListener(aVoid -> {
             Toast.makeText(context, R.string.restaurant_choice, Toast.LENGTH_SHORT).show();
             result.setValue(restaurantId);
         });
@@ -124,21 +139,31 @@ public class UserCRUDRepository {
 
     public void updateUserRestaurantName(String uid, String restaurantName, Context context) {
         MutableLiveData<String> result = new MutableLiveData<>();
-        UserCRUD.updateRestaurantName(uid, restaurantName).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
+        UserCRUD.updateRestaurantName(uid, restaurantName).addOnFailureListener(onFailureListener
+                (context)).addOnSuccessListener(
                 aVoid -> { result.setValue(restaurantName);
                 });
     }
 
     public void updateUserRestaurantAddress(String uid, String restaurantAddress, Context context) {
         MutableLiveData<String> result = new MutableLiveData<>();
-        UserCRUD.updateRestaurantAddress(uid, restaurantAddress).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
+        UserCRUD.updateRestaurantAddress(uid, restaurantAddress).addOnFailureListener
+                (onFailureListener(context)).addOnSuccessListener(
                 aVoid -> { result.setValue(restaurantAddress);
                 });
     }
 
+    public void updateRestaurantsFavouritesList(String uid, String restaurantsLiked, Context context) {
+        MutableLiveData<String> result = new MutableLiveData<>();
+        UserCRUD.addToListFavorites(uid, restaurantsLiked).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
+                aVoid -> { result.setValue(restaurantsLiked);
+    });
+    }
+
     public void deleteUser(String uid, Context context) {
         MutableLiveData<String> result = new MutableLiveData<>();
-        UserCRUD.deleteUser(uid).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(aVoid -> {
+        UserCRUD.deleteUser(uid).addOnFailureListener(onFailureListener(context))
+                .addOnSuccessListener(aVoid -> {
             Toast.makeText(context, R.string.user_delete, Toast.LENGTH_SHORT).show();
             result.setValue(uid);
         });
