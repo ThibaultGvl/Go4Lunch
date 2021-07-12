@@ -29,6 +29,8 @@ public class NotificationsService extends FirebaseMessagingService {
 
     private final String mNotificationName = "Time To Lunch !";
 
+    private final int mId = 26;
+
     private final User mUser = MainActivity.getUserInformations();
 
     @Override
@@ -43,7 +45,7 @@ public class NotificationsService extends FirebaseMessagingService {
     private void sendVisualNotification(RemoteMessage.Notification notification) {
 
         Intent intent = new Intent(this, ConnexionActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 26,
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, mId,
                 intent, PendingIntent.FLAG_ONE_SHOT);
 
         String channelId = mNotificationCanal;
@@ -71,8 +73,7 @@ public class NotificationsService extends FirebaseMessagingService {
             NotificationChannel mChannel = new NotificationChannel(getString(R.string.notification_channel_id), channelName,
                     importance);
             notificationManager.createNotificationChannel(mChannel);
-
-            notificationManager.notify(26, notificationBuilder.build());
+            notificationManager.notify(mNotificationName, mId, notificationBuilder.build());
         }
     }
 }

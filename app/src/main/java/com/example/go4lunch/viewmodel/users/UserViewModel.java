@@ -18,6 +18,8 @@ public class UserViewModel extends androidx.lifecycle.ViewModel {
 
     private LiveData<List<User>> users;
 
+    private LiveData<User> user;
+
     public UserViewModel(UserCRUDRepository userCRUDRepository, Executor executor){
         this.mUserCRUDRepository = userCRUDRepository;
         this.executor = executor;
@@ -33,7 +35,7 @@ public class UserViewModel extends androidx.lifecycle.ViewModel {
     public LiveData<List<User>> getUsers() {return users;}
 
     public LiveData<User> getUser(String uid, Context context) {
-        LiveData<User> user = mUserCRUDRepository.getUser(uid, context);
+        user = mUserCRUDRepository.getUser(uid, context);
         return user;
     }
 

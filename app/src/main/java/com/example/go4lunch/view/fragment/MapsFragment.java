@@ -178,7 +178,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         if (mMap != null) {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(placePosition, DEFAULT_ZOOM));
             setMarker(placePosition, placeIdFromSearch);
-            mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) marker -> {
+            mMap.setOnMarkerClickListener(marker -> {
                 Intent intent = new Intent(this.getContext(), DetailsActivity.class);
                 intent.putExtra("placeId", Objects.requireNonNull(marker.getTag()).toString());
                 startActivity(intent);
@@ -205,15 +205,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                         , restaurant.getGeometry().getLocation().getLng());
                 setMarker(restaurantLatLng, placeId);
             }
-            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(@NonNull Marker marker) {
-                    Intent intent = new Intent(requireContext(), DetailsActivity.class);
-                    intent.putExtra("placeId", Objects.requireNonNull(marker.getTag())
-                            .toString());
-                    startActivity(intent);
-                    return false;
-                }
+            mMap.setOnMarkerClickListener(marker -> {
+                Intent intent = new Intent(requireContext(), DetailsActivity.class);
+                intent.putExtra("placeId", Objects.requireNonNull(marker.getTag())
+                        .toString());
+                startActivity(intent);
+                return false;
             });
         }
         else {

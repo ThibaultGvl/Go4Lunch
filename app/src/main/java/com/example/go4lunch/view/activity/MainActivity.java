@@ -304,16 +304,17 @@ public class MainActivity extends AppCompatActivity
     protected Boolean isCurrentUserLogged(){ return (this.getCurrentUser() != null); }
 
     private void setUser(User user) {
+        // mUser != user
         mUser = user;
     }
 
     private void updateUIWhenCreating(){
 
+        String uid = Objects.requireNonNull(getCurrentUser()).getUid();
+
+        this.mUserViewModel.getUser(uid,this).observe(this, this::setUser);
+
         if (isCurrentUserLogged()){
-
-            String uid = Objects.requireNonNull(getCurrentUser()).getUid();
-
-            this.mUserViewModel.getUser(uid,this).observe(this, this::setUser);
 
             if (Objects.requireNonNull(this.getCurrentUser()).getPhotoUrl() != null) {
                 Glide.with(this)
