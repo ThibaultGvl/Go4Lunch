@@ -3,8 +3,8 @@ package com.example.go4lunch.viewmodel.users;
 import com.example.go4lunch.model.User;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -13,8 +13,6 @@ import java.util.List;
 public class UserCRUD {
 
     private static final String COLLECTION_NAME = "users";
-
-    private static final String COLLECTION_FAVORITES = "restaurantsLiked";
 
     public static CollectionReference getUsersCollection() {
         return FirebaseFirestore.getInstance().collection(COLLECTION_NAME);
@@ -61,8 +59,16 @@ public class UserCRUD {
                 address);
     }
 
-    public static Task<DocumentReference> addToListFavorites(String uid, String restaurant) {
-        return UserCRUD.getUsersCollection().document(uid).collection(COLLECTION_FAVORITES).add(restaurant);
+    public static boolean getFavoritesList(String uid, String restaurant) {
+        return UserCRUD.getUser(uid).getResult().getString("restaurantsLiked").contains(restaurant);
+    }
+
+    public static Task<Void> addToListFavorites(String uid, String restaurant) {
+        return UserCRUD.getUsersCollection().document(uid).update("restaurantsLiked", FieldValue.arrayUnion(restaurant));
+    }
+
+    public static Task<Void> deleteFromFavorites(String uid, String restaurant){
+        return UserCRUD.getUsersCollection().document(uid).update("restaurantsLiked", FieldValue.arrayRemove(restaurant));
     }
     
     public static Task<Void> deleteUser(String uid) {

@@ -164,9 +164,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 LatLng mLastKnownLocationLatLng = new
                          LatLng(Objects.requireNonNull(mLastKnownLocation).getLatitude(),
                         mLastKnownLocation.getLongitude());
-                getPlaces();
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                         mLastKnownLocationLatLng, DEFAULT_ZOOM));
+                getPlaces();
             });
         }else {
             getLocationPermission(requireContext(), requireActivity());

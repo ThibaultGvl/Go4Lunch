@@ -39,7 +39,7 @@ public class UserViewModel extends androidx.lifecycle.ViewModel {
 
     public MutableLiveData<User> getCurrentUser(Context context) {
         MutableLiveData<User> user = new MutableLiveData<>();
-        user = mUserCRUDRepository.getCurrentUserFirestore(context);
+        user = (MutableLiveData<User>) mUserCRUDRepository.getCurrentUserFirestore(context);
         return user;
     }
 

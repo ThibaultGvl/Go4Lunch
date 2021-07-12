@@ -56,6 +56,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity
     private UserViewModel mUserViewModel;
     private NearbyRestaurantViewModel mNearbyRestaurantViewModel;
     private int mFragmentIdentifier;
-    private User mUser = new User("", "", "", "", "",
+    private static User mUser = new User("", "", "", "", "",
             null, "", "");
     private static final int MAPS_FRAGMENT = 0;
     private static final int RESTAURANT_FRAGMENT = 1;
@@ -308,11 +309,11 @@ public class MainActivity extends AppCompatActivity
 
     private void updateUIWhenCreating(){
 
-        String uid = Objects.requireNonNull(getCurrentUser()).getUid();
-
-        this.mUserViewModel.getUser(uid, this).observe(this, this::setUser);
-
         if (isCurrentUserLogged()){
+
+            String uid = Objects.requireNonNull(getCurrentUser()).getUid();
+
+            this.mUserViewModel.getUser(uid,this).observe(this, this::setUser);
 
             if (Objects.requireNonNull(this.getCurrentUser()).getPhotoUrl() != null) {
                 Glide.with(this)
@@ -367,7 +368,7 @@ public class MainActivity extends AppCompatActivity
                 .get(NearbyRestaurantViewModel.class);
     }
 
-    public User getUserInformations() {
+    public static User getUserInformations() {
         return mUser;
     }
 }

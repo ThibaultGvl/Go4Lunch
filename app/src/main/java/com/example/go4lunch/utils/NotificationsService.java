@@ -13,7 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import com.example.go4lunch.R;
+import com.example.go4lunch.model.User;
 import com.example.go4lunch.view.activity.ConnexionActivity;
+import com.example.go4lunch.view.activity.MainActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -23,7 +25,11 @@ import static java.lang.String.valueOf;
 
 public class NotificationsService extends FirebaseMessagingService {
 
-    private final int mNotificationCanal = R.string.notification_channel_id;
+    private final String mNotificationCanal = "password";
+
+    private final String mNotificationName = "Time To Lunch !";
+
+    private final User mUser = MainActivity.getUserInformations();
 
     @Override
     public void onMessageReceived(@NotNull RemoteMessage remoteMessage) {
@@ -40,11 +46,13 @@ public class NotificationsService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 26,
                 intent, PendingIntent.FLAG_ONE_SHOT);
 
-        int channelId = mNotificationCanal;
-        String message = "blablabla";
+        String channelId = mNotificationCanal;
+        String message = "Hello" + mUser.getUsername() + " it's Time to Lunch you'll eat at " +
+                mUser.getRestaurantName() + " at " + mUser.getRestaurantAddress() + "with"
+                + mUser.getRestaurant();
 
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this, valueOf(channelId))
+                new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle(notification.getTitle())
                         .setContentText(message)
@@ -58,13 +66,13 @@ public class NotificationsService extends FirebaseMessagingService {
                 (Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence channelName = valueOf(mNotificationCanal);
+            CharSequence channelName = mNotificationName;
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel mChannel = new NotificationChannel(getString(R.string.notification_channel_id), channelName,
                     importance);
             notificationManager.createNotificationChannel(mChannel);
 
-            notificationManager.notify(String.valueOf(mNotificationCanal), mNotificationCanal, notificationBuilder.build());
+            notificationManager.notify(26, notificationBuilder.build());
         }
     }
 }

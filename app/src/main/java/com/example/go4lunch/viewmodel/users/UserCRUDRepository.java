@@ -3,6 +3,7 @@ package com.example.go4lunch.viewmodel.users;
 import android.content.Context;
 import android.widget.Toast;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.go4lunch.R;
@@ -91,7 +92,7 @@ public class UserCRUDRepository {
             String imageUrl = (user.getPhotoUrl() != null) ? Objects.requireNonNull
                     (this.getCurrentUser().getPhotoUrl()).toString() : null;
 
-            UserCRUD.createUser(uid, username, email, imageUrl, null, null,
+            UserCRUD.createUser(uid, username, email, imageUrl, null, new ArrayList<>(),
                     null, null).addOnFailureListener
                     (onFailureListener(context)).addOnSuccessListener(aVoid -> {
                 result.setValue(user);
@@ -155,9 +156,19 @@ public class UserCRUDRepository {
 
     public void updateRestaurantsFavouritesList(String uid, String restaurantsLiked, Context context) {
         MutableLiveData<String> result = new MutableLiveData<>();
-        UserCRUD.addToListFavorites(uid, restaurantsLiked).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
-                aVoid -> { result.setValue(restaurantsLiked);
-    });
+        if (UserCRUD.getFavoritesList(uid, restaurantsLiked)) {
+            UserCRUD.deleteFromFavorites(uid, restaurantsLiked).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
+                    aVoid -> {
+                        result.setValue(restaurantsLiked);
+                    });
+        }
+        else {
+            UserCRUD.addToListFavorites(uid, restaurantsLiked).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
+                    aVoid -> {
+                        result.setValue(restaurantsLiked);
+                    }
+            );
+        }
     }
 
     public void deleteUser(String uid, Context context) {
