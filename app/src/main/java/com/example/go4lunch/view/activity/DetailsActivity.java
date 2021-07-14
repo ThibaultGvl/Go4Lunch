@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.ActivityDetailsBinding;
 import com.example.go4lunch.model.User;
@@ -51,6 +52,7 @@ public class DetailsActivity extends AppCompatActivity {
     private final String currentUserId = FirebaseAuth.getInstance().getUid();
     private String placeId;
     private final List<User> mUsers = new ArrayList<>();
+    private final List<String> mRestaurantsLiked = new ArrayList<>();
     private final DetailsRecyclerViewAdapter mAdapter = new DetailsRecyclerViewAdapter(mUsers);
 
     @Override
@@ -64,7 +66,7 @@ public class DetailsActivity extends AppCompatActivity {
         configureUserViewModel();
         configureNearbyRestaurantViewModel();
         mRestaurantViewModel.getRestaurantDetails(placeId,
-                "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4")
+                BuildConfig.API_KEY)
                 .observe(this, this::setRestaurant);
         configureUsers();
         RecyclerView recyclerView = mActivityBinding.userRvDetails;
@@ -93,7 +95,7 @@ public class DetailsActivity extends AppCompatActivity {
                 if (mRestaurant.getPhotos().get(0) != null) {
                     String photoUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth" +
                             "=400&photoreference=" + mRestaurant.getPhotos().get(0)
-                            .getPhotoReference() + "&key=AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4";
+                            .getPhotoReference() + "&key=" + BuildConfig.API_KEY;
                     Glide.with(mImage).load(photoUrl).into(mImage);
                 }
             }
@@ -116,7 +118,7 @@ public class DetailsActivity extends AppCompatActivity {
                 }
             });
             mFab.setOnClickListener(v -> updateRestaurantChoose(mRestaurant));
-            mLikeButton.setOnClickListener(v -> updateRestaurantsLiked(mRestaurant.getPlaceId()));
+            mLikeButton.setOnClickListener(v -> updateRestaurantsLiked());
         }
     }
 
@@ -139,16 +141,22 @@ public class DetailsActivity extends AppCompatActivity {
                 this);
     }
 
-    public void updateRestaurantsLiked(String placeId) {
-        mLikeButton.setOnClickListener(v -> mUserViewModel
-                .updateRestaurantsFavouritesList(currentUserId, placeId, this));
-        Toast.makeText(this, "This restaurant has been had to favorites",
-                Toast.LENGTH_SHORT).show();
+    public void updateRestaurantsLiked() {
+        mUserViewModel.getFavoritesRestaurants(currentUserId, this.getBaseContext())
+                .observe(this, this::configureRestaurants);
     }
 
     private void configureUsers() {
         mUserViewModel.getUserByPlaceId(placeId, this)
                 .observe(this, this::setUsersList);
+    }
+
+    private void configureRestaurants(List<String> restaurants) {
+        mRestaurantsLiked.clear();
+        mRestaurantsLiked.addAll(restaurants);
+        mUserViewModel.updateRestaurantsFavouritesList(currentUserId, placeId, this, mRestaurantsLiked);
+        Toast.makeText(this, "This restaurant has been had to favorites",
+                Toast.LENGTH_SHORT).show();
     }
 
     private void setUsersList(List<User> users) {

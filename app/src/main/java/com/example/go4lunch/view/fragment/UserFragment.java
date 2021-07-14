@@ -24,9 +24,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A fragment representing a list of Items.
- */
 public class UserFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -39,10 +36,6 @@ public class UserFragment extends Fragment {
 
     private final UserRecyclerViewAdapter adapter = new UserRecyclerViewAdapter(users);
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public UserFragment() {
     }
 

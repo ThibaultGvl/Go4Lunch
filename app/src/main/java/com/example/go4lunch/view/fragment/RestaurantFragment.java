@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.FragmentRestaurantListBinding;
 import com.example.go4lunch.model.restaurant.RestaurantOutputs;
@@ -117,7 +118,7 @@ public class RestaurantFragment extends Fragment {
                         mLastKnownLocation.getLongitude());
                 String mLastKnownLocationString = mLastKnownLocationLatLng.toString();
                 mNearbyRestaurantViewModel.getRestaurantsList(mLastKnownLocationString,"1000"
-                        ,"AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4")
+                        , BuildConfig.API_KEY)
                         .observe(getViewLifecycleOwner(), this::getRestaurants);
             });
         }

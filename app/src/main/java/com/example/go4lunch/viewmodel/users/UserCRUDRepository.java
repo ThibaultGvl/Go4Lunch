@@ -3,7 +3,6 @@ package com.example.go4lunch.viewmodel.users;
 import android.content.Context;
 import android.widget.Toast;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.go4lunch.R;
@@ -92,7 +91,7 @@ public class UserCRUDRepository {
             String imageUrl = (user.getPhotoUrl() != null) ? Objects.requireNonNull
                     (this.getCurrentUser().getPhotoUrl()).toString() : null;
 
-            UserCRUD.createUser(uid, username, email, imageUrl, null, new ArrayList<>(),
+            UserCRUD.createUser(uid, username, email, imageUrl, null, null,
                     null, null).addOnFailureListener
                     (onFailureListener(context)).addOnSuccessListener(aVoid -> {
                 result.setValue(user);
@@ -154,9 +153,25 @@ public class UserCRUDRepository {
                 });
     }
 
-    public void updateRestaurantsFavouritesList(String uid, String restaurantsLiked, Context context) {
+    public MutableLiveData<List<String>> getRestaurantsFavorites(String uid, Context context) {
+        MutableLiveData<List<String>> mutableLiveData = new MutableLiveData<>();
+        UserCRUD.getFavoritesList(uid).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
+                querySnapshot -> {
+                    List<String> restaurantsId = new ArrayList<>();
+                    for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
+                        if (documentSnapshot != null) {
+                            String restaurantId = documentSnapshot.toString();
+                            restaurantsId.add(restaurantId);
+                        }
+                    }
+                    mutableLiveData.setValue(restaurantsId);
+                });
+        return mutableLiveData;
+    }
+
+    public void updateRestaurantsFavouritesList(String uid, String restaurantsLiked, Context context, List<String> restaurants) {
         MutableLiveData<String> result = new MutableLiveData<>();
-        if (UserCRUD.getFavoritesList(uid, restaurantsLiked)) {
+        if (restaurants.contains(restaurantsLiked)) {
             UserCRUD.deleteFromFavorites(uid, restaurantsLiked).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
                     aVoid -> {
                         result.setValue(restaurantsLiked);

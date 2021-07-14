@@ -17,6 +17,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.FragmentRestaurantBinding;
 import com.example.go4lunch.model.User;
@@ -66,50 +67,50 @@ public class RestaurantRecyclerViewAdapter
 
     @Override
     public void onBindViewHolder(@NotNull final ViewHolder holder, int position) {
-        ResultRestaurant mRestaurant = restaurants.get(position);
+        ResultRestaurant restaurant = restaurants.get(position);
         Context context = holder.mFragmentRestaurantBinding.getRoot().getContext();
         if (ContextCompat.checkSelfPermission(context,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mFusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
                 mLastKnownLocation = task.getResult();
-        if (mRestaurant.getGeometry() != null) {
-            double distanceDouble = meterDistanceBetweenPoints(mRestaurant.getGeometry()
-                    .getLocation().getLat(), mRestaurant.getGeometry().getLocation().getLng(),
+        if (restaurant.getGeometry() != null) {
+            double distanceDouble = meterDistanceBetweenPoints(restaurant.getGeometry()
+                    .getLocation().getLat(), restaurant.getGeometry().getLocation().getLng(),
                     mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
             String distance = (int) distanceDouble + "m";
             holder.mRestaurantDistance.setText(distance);
         }
             });
         }
-        double rating = ((mRestaurant.getRating()/5)*3);
-        String placeId = mRestaurant.getPlaceId();
-        if (mRestaurant.getPhotos() != null) {
+        double rating = ((restaurant.getRating()/5)*3);
+        String placeId = restaurant.getPlaceId();
+        if (restaurant.getPhotos() != null) {
             String photoUrl =
                     "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
-                            + mRestaurant.getPhotos().get(0).getPhotoReference() +
-                            "&key=AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4";
+                            + restaurant.getPhotos().get(0).getPhotoReference() +
+                            "&key=" + BuildConfig.API_KEY;
             Glide.with(holder.mRestaurantImage.getContext()).load(photoUrl)
                     .into(holder.mRestaurantImage);
         }
         else {
             holder.mRestaurantImage.setColorFilter(R.color.black);
         }
-        if (mRestaurant.getName() != null) {
-            holder.mRestaurantName.setText(mRestaurant.getName());
+        if (restaurant.getName() != null) {
+            holder.mRestaurantName.setText(restaurant.getName());
         }
         else {
             holder.mRestaurantName.setText(R.string.no_name_found);
         }
-        if (mRestaurant.getVicinity() != null) {
-            String address = mRestaurant.getVicinity().split(",")[0];
+        if (restaurant.getVicinity() != null) {
+            String address = restaurant.getVicinity().split(",")[0];
             holder.mRestaurantAddress.setText(address);
         }
         else {
             holder.mRestaurantAddress.setText(R.string.unknown);
         }
-        if (mRestaurant.getOpeningHours() != null) {
-            if (mRestaurant.getOpeningHours().getOpenNow()) {
+        if (restaurant.getOpeningHours() != null) {
+            if (restaurant.getOpeningHours().getOpenNow()) {
                 holder.mRestaurantSchedules.setText(R.string.open);
             } else {
                 holder.mRestaurantSchedules.setText(R.string.close);
@@ -119,15 +120,8 @@ public class RestaurantRecyclerViewAdapter
             holder.mRestaurantSchedules.setText(R.string.unknown);
         }
         holder.mRestaurantRank.setRating((float) rating);
-            mUserViewModel.getUserByPlaceId(placeId, context)
-                    .observe((LifecycleOwner) context, this::setUsers);
-            String workmatesText = "(" + mUsers.size() + ")";
-            if (mUsers.size() == 0) {
-                holder.mRestaurantWorkmatesImage.setColorFilter(R.color.white);
-            } else {
-                holder.mRestaurantWorkmatesImage.setColorFilter(R.color.black);
-                holder.mRestaurantWorkmates.setText(workmatesText);
-            }
+        mUserViewModel.getUsers()
+                    .observe((LifecycleOwner) context, users -> {setUsers(users, restaurant, holder);});
         holder.mFragmentRestaurantBinding.getRoot().setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), DetailsActivity.class);
             intent.putExtra("placeId", placeId);
@@ -135,10 +129,20 @@ public class RestaurantRecyclerViewAdapter
         });
     }
 
-    private void setUsers(List<User> users) {
-        mUsers.clear();
-        mUsers.addAll(users);
-    }
+    private void setUsers(List<User> users, ResultRestaurant restaurant, ViewHolder holder) {
+           for (User user : users) {
+               if (user.getRestaurant() != null && user.getRestaurant().equals(restaurant.getPlaceId())) {
+                   mUsers.add(user);
+               } else {
+                   mUsers.remove(user);
+               }
+           }
+           if (mUsers.size() != 0) {
+               holder.mRestaurantWorkmatesImage.getDisplay();
+               String workmates = "(" + mUsers.size() + ")";
+               holder.mRestaurantWorkmates.setText(workmates);
+           }
+        }
 
     private void configureUserViewModel(Context context) {
         UserViewModelFactory mViewModelFactory = UserInjection.provideViewModelFactory();

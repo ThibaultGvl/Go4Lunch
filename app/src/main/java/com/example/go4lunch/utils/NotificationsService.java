@@ -55,7 +55,7 @@ public class NotificationsService extends FirebaseMessagingService {
 
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_logo_go4lunch)
                         .setContentTitle(notification.getTitle())
                         .setContentText(message)
                         .setStyle(new NotificationCompat.BigTextStyle()

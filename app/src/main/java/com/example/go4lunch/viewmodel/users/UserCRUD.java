@@ -59,16 +59,16 @@ public class UserCRUD {
                 address);
     }
 
-    public static boolean getFavoritesList(String uid, String restaurant) {
-        return UserCRUD.getUser(uid).getResult().getString("restaurantsLiked").contains(restaurant);
+    public static Task<QuerySnapshot> getFavoritesList(String uid) {
+        return UserCRUD.getUsersCollection().document(uid).collection("restaurantsLiked").get();
     }
 
     public static Task<Void> addToListFavorites(String uid, String restaurant) {
-        return UserCRUD.getUsersCollection().document(uid).update("restaurantsLiked", FieldValue.arrayUnion(restaurant));
+        return UserCRUD.getUsersCollection().document(uid).collection("restaurantsLiked").document(restaurant).update(restaurant, restaurant);
     }
 
     public static Task<Void> deleteFromFavorites(String uid, String restaurant){
-        return UserCRUD.getUsersCollection().document(uid).update("restaurantsLiked", FieldValue.arrayRemove(restaurant));
+        return UserCRUD.getUsersCollection().document(uid).collection("restaurantsLiked").document(restaurant).delete();
     }
     
     public static Task<Void> deleteUser(String uid) {

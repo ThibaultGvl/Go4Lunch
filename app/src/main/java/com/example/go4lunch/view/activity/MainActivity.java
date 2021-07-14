@@ -28,10 +28,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.ActivityMainBinding;
 import com.example.go4lunch.databinding.ActivityNavHeaderBinding;
 import com.example.go4lunch.model.User;
+import com.example.go4lunch.model.restaurant.ResultRestaurant;
 import com.example.go4lunch.view.fragment.MapsFragment;
 import com.example.go4lunch.view.fragment.RestaurantFragment;
 import com.example.go4lunch.view.fragment.SettingsFragment;
@@ -93,7 +95,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
-        Places.initialize(this, "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4");
+        Places.initialize(this, BuildConfig.API_KEY);
         PlacesClient placesClient = Places.createClient(this);
         this.configureUserViewModel();
         this.configureNearbyRestaurantViewModel();
@@ -304,16 +306,7 @@ public class MainActivity extends AppCompatActivity
     protected Boolean isCurrentUserLogged(){ return (this.getCurrentUser() != null); }
 
     private void setUser(User user) {
-        // mUser != user
         mUser = user;
-    }
-
-    private void updateUIWhenCreating(){
-
-        String uid = Objects.requireNonNull(getCurrentUser()).getUid();
-
-        this.mUserViewModel.getUser(uid,this).observe(this, this::setUser);
-
         if (isCurrentUserLogged()){
 
             if (Objects.requireNonNull(this.getCurrentUser()).getPhotoUrl() != null) {
@@ -335,6 +328,12 @@ public class MainActivity extends AppCompatActivity
                 this.mUserViewModel.createCurrentUser(this);
             }
         }
+    }
+
+    private void updateUIWhenCreating(){
+        String uid = Objects.requireNonNull(getCurrentUser()).getUid();
+
+        this.mUserViewModel.getUser(uid,this).observe(this, this::setUser);
     }
 
     private void getYourLunch() {

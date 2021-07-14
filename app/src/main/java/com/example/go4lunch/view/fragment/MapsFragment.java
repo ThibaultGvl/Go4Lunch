@@ -25,9 +25,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.FragmentMapsBinding;
 import com.example.go4lunch.model.User;
+import com.example.go4lunch.model.details.Result;
 import com.example.go4lunch.model.restaurant.RestaurantOutputs;
 import com.example.go4lunch.model.restaurant.ResultRestaurant;
 import com.example.go4lunch.view.activity.DetailsActivity;
@@ -70,6 +72,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private LatLng placePosition;
     private String placeIdFromSearch = "";
     private UserViewModel mUserViewModel;
+    List<ResultRestaurant> restaurantsList = new ArrayList<>();
     private List<User> mUsers = new ArrayList<>();
 
     public static MapsFragment newInstance() {
@@ -176,11 +179,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void getPlaceSearched() {
         if (mMap != null) {
+            mMap.clear();
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(placePosition, DEFAULT_ZOOM));
             setMarker(placePosition, placeIdFromSearch);
             mMap.setOnMarkerClickListener(marker -> {
                 Intent intent = new Intent(this.getContext(), DetailsActivity.class);
-                intent.putExtra("placeId", Objects.requireNonNull(marker.getTag()).toString());
+                intent.putExtra("placeId", Objects.requireNonNull(placeIdFromSearch));
                 startActivity(intent);
                 return false;
             });
@@ -190,7 +194,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private void getPlaces() {
         String location = mLastKnownLocation.getLatitude() + "," + mLastKnownLocation.getLongitude();
         mNearbyRestaurantViewModel.getRestaurantsList(location, "1000",
-                "AIzaSyA8fqLfJRcp8jVraX7TatTFkykuTHJUzt4").observe(getViewLifecycleOwner(),
+                BuildConfig.API_KEY).observe(getViewLifecycleOwner(),
                 this::getRestaurants);
     }
 
@@ -198,12 +202,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private void getRestaurants(RestaurantOutputs restaurants) {
 
         if (restaurants != null) {
-            List<ResultRestaurant> restaurantsList = restaurants.getResults();
+            restaurantsList = restaurants.getResults();
             for (ResultRestaurant restaurant : restaurantsList) {
-                placeId = restaurant.getPlaceId();
-                LatLng restaurantLatLng = new LatLng(restaurant.getGeometry().getLocation().getLat()
-                        , restaurant.getGeometry().getLocation().getLng());
-                setMarker(restaurantLatLng, placeId);
+                LatLng latLng = new LatLng(restaurant.getGeometry().getLocation().getLat(), restaurant.getGeometry().getLocation().getLng());
+                String id = restaurant.getPlaceId();
+                setMarker(latLng, id);
             }
             mMap.setOnMarkerClickListener(marker -> {
                 Intent intent = new Intent(requireContext(), DetailsActivity.class);
@@ -221,15 +224,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setMarker(LatLng latLng, String id) {
-            Marker marker = mMap.addMarker(new MarkerOptions().position(latLng));
-            Objects.requireNonNull(marker).setTag(id);
-            mUserViewModel.getUserByPlaceId(Objects.requireNonNull(marker.getTag()).toString(),
-                    this.requireContext()).observe(this, this::setUsers);
-            if (mUsers.size() == 0) {
-                marker.setIcon(getBitmapDescriptor(R.drawable.marker_orange));
-            } else {
-                marker.setIcon(getBitmapDescriptor(R.drawable.marker_green));
-            }
+        mUserViewModel.getUsers().observe(this,
+                users -> setUsers(users, latLng, id));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -244,9 +240,24 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-    private void setUsers(List<User> users) {
-        mUsers.clear();
-        mUsers.addAll(users);
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void setUsers(List<User> users, LatLng latLng, String id) {
+        Marker marker = mMap.addMarker(new MarkerOptions().position(latLng));
+        Objects.requireNonNull(marker).setTag(id);
+        for (User user : users) {
+            if (user.getRestaurant() != null && user.getRestaurant().equals(marker.getTag())) {
+                mUsers.add(user);
+            }
+            else {
+                mUsers.remove(user);
+            }
+        }
+        if (mUsers.size() != 0) {
+            marker.setIcon(getBitmapDescriptor(R.drawable.marker_green));
+        }
+        else {
+            marker.setIcon(getBitmapDescriptor(R.drawable.marker_orange));
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
