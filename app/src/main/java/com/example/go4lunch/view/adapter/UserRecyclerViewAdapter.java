@@ -51,13 +51,6 @@ public class UserRecyclerViewAdapter
                 user.getRestaurantName();
         String userDoestKnowWhatEating = user.getUsername() + holder.mFragmentUserBinding.getRoot().getContext().getString(R.string.hasnot_decided);
         String placeId = user.getRestaurant();
-        if(user.getPicture() != null) {
-            Glide.with(holder.userImage.getContext()).load(user.getPicture())
-                    .apply(RequestOptions.circleCropTransform()).into(holder.userImage);
-        }
-        else {
-            holder.userImage.setColorFilter(R.color.primary_color);
-        }
         if(user.getRestaurantName() != null && !user.getRestaurantName().equals("")) {
             holder.userEating.setText(userKnowWhatEatingText);
             holder.userEating.setTextColor(Color.BLACK);
@@ -72,6 +65,13 @@ public class UserRecyclerViewAdapter
             holder.userEating.setText(userDoestKnowWhatEating);
             holder.userEating.setTypeface(holder.userEating.getTypeface(), Typeface.ITALIC);
             holder.userEating.setTextColor(Color.GRAY);
+        }
+        if(user.getPicture() != null) {
+            Glide.with(holder.userImage.getContext()).load(user.getPicture())
+                    .apply(RequestOptions.circleCropTransform()).into(holder.userImage);
+        }
+        else {
+            holder.userImage.setColorFilter(R.color.primary_color);
         }
         Collections.sort(users, new User.UserRestaurantComparator());
     }

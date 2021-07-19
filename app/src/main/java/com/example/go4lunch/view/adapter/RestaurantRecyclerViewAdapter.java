@@ -83,7 +83,6 @@ public class RestaurantRecyclerViewAdapter
         }
             });
         }
-        double rating = ((restaurant.getRating()/5)*3);
         String placeId = restaurant.getPlaceId();
         if (restaurant.getPhotos() != null) {
             String photoUrl =
@@ -119,7 +118,7 @@ public class RestaurantRecyclerViewAdapter
         else {
             holder.mRestaurantSchedules.setText(R.string.unknown);
         }
-        holder.mRestaurantRank.setRating((float) rating);
+        holder.mRestaurantRank.setRating((float) setRating(restaurant.getRating()));
         mUserViewModel.getUsers()
                     .observe((LifecycleOwner) context, users -> {setUsers(users, restaurant, holder);});
         holder.mFragmentRestaurantBinding.getRoot().setOnClickListener(v -> {
@@ -127,6 +126,10 @@ public class RestaurantRecyclerViewAdapter
             intent.putExtra("placeId", placeId);
             startActivity(v.getContext(), intent, null);
         });
+    }
+
+    public static double setRating(double rating) {
+        return ((rating/5)*3);
     }
 
     private void setUsers(List<User> users, ResultRestaurant restaurant, ViewHolder holder) {
@@ -152,7 +155,7 @@ public class RestaurantRecyclerViewAdapter
         this.mUserViewModel.initUsers(context);
     }
 
-    private double meterDistanceBetweenPoints(double lat_a, double lng_a, double lat_b,
+    public static double meterDistanceBetweenPoints(double lat_a, double lng_a, double lat_b,
                                               double lng_b) {
         float pk = (float) (180.f/Math.PI);
 

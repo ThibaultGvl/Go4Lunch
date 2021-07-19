@@ -78,5 +78,7 @@
     <string name="select_a_language">Select a Language</string>
     <string name="delete_your_account">DELETE YOUR ACCOUNT</string>
     <string name="notification_channel_id" translatable="false">password</string>
-    <string name="default_notification_channel_id">password</string>
+    <string name="default_notification_channel_id" translatable="false">password</string>
+    <string name="no_phone">No phone number for this restaurant</string>
+    <string name="no_website">No Website found for this restaurant</string>
 </resources>

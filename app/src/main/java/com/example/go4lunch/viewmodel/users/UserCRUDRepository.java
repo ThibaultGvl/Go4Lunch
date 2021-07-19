@@ -18,6 +18,7 @@ import java.util.Objects;
 
 public class UserCRUDRepository {
 
+    MutableLiveData<List<String>> mutableLiveData = new MutableLiveData<>();
 
     public MutableLiveData<List<User>> getUsers(Context context) {
         MutableLiveData<List<User>> result = new MutableLiveData<>();
@@ -154,7 +155,6 @@ public class UserCRUDRepository {
     }
 
     public MutableLiveData<List<String>> getRestaurantsFavorites(String uid, Context context) {
-        MutableLiveData<List<String>> mutableLiveData = new MutableLiveData<>();
         UserCRUD.getUser(uid).addOnFailureListener(onFailureListener(context))
                 .addOnSuccessListener(documentsSnapshot -> {
                     List<String> restaurantsLikedFirestore;
@@ -171,17 +171,18 @@ public class UserCRUDRepository {
     }
 
     public void updateRestaurantsLiked(String uid, List<String> restaurants, String restaurant, Context context) {
-        MutableLiveData<List<String>> result = new MutableLiveData<>();
         if (restaurants != null) {
             if (restaurants.contains(restaurant)) {
                 restaurants.remove(restaurant);
+                //Toast.makeText(context, "This restaurant has been delete from favorites", Toast.LENGTH_SHORT).show();
             } else if (!restaurants.contains(restaurant)) {
                 restaurants.add(restaurant);
+                //Toast.makeText(context, "This restaurant has been had to favorites", Toast.LENGTH_SHORT).show();
             }
         }
         UserCRUD.updateRestaurantsLiked(uid, restaurants).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
           aVoid -> {
-              result.setValue(restaurants);
+              mutableLiveData.setValue(restaurants);
           });
     }
 

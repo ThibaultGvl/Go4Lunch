@@ -56,4 +56,6 @@
     <string name="english">Anglais</string>
     <string name="select_a_language">Choississez un Langage</string>
     <string name="delete_your_account">SUPPRIMEZ VOTRE COMPTE</string>
+    <string name="no_phone">Aucun numéro trouvé</string>
+    <string name="no_website">Aucun site trouvé</string>
 </resources>

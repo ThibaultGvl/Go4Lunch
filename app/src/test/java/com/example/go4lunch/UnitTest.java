@@ -2,8 +2,12 @@ package com.example.go4lunch;
 
 import android.content.Context;
 
+import com.example.go4lunch.databinding.FragmentUserBinding;
 import com.example.go4lunch.model.User;
 import com.example.go4lunch.model.restaurant.RestaurantOutputs;
+import com.example.go4lunch.view.adapter.RestaurantRecyclerViewAdapter;
+import com.example.go4lunch.view.adapter.UserRecyclerViewAdapter;
+import com.example.go4lunch.view.fragment.UserFragment;
 import com.example.go4lunch.viewmodel.places.NearbyRestaurantRepository;
 import com.example.go4lunch.viewmodel.places.NearbyRestaurantViewModel;
 import com.example.go4lunch.viewmodel.users.UserCRUD;
@@ -35,6 +39,8 @@ import static org.junit.Assert.assertTrue;
  */
 public class UnitTest {
 
+    FragmentUserBinding mFragmentUserBinding;
+
     NearbyRestaurantViewModel mNearbyRestaurantViewModel;
 
     NearbyRestaurantRepository mNearbyRestaurantRepository;
@@ -59,7 +65,7 @@ public class UnitTest {
     }
 
     @Test
-    public void sortUsersRV() {
+    public void sortUsersRVTest() {
         final User mUser1 = new User("a", "a", "a", "a", " ",
                 new ArrayList<>(), "a", "a");
         final User mUser2 = new User("b", "b", "b", "b",
@@ -77,7 +83,17 @@ public class UnitTest {
     }
 
     @Test
-    public void test() {
+    public void metersDistanceTest() {
+        assertEquals(587679.1765427797, RestaurantRecyclerViewAdapter.meterDistanceBetweenPoints(48.856613, 2.352222, 43.604652, 1.444209), 0.0);
+    }
+
+    @Test
+    public void updateRankTest() {
+        assertEquals(RestaurantRecyclerViewAdapter.setRating(5), 3, 0.0);
+    }
+
+    @Test
+    public void verifySchedules() {
 
     }
 }

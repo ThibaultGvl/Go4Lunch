@@ -50,6 +50,7 @@ public class DetailsActivity extends AppCompatActivity {
     private final String currentUserId = FirebaseAuth.getInstance().getUid();
     private UserViewModel mUserViewModel;
     private NearbyRestaurantViewModel mRestaurantViewModel;
+    private Result mRestaurant;
     private String placeId;
     private final List<User> mUsers = new ArrayList<>();
     private List<String> mRestaurantsLiked = new ArrayList<>();
@@ -76,7 +77,7 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void setRestaurant(RestaurantDetails restaurant) {
-            Result mRestaurant = restaurant.getResult();
+            mRestaurant = restaurant.getResult();
             updateWithRestaurant(mRestaurant);
     }
 
@@ -106,19 +107,27 @@ public class DetailsActivity extends AppCompatActivity {
                 double rating = ((mRestaurant.getRating() / 5) * 3);
                 mRatingBar.setRating((float) rating);
             }
-            mPhoneButton.setOnClickListener(v -> {
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(phone));
-                startActivity(intent);
-            });
+             mPhoneButton.setOnClickListener(v -> {
+              if (mRestaurant.getInternationalPhoneNumber() != null) {
+              Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(phone));
+              startActivity(intent);
+              }
+              else {
+                  Toast.makeText(this, getString(R.string.no_phone), Toast.LENGTH_SHORT).show();
+              }
+             });
             mWebButton.setOnClickListener(v -> {
                 if (mRestaurant.getWebsite() != null) {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri
                             .parse(mRestaurant.getWebsite()));
                     startActivity(intent);
                 }
+                else {
+                    Toast.makeText(this, getString(R.string.no_website), Toast.LENGTH_SHORT).show();
+                }
             });
             mFab.setOnClickListener(v -> updateRestaurantChoose(mRestaurant));
-            mLikeButton.setOnClickListener(v -> setRestaurantsLiked(mRestaurant.getPlaceId()));
+            mLikeButton.setOnClickListener(v -> updateRestaurantsLiked(mRestaurantsLiked, mRestaurant.getPlaceId()));
         }
     }
 
@@ -146,14 +155,17 @@ public class DetailsActivity extends AppCompatActivity {
                 .observe(this, this::setUsersList);
     }
 
-    private void setRestaurantsLiked(String restaurantLiked) {
-        mUserViewModel.getRestaurantsLiked().observe(this, restaurantsLiked ->
-                configureRestaurantsLiked(restaurantsLiked, restaurantLiked));
+    private void setRestaurantsLiked() {
+        mUserViewModel.getRestaurantsLiked().observe(this, this::configureRestaurantsLiked);
     }
 
-    private void configureRestaurantsLiked(List<String> restaurantsLiked, String restaurantLike) {
+    private void configureRestaurantsLiked(List<String> restaurantsLiked) {
+        mRestaurantsLiked.addAll(restaurantsLiked);
+    }
+
+    private void updateRestaurantsLiked(List<String> restaurantsLiked, String restaurantLike) {
         if (restaurantsLiked != null) {
-            mRestaurantsLiked.clear();
+            this.mRestaurantsLiked.clear();
             this.mRestaurantsLiked.addAll(restaurantsLiked);
         }
         else {
@@ -175,6 +187,7 @@ public class DetailsActivity extends AppCompatActivity {
                 .get(UserViewModel.class);
         this.mUserViewModel.initUsers(this);
         this.mUserViewModel.initRestaurantsLiked(currentUserId, this);
+        this.setRestaurantsLiked();
     }
 
     private void configureNearbyRestaurantViewModel() {
