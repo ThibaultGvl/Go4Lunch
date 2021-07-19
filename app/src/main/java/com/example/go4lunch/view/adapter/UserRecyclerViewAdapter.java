@@ -19,6 +19,8 @@ import com.example.go4lunch.view.activity.DetailsActivity;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static androidx.core.content.ContextCompat.startActivity;
@@ -71,6 +73,7 @@ public class UserRecyclerViewAdapter
             holder.userEating.setTypeface(holder.userEating.getTypeface(), Typeface.ITALIC);
             holder.userEating.setTextColor(Color.GRAY);
         }
+        Collections.sort(users, new User.UserRestaurantComparator());
     }
 
     @Override

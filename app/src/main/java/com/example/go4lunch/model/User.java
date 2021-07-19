@@ -3,6 +3,7 @@ package com.example.go4lunch.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class User {
@@ -118,5 +119,12 @@ public class User {
 
     public void setRestaurantAddress(String restaurantAddress) {
         this.restaurantAddress = restaurantAddress;
+    }
+
+    public static class UserRestaurantComparator implements Comparator<User> {
+        @Override
+        public int compare(User o1, User o2) {
+            return o2.getRestaurant().length() - o1.getRestaurant().length();
+        }
     }
 }

@@ -48,13 +48,12 @@ public class NotificationsService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, mId,
                 intent, PendingIntent.FLAG_ONE_SHOT);
 
-        String channelId = mNotificationCanal;
         String message = "Hello" + mUser.getUsername() + " it's Time to Lunch you'll eat at " +
                 mUser.getRestaurantName() + " at " + mUser.getRestaurantAddress() + "with"
                 + mUser.getRestaurant();
 
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this, channelId)
+                new NotificationCompat.Builder(this, mNotificationCanal)
                         .setSmallIcon(R.drawable.ic_logo_go4lunch)
                         .setContentTitle(notification.getTitle())
                         .setContentText(message)
@@ -68,9 +67,8 @@ public class NotificationsService extends FirebaseMessagingService {
                 (Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence channelName = mNotificationName;
             int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel mChannel = new NotificationChannel(getString(R.string.notification_channel_id), channelName,
+            NotificationChannel mChannel = new NotificationChannel(getString(R.string.notification_channel_id), mNotificationName,
                     importance);
             notificationManager.createNotificationChannel(mChannel);
             notificationManager.notify(mNotificationName, mId, notificationBuilder.build());

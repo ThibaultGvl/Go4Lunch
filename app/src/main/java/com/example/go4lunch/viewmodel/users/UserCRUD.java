@@ -4,9 +4,9 @@ import com.example.go4lunch.model.User;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 
 import java.util.List;
 
@@ -59,15 +59,29 @@ public class UserCRUD {
                 address);
     }
 
-    public static Task<QuerySnapshot> getFavoritesList(String uid) {
-        return UserCRUD.getUsersCollection().document(uid).collection("restaurantsLiked").get();
+    public static Task<Void> updateRestaurantsLiked(String uid, List<String> restaurants) {
+        return UserCRUD.getUsersCollection().document(uid).update("restaurantsLiked", restaurants);
+    }
+
+    public static Task<DocumentSnapshot> getFavoritesList(String uid) {
+        return UserCRUD.getUsersCollection().document(uid).get(Source.valueOf("restaurantsLiked"));
     }
 
     public static Task<Void> addToListFavorites(String uid, String restaurant) {
+        return UserCRUD.getUsersCollection().document(uid)
+                .collection("restaurantsLiked").document(restaurant).update(restaurant,
+                        restaurant);
+    }
+    public static Task<Void> addRestaurantToFavorites(String uid, String restaurant) {
         return UserCRUD.getUsersCollection().document(uid).collection("restaurantsLiked").document(restaurant).update(restaurant, restaurant);
     }
 
     public static Task<Void> deleteFromFavorites(String uid, String restaurant){
+        return UserCRUD.getUsersCollection().document(uid)
+                .collection("restaurantsLiked").document(restaurant).delete();
+    }
+
+    public static Task<Void> deleteRestaurantFromFavorites(String uid, String restaurant) {
         return UserCRUD.getUsersCollection().document(uid).collection("restaurantsLiked").document(restaurant).delete();
     }
     

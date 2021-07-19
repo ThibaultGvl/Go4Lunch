@@ -67,6 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/restaurant_name_details"
                 android:text="@string/restaurant_details"
+                android:maxLines="1"
                 android:textColor="@color/white" />
 
 

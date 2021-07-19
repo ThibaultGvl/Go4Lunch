@@ -91,7 +91,7 @@ public class UserCRUDRepository {
             String imageUrl = (user.getPhotoUrl() != null) ? Objects.requireNonNull
                     (this.getCurrentUser().getPhotoUrl()).toString() : null;
 
-            UserCRUD.createUser(uid, username, email, imageUrl, null, null,
+            UserCRUD.createUser(uid, username, email, imageUrl, "", new ArrayList<>(),
                     null, null).addOnFailureListener
                     (onFailureListener(context)).addOnSuccessListener(aVoid -> {
                 result.setValue(user);
@@ -155,30 +155,50 @@ public class UserCRUDRepository {
 
     public MutableLiveData<List<String>> getRestaurantsFavorites(String uid, Context context) {
         MutableLiveData<List<String>> mutableLiveData = new MutableLiveData<>();
-        UserCRUD.getFavoritesList(uid).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
-                querySnapshot -> {
-                    List<String> restaurantsId = new ArrayList<>();
-                    for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
-                        if (documentSnapshot != null) {
-                            String restaurantId = documentSnapshot.toString();
-                            restaurantsId.add(restaurantId);
+        UserCRUD.getFavoritesList(uid).addOnFailureListener(onFailureListener(context))
+                .addOnSuccessListener(documentsSnapshot -> {
+                    List<String> restaurantsLikedFirestore = new ArrayList<>();
+                    if (documentsSnapshot != null) {
+                            restaurantsLikedFirestore.add(documentsSnapshot.toString());
                         }
+                    else {
+                        restaurantsLikedFirestore = new ArrayList<>();
                     }
-                    mutableLiveData.setValue(restaurantsId);
+                    mutableLiveData.setValue(restaurantsLikedFirestore);
                 });
         return mutableLiveData;
+    }
+
+    public void updateRestaurantsLiked(String uid, List<String> restaurants, String restaurant, Context context) {
+        MutableLiveData<List<String>> result = new MutableLiveData<>();
+        if (restaurants != null) {
+            if (restaurants.contains(restaurant)) {
+                restaurants.remove(restaurant);
+            } else {
+                restaurants.add(restaurant);
+            }
+        }
+        else {
+            restaurants = new ArrayList<>();
+            restaurants.add(restaurant);
+        }
+        List<String> list = new ArrayList<>(restaurants);
+        UserCRUD.updateRestaurantsLiked(uid, restaurants).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
+          aVoid -> {
+              result.setValue(list);
+          });
     }
 
     public void updateRestaurantsFavouritesList(String uid, String restaurantsLiked, Context context, List<String> restaurants) {
         MutableLiveData<String> result = new MutableLiveData<>();
         if (restaurants.contains(restaurantsLiked)) {
-            UserCRUD.deleteFromFavorites(uid, restaurantsLiked).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
+            UserCRUD.deleteRestaurantFromFavorites(uid, restaurantsLiked).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
                     aVoid -> {
                         result.setValue(restaurantsLiked);
                     });
         }
         else {
-            UserCRUD.addToListFavorites(uid, restaurantsLiked).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
+            UserCRUD.addRestaurantToFavorites(uid, restaurantsLiked).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
                     aVoid -> {
                         result.setValue(restaurantsLiked);
                     }

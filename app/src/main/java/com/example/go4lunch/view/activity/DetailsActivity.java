@@ -47,12 +47,12 @@ public class DetailsActivity extends AppCompatActivity {
     private ImageButton mLikeButton;
     private ImageButton mReturnButton;
     private FloatingActionButton mFab;
+    private final String currentUserId = FirebaseAuth.getInstance().getUid();
     private UserViewModel mUserViewModel;
     private NearbyRestaurantViewModel mRestaurantViewModel;
-    private final String currentUserId = FirebaseAuth.getInstance().getUid();
     private String placeId;
     private final List<User> mUsers = new ArrayList<>();
-    private final List<String> mRestaurantsLiked = new ArrayList<>();
+    private List<String> mRestaurantsLiked = new ArrayList<>();
     private final DetailsRecyclerViewAdapter mAdapter = new DetailsRecyclerViewAdapter(mUsers);
 
     @Override
@@ -118,7 +118,7 @@ public class DetailsActivity extends AppCompatActivity {
                 }
             });
             mFab.setOnClickListener(v -> updateRestaurantChoose(mRestaurant));
-            mLikeButton.setOnClickListener(v -> updateRestaurantsLiked());
+            mLikeButton.setOnClickListener(v -> setRestaurantsLiked(mRestaurant.getPlaceId()));
         }
     }
 
@@ -137,13 +137,8 @@ public class DetailsActivity extends AppCompatActivity {
     private void updateRestaurantChoose(Result mRestaurant) {
         mUserViewModel.updateUserRestaurant(currentUserId, placeId, this);
         mUserViewModel.updateUserRestaurantName(currentUserId, mRestaurant.getName(), this);
-        mUserViewModel.updateUserRestaurantAddress(currentUserId, mRestaurant.getAdrAddress(),
+        mUserViewModel.updateUserRestaurantAddress(currentUserId, mRestaurant.getFormattedAddress(),
                 this);
-    }
-
-    public void updateRestaurantsLiked() {
-        mUserViewModel.getFavoritesRestaurants(currentUserId, this.getBaseContext())
-                .observe(this, this::configureRestaurants);
     }
 
     private void configureUsers() {
@@ -151,12 +146,20 @@ public class DetailsActivity extends AppCompatActivity {
                 .observe(this, this::setUsersList);
     }
 
-    private void configureRestaurants(List<String> restaurants) {
-        mRestaurantsLiked.clear();
-        mRestaurantsLiked.addAll(restaurants);
-        mUserViewModel.updateRestaurantsFavouritesList(currentUserId, placeId, this, mRestaurantsLiked);
-        Toast.makeText(this, "This restaurant has been had to favorites",
-                Toast.LENGTH_SHORT).show();
+    private void setRestaurantsLiked(String restaurantLiked) {
+        mUserViewModel.getRestaurantsLiked().observe(this, restaurantsLiked ->
+                configureRestaurantsLiked(restaurantsLiked, restaurantLiked));
+    }
+
+    private void configureRestaurantsLiked(List<String> restaurantsLiked, String restaurantLike) {
+        if (restaurantsLiked != null) {
+            this.mRestaurantsLiked.addAll(restaurantsLiked);
+        }
+        else {
+            this.mRestaurantsLiked = new ArrayList<>();
+        }
+        mUserViewModel.updateRestaurantsLiked(currentUserId, mRestaurantsLiked, restaurantLike,
+                getBaseContext());
     }
 
     private void setUsersList(List<User> users) {
@@ -170,6 +173,7 @@ public class DetailsActivity extends AppCompatActivity {
         this.mUserViewModel = new ViewModelProvider(this, mViewModelFactory)
                 .get(UserViewModel.class);
         this.mUserViewModel.initUsers(this);
+        this.mUserViewModel.initRestaurantsLiked(currentUserId, this);
     }
 
     private void configureNearbyRestaurantViewModel() {
