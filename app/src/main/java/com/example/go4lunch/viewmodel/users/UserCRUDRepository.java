@@ -155,11 +155,12 @@ public class UserCRUDRepository {
 
     public MutableLiveData<List<String>> getRestaurantsFavorites(String uid, Context context) {
         MutableLiveData<List<String>> mutableLiveData = new MutableLiveData<>();
-        UserCRUD.getFavoritesList(uid).addOnFailureListener(onFailureListener(context))
+        UserCRUD.getUser(uid).addOnFailureListener(onFailureListener(context))
                 .addOnSuccessListener(documentsSnapshot -> {
-                    List<String> restaurantsLikedFirestore = new ArrayList<>();
+                    List<String> restaurantsLikedFirestore;
                     if (documentsSnapshot != null) {
-                            restaurantsLikedFirestore.add(documentsSnapshot.toString());
+                        restaurantsLikedFirestore =
+                                (List<String>) documentsSnapshot.get("restaurantsLiked");
                         }
                     else {
                         restaurantsLikedFirestore = new ArrayList<>();
@@ -174,36 +175,14 @@ public class UserCRUDRepository {
         if (restaurants != null) {
             if (restaurants.contains(restaurant)) {
                 restaurants.remove(restaurant);
-            } else {
+            } else if (!restaurants.contains(restaurant)) {
                 restaurants.add(restaurant);
             }
         }
-        else {
-            restaurants = new ArrayList<>();
-            restaurants.add(restaurant);
-        }
-        List<String> list = new ArrayList<>(restaurants);
         UserCRUD.updateRestaurantsLiked(uid, restaurants).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
           aVoid -> {
-              result.setValue(list);
+              result.setValue(restaurants);
           });
-    }
-
-    public void updateRestaurantsFavouritesList(String uid, String restaurantsLiked, Context context, List<String> restaurants) {
-        MutableLiveData<String> result = new MutableLiveData<>();
-        if (restaurants.contains(restaurantsLiked)) {
-            UserCRUD.deleteRestaurantFromFavorites(uid, restaurantsLiked).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
-                    aVoid -> {
-                        result.setValue(restaurantsLiked);
-                    });
-        }
-        else {
-            UserCRUD.addRestaurantToFavorites(uid, restaurantsLiked).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
-                    aVoid -> {
-                        result.setValue(restaurantsLiked);
-                    }
-            );
-        }
     }
 
     public void deleteUser(String uid, Context context) {

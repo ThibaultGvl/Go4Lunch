@@ -62,28 +62,6 @@ public class UserCRUD {
     public static Task<Void> updateRestaurantsLiked(String uid, List<String> restaurants) {
         return UserCRUD.getUsersCollection().document(uid).update("restaurantsLiked", restaurants);
     }
-
-    public static Task<DocumentSnapshot> getFavoritesList(String uid) {
-        return UserCRUD.getUsersCollection().document(uid).get(Source.valueOf("restaurantsLiked"));
-    }
-
-    public static Task<Void> addToListFavorites(String uid, String restaurant) {
-        return UserCRUD.getUsersCollection().document(uid)
-                .collection("restaurantsLiked").document(restaurant).update(restaurant,
-                        restaurant);
-    }
-    public static Task<Void> addRestaurantToFavorites(String uid, String restaurant) {
-        return UserCRUD.getUsersCollection().document(uid).collection("restaurantsLiked").document(restaurant).update(restaurant, restaurant);
-    }
-
-    public static Task<Void> deleteFromFavorites(String uid, String restaurant){
-        return UserCRUD.getUsersCollection().document(uid)
-                .collection("restaurantsLiked").document(restaurant).delete();
-    }
-
-    public static Task<Void> deleteRestaurantFromFavorites(String uid, String restaurant) {
-        return UserCRUD.getUsersCollection().document(uid).collection("restaurantsLiked").document(restaurant).delete();
-    }
     
     public static Task<Void> deleteUser(String uid) {
         return UserCRUD.getUsersCollection().document(uid).delete();

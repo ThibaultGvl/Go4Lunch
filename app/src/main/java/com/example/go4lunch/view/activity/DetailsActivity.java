@@ -153,6 +153,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     private void configureRestaurantsLiked(List<String> restaurantsLiked, String restaurantLike) {
         if (restaurantsLiked != null) {
+            mRestaurantsLiked.clear();
             this.mRestaurantsLiked.addAll(restaurantsLiked);
         }
         else {
