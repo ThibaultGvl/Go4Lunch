@@ -23,6 +23,7 @@ import com.example.go4lunch.model.User;
 import com.example.go4lunch.model.details.RestaurantDetails;
 import com.example.go4lunch.model.details.Result;
 import com.example.go4lunch.view.adapter.DetailsRecyclerViewAdapter;
+import com.example.go4lunch.view.adapter.RestaurantRecyclerViewAdapter;
 import com.example.go4lunch.viewmodel.places.NearbyInjection;
 import com.example.go4lunch.viewmodel.places.NearbyRestaurantViewModel;
 import com.example.go4lunch.viewmodel.places.NearbyViewModelFactory;
@@ -104,8 +105,8 @@ public class DetailsActivity extends AppCompatActivity {
                 Glide.with(mImage).load(R.drawable.ic_logo_go4lunch).into(mImage);
             }
             if (mRestaurant.getRating() != null) {
-                double rating = ((mRestaurant.getRating() / 5) * 3);
-                mRatingBar.setRating((float) rating);
+                mRatingBar.setRating((float)
+                        RestaurantRecyclerViewAdapter.setRating(mRestaurant.getRating()));
             }
              mPhoneButton.setOnClickListener(v -> {
               if (mRestaurant.getInternationalPhoneNumber() != null) {
@@ -156,22 +157,12 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void setRestaurantsLiked() {
-        mUserViewModel.getRestaurantsLiked().observe(this, this::configureRestaurantsLiked);
-    }
-
-    private void configureRestaurantsLiked(List<String> restaurantsLiked) {
-        mRestaurantsLiked.addAll(restaurantsLiked);
+        mUserViewModel.getRestaurantsLiked().observe(this, users ->
+                mRestaurantsLiked.addAll(users));
     }
 
     private void updateRestaurantsLiked(List<String> restaurantsLiked, String restaurantLike) {
-        if (restaurantsLiked != null) {
-            this.mRestaurantsLiked.clear();
-            this.mRestaurantsLiked.addAll(restaurantsLiked);
-        }
-        else {
-            this.mRestaurantsLiked = new ArrayList<>();
-        }
-        mUserViewModel.updateRestaurantsLiked(currentUserId, mRestaurantsLiked, restaurantLike,
+        mUserViewModel.updateRestaurantsLiked(currentUserId, restaurantsLiked, restaurantLike,
                 getBaseContext());
     }
 

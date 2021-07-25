@@ -60,7 +60,8 @@ public class UserCRUD {
     }
 
     public static Task<Void> updateRestaurantsLiked(String uid, List<String> restaurants) {
-        return UserCRUD.getUsersCollection().document(uid).update("restaurantsLiked", restaurants);
+        return UserCRUD.getUsersCollection().document(uid).update("restaurantsLiked",
+                restaurants);
     }
     
     public static Task<Void> deleteUser(String uid) {

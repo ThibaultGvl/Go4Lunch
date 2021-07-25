@@ -58,4 +58,9 @@
     <string name="delete_your_account">SUPPRIMEZ VOTRE COMPTE</string>
     <string name="no_phone">Aucun numéro trouvé</string>
     <string name="no_website">Aucun site trouvé</string>
+    <string name="notif_pt_1">Salut \</string>
+    <string name="notif_pt_2">\ c\'est l\'heure de manger, tu manges à \</string>
+    <string name="notif_pt_3">\ à \</string>
+    <string name="notif_pt_4">\ avec \</string>
+    <string name="notification_name">Bon Appétit\ !</string>
 </resources>

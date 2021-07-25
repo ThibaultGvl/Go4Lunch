@@ -94,9 +94,8 @@ public class UserCRUDRepository {
 
             UserCRUD.createUser(uid, username, email, imageUrl, "", new ArrayList<>(),
                     null, null).addOnFailureListener
-                    (onFailureListener(context)).addOnSuccessListener(aVoid -> {
-                result.setValue(user);
-            });
+                    (onFailureListener(context)).addOnSuccessListener
+                    (aVoid -> result.setValue(user));
         }
     }
 
@@ -142,16 +141,14 @@ public class UserCRUDRepository {
         MutableLiveData<String> result = new MutableLiveData<>();
         UserCRUD.updateRestaurantName(uid, restaurantName).addOnFailureListener(onFailureListener
                 (context)).addOnSuccessListener(
-                aVoid -> { result.setValue(restaurantName);
-                });
+                aVoid -> result.setValue(restaurantName));
     }
 
     public void updateUserRestaurantAddress(String uid, String restaurantAddress, Context context) {
         MutableLiveData<String> result = new MutableLiveData<>();
         UserCRUD.updateRestaurantAddress(uid, restaurantAddress).addOnFailureListener
                 (onFailureListener(context)).addOnSuccessListener(
-                aVoid -> { result.setValue(restaurantAddress);
-                });
+                aVoid -> result.setValue(restaurantAddress));
     }
 
     public MutableLiveData<List<String>> getRestaurantsFavorites(String uid, Context context) {
@@ -181,9 +178,7 @@ public class UserCRUDRepository {
             }
         }
         UserCRUD.updateRestaurantsLiked(uid, restaurants).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
-          aVoid -> {
-              mutableLiveData.setValue(restaurants);
-          });
+          aVoid -> mutableLiveData.setValue(restaurants));
     }
 
     public void deleteUser(String uid, Context context) {
@@ -195,9 +190,7 @@ public class UserCRUDRepository {
         });
     }
 
-    protected FirebaseUser getCurrentUser(){ return FirebaseAuth.getInstance().getCurrentUser(); }
-
-    protected Boolean isCurrentUserLogged(){ return (this.getCurrentUser() != null); }
+    protected FirebaseUser getCurrentUser(){ return FirebaseAuth.getInstance().getCurrentUser();}
 
     private OnFailureListener onFailureListener(Context context) {
         return e -> Toast.makeText(context, R.string.fui_error_unknown, Toast.LENGTH_LONG).show();

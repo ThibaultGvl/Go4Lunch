@@ -81,4 +81,9 @@
     <string name="default_notification_channel_id" translatable="false">password</string>
     <string name="no_phone">No phone number for this restaurant</string>
     <string name="no_website">No Website found for this restaurant</string>
+    <string name="notif_pt_1">Hello\ </string>
+    <string name="notif_pt_2">\ it\'s Time to Lunch you\'ll eat at\ </string>
+    <string name="notif_pt_3">\ at \ </string>
+    <string name="notif_pt_4">\ with\ </string>
+    <string name="notification_name">Time\ To\ Lunch!</string>
 </resources>

@@ -1,6 +1,5 @@
-/*package com.example.go4lunch.utils;
+package com.example.go4lunch.utils;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,19 +10,20 @@ import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkerParameters;
 
 import com.example.go4lunch.R;
 import com.example.go4lunch.model.User;
 import com.example.go4lunch.view.activity.ConnexionActivity;
 import com.example.go4lunch.view.activity.MainActivity;
-import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import org.jetbrains.annotations.NotNull;
+import java.util.concurrent.TimeUnit;
 
-import static java.lang.String.valueOf;
-
-public class NotificationsService extends FirebaseMessagingService {
+public class Worker extends androidx.work.Worker {
 
     private final String mNotificationCanal = "password";
 
@@ -31,32 +31,29 @@ public class NotificationsService extends FirebaseMessagingService {
 
     private final int mId = 26;
 
-    private final User mUser = MainActivity.getUserInformations();
-
-    @Override
-    public void onMessageReceived(@NotNull RemoteMessage remoteMessage) {
-        super.onMessageReceived(remoteMessage);
-        RemoteMessage.Notification notification = remoteMessage.getNotification();
-        if (notification != null) {
-            this.sendVisualNotification(notification);
-        }
+    public Worker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+        super(context, workerParams);
     }
 
-    private void sendVisualNotification(RemoteMessage.Notification notification) {
+    @NonNull
+    @Override
+    public Result doWork() {
+        String message = getInputData().getString("message");
+        sendVisualNotification(message);
+        return Result.success();
+    }
 
-        Intent intent = new Intent(this, ConnexionActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, mId,
+    private void sendVisualNotification(String message) {
+
+        Intent intent = new Intent(this.getApplicationContext(), ConnexionActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this.getApplicationContext(), mId,
                 intent, PendingIntent.FLAG_ONE_SHOT);
 
-        String message = getString(R.string.notif_pt_1) + mUser.getUsername()
-                + getString(R.string.notif_pt_2) + mUser.getRestaurantName() +
-                getString(R.string.notif_pt_3) + mUser.getRestaurantAddress() +
-                getString(R.string.notif_pt_4) + mUser.getRestaurant();
-
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this, mNotificationCanal)
+                new NotificationCompat.Builder(this.getApplicationContext(), mNotificationCanal)
                         .setSmallIcon(R.drawable.ic_logo_go4lunch)
-                        .setContentTitle(notification.getTitle())
+                        .setContentTitle
+                                (this.getApplicationContext().getString(R.string.notification_name))
                         .setContentText(message)
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(message))
@@ -64,15 +61,16 @@ public class NotificationsService extends FirebaseMessagingService {
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                         .setContentIntent(pendingIntent);
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService
-                (Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) this.getApplicationContext()
+                .getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel mChannel = new NotificationChannel(getString(R.string.notification_channel_id), mNotificationName,
+            NotificationChannel mChannel = new NotificationChannel(this.getApplicationContext()
+                    .getString(R.string.notification_channel_id), mNotificationName,
                     importance);
             notificationManager.createNotificationChannel(mChannel);
             notificationManager.notify(mNotificationName, mId, notificationBuilder.build());
         }
     }
-}*/
+}

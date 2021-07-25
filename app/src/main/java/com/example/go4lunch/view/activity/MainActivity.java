@@ -2,6 +2,7 @@ package com.example.go4lunch.view.activity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -9,18 +10,20 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,7 +36,7 @@ import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.ActivityMainBinding;
 import com.example.go4lunch.databinding.ActivityNavHeaderBinding;
 import com.example.go4lunch.model.User;
-import com.example.go4lunch.model.restaurant.ResultRestaurant;
+import com.example.go4lunch.utils.Worker;
 import com.example.go4lunch.view.fragment.MapsFragment;
 import com.example.go4lunch.view.fragment.RestaurantFragment;
 import com.example.go4lunch.view.fragment.SettingsFragment;
@@ -57,12 +60,21 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.type.DateTime;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
 
@@ -83,13 +95,15 @@ public class MainActivity extends AppCompatActivity
     private UserViewModel mUserViewModel;
     private NearbyRestaurantViewModel mNearbyRestaurantViewModel;
     private int mFragmentIdentifier;
-    private static User mUser = new User("", "", "", "", "",
+    private User mUser = new User("", "", "", "", "",
             null, "", "");
+    private List<String> names = new ArrayList<>();
     private static final int MAPS_FRAGMENT = 0;
     private static final int RESTAURANT_FRAGMENT = 1;
     private static final int USER_FRAGMENT = 2;
     private final int AUTOCOMPLETE_REQUEST_CODE = 26;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -305,6 +319,7 @@ public class MainActivity extends AppCompatActivity
 
     protected Boolean isCurrentUserLogged(){ return (this.getCurrentUser() != null); }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void setUser(User user) {
         mUser = user;
         if (isCurrentUserLogged()){
@@ -324,12 +339,15 @@ public class MainActivity extends AppCompatActivity
             currentUserName.setText(username);
             currentUserEmail.setText(email);
 
+            this.useWorker();
+
             if (mUser.getUid() == null || mUser.getUid().equals("")) {
                 this.mUserViewModel.createCurrentUser(this);
             }
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateUIWhenCreating(){
         String uid = Objects.requireNonNull(getCurrentUser()).getUid();
 
@@ -349,6 +367,7 @@ public class MainActivity extends AppCompatActivity
        }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onResume() {
        super.onResume();
@@ -368,7 +387,56 @@ public class MainActivity extends AppCompatActivity
                 .get(NearbyRestaurantViewModel.class);
     }
 
-    public static User getUserInformations() {
-        return mUser;
+    private void setRestaurantsUser(List<User> restaurantsUser) {
+        for (User user : restaurantsUser) {
+            String restaurantUser = user.getUsername();
+            names.add(restaurantUser);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void useWorker() {
+        long timeNow = ZonedDateTime.now(ZoneId.systemDefault()).getHour();
+        long hourAlarm = 12;
+        mUserViewModel.getUserByPlaceId(mUser.getRestaurant(), this)
+                .observe(this, this::setRestaurantsUser);
+        long delay;
+        if (timeNow <= hourAlarm) {
+            delay = hourAlarm - timeNow;
+        }
+        else {
+            delay = hourAlarm + (24 - timeNow);
+        }
+        String username = mUser.getUsername();
+        String restaurantName = mUser.getRestaurantName();
+        String restaurantAddress = mUser.getRestaurantAddress();
+        String users = names.toString();
+        String message;
+        //SalutThibault Grivel c'est l'heure de manger, tu manges àTotalEnergies à Route de Castres, 31130 Balma, France
+
+
+        if (names.size() != 0) {
+            message = getString(R.string.notif_pt_1) + username +
+                    getString(R.string.notif_pt_2) + restaurantName +
+                    getString(R.string.notif_pt_3) + restaurantAddress +
+                    getString(R.string.notif_pt_4) + users;
+        }
+        else {
+            message = getString(R.string.notif_pt_1) + username +
+                    getString(R.string.notif_pt_2) + restaurantName +
+                    getString(R.string.notif_pt_3) + restaurantAddress;
+        }
+
+        Data.Builder data = new Data.Builder();
+        data.putString("message", message);
+
+        OneTimeWorkRequest myWork = new OneTimeWorkRequest.Builder(Worker.class)
+                .setInitialDelay(delay, TimeUnit.HOURS).setInputData(data.build()).build();
+
+        WorkManager.getInstance(this).enqueue(myWork);
+
+        PeriodicWorkRequest periodicWork = new PeriodicWorkRequest.Builder(Worker.class,
+                24, TimeUnit.HOURS).build();
+        WorkManager.getInstance(this).enqueue(periodicWork);
     }
 }
