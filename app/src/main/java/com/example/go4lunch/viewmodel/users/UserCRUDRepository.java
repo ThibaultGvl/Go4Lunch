@@ -167,18 +167,11 @@ public class UserCRUDRepository {
         return mutableLiveData;
     }
 
-    public void updateRestaurantsLiked(String uid, List<String> restaurants, String restaurant, Context context) {
+    public void updateRestaurantsLiked(String uid, List<String> restaurants, Context context) {
         if (restaurants != null) {
-            if (restaurants.contains(restaurant)) {
-                restaurants.remove(restaurant);
-                //Toast.makeText(context, "This restaurant has been delete from favorites", Toast.LENGTH_SHORT).show();
-            } else if (!restaurants.contains(restaurant)) {
-                restaurants.add(restaurant);
-                //Toast.makeText(context, "This restaurant has been had to favorites", Toast.LENGTH_SHORT).show();
-            }
+            UserCRUD.updateRestaurantsLiked(uid, restaurants).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
+                    aVoid -> mutableLiveData.setValue(restaurants));
         }
-        UserCRUD.updateRestaurantsLiked(uid, restaurants).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
-          aVoid -> mutableLiveData.setValue(restaurants));
     }
 
     public void deleteUser(String uid, Context context) {

@@ -54,7 +54,7 @@ public class DetailsActivity extends AppCompatActivity {
     private Result mRestaurant;
     private String placeId;
     private final List<User> mUsers = new ArrayList<>();
-    private List<String> mRestaurantsLiked = new ArrayList<>();
+    private final List<String> mRestaurantsLiked = new ArrayList<>();
     private final DetailsRecyclerViewAdapter mAdapter = new DetailsRecyclerViewAdapter(mUsers);
 
     @Override
@@ -157,12 +157,17 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void setRestaurantsLiked() {
-        mUserViewModel.getRestaurantsLiked().observe(this, users ->
-                mRestaurantsLiked.addAll(users));
+        mUserViewModel.getRestaurantsLiked().observe(this, mRestaurantsLiked::addAll);
     }
 
     private void updateRestaurantsLiked(List<String> restaurantsLiked, String restaurantLike) {
-        mUserViewModel.updateRestaurantsLiked(currentUserId, restaurantsLiked, restaurantLike,
+        if (restaurantsLiked.contains(restaurantLike)) {
+            restaurantsLiked.remove(restaurantLike);
+        }
+        else {
+            restaurantsLiked.add(restaurantLike);
+        }
+        mUserViewModel.updateRestaurantsLiked(currentUserId, restaurantsLiked,
                 getBaseContext());
     }
 

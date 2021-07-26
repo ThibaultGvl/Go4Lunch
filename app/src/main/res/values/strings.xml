@@ -84,6 +84,6 @@
     <string name="notif_pt_1">Hello\ </string>
     <string name="notif_pt_2">\ it\'s Time to Lunch you\'ll eat at\ </string>
     <string name="notif_pt_3">\ at \ </string>
-    <string name="notif_pt_4">\ with\ </string>
+    <string name="notif_pt_4">\ with \</string>
     <string name="notification_name">Time\ To\ Lunch!</string>
 </resources>

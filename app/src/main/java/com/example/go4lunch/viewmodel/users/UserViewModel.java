@@ -18,8 +18,6 @@ public class UserViewModel extends androidx.lifecycle.ViewModel {
 
     private LiveData<List<User>> users;
 
-    private LiveData<User> user;
-
     private MutableLiveData<List<String>> restaurantsLiked;
 
     public UserViewModel(UserCRUDRepository userCRUDRepository, Executor executor){
@@ -48,19 +46,17 @@ public class UserViewModel extends androidx.lifecycle.ViewModel {
     }
 
     public LiveData<User> getUser(String uid, Context context) {
-        user = mUserCRUDRepository.getUser(uid, context);
-        return user;
+        return mUserCRUDRepository.getUser(uid, context);
     }
 
     public MutableLiveData<User> getCurrentUser(Context context) {
-        MutableLiveData<User> user = new MutableLiveData<>();
+        MutableLiveData<User> user;
         user = (MutableLiveData<User>) mUserCRUDRepository.getCurrentUserFirestore(context);
         return user;
     }
 
     public LiveData<List<User>> getUserByPlaceId(String placeId, Context context) {
-        LiveData<List<User>> users = mUserCRUDRepository.getUserByPlaceId(placeId, context);
-        return users;
+        return mUserCRUDRepository.getUserByPlaceId(placeId, context);
     }
 
     public void createCurrentUser(Context context) {
@@ -91,8 +87,8 @@ public class UserViewModel extends androidx.lifecycle.ViewModel {
         executor.execute(() -> mUserCRUDRepository.getRestaurantsFavorites(uid, context));
     }
 
-    public void updateRestaurantsLiked(String uid, List<String> restaurants, String restaurant, Context context) {
-        executor.execute(() -> mUserCRUDRepository.updateRestaurantsLiked(uid, restaurants, restaurant, context));
+    public void updateRestaurantsLiked(String uid, List<String> restaurants, Context context) {
+        executor.execute(() -> mUserCRUDRepository.updateRestaurantsLiked(uid, restaurants, context));
     }
 
     public void updateUserRestaurantName(String uid, String restaurantToLike, Context context) {
