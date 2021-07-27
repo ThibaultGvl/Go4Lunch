@@ -167,10 +167,15 @@ public class UserCRUDRepository {
         return mutableLiveData;
     }
 
-    public void updateRestaurantsLiked(String uid, List<String> restaurants, Context context) {
-        if (restaurants != null) {
-            UserCRUD.updateRestaurantsLiked(uid, restaurants).addOnFailureListener(onFailureListener(context)).addOnSuccessListener(
-                    aVoid -> mutableLiveData.setValue(restaurants));
+    public void updateRestaurantsLiked(String uid, List<String> restaurantsLiked, String restaurantLike, Context context) {
+        if (restaurantsLiked != null) {
+            if (restaurantsLiked.contains(restaurantLike)) {
+                restaurantsLiked.remove(restaurantLike);
+            }
+            else {
+                restaurantsLiked.add(restaurantLike);
+            }
+            UserCRUD.updateRestaurantsLiked(uid, restaurantsLiked).addOnFailureListener(onFailureListener(context));
         }
     }
 

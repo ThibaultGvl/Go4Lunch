@@ -97,7 +97,6 @@ public class MainActivity extends AppCompatActivity
     private int mFragmentIdentifier;
     private User mUser = new User("", "", "", "", "",
             null, "", "");
-    private List<String> names = new ArrayList<>();
     private static final int MAPS_FRAGMENT = 0;
     private static final int RESTAURANT_FRAGMENT = 1;
     private static final int USER_FRAGMENT = 2;
@@ -321,9 +320,8 @@ public class MainActivity extends AppCompatActivity
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setUser(User user) {
-        mUser = user;
         if (isCurrentUserLogged()){
-
+            mUser = user;
             if (Objects.requireNonNull(this.getCurrentUser()).getPhotoUrl() != null) {
                 Glide.with(this)
                         .load(this.getCurrentUser().getPhotoUrl())
@@ -387,19 +385,10 @@ public class MainActivity extends AppCompatActivity
                 .get(NearbyRestaurantViewModel.class);
     }
 
-    private void setRestaurantsUser(List<User> restaurantsUser) {
-        for (User user : restaurantsUser) {
-            String restaurantUser = user.getUsername();
-            names.add(restaurantUser);
-        }
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void useWorker() {
         long timeNow = ZonedDateTime.now(ZoneId.systemDefault()).getHour();
         long hourAlarm = 12;
-        mUserViewModel.getUserByPlaceId(mUser.getRestaurant(), this)
-                .observe(this, this::setRestaurantsUser);
         long delay;
         if (timeNow <= hourAlarm) {
             delay = hourAlarm - timeNow;
@@ -407,36 +396,8 @@ public class MainActivity extends AppCompatActivity
         else {
             delay = hourAlarm + (24 - timeNow);
         }
-        String username = mUser.getUsername();
-        String restaurantName = mUser.getRestaurantName();
-        String restaurantAddress = mUser.getRestaurantAddress();
-        String users = names.toString();
-        String message;
-        //SalutThibault Grivel c'est l'heure de manger, tu manges àTotalEnergies à Route de Castres, 31130 Balma, France
-
-
-        if (names.size() != 0) {
-            message = getString(R.string.notif_pt_1) + username +
-                    getString(R.string.notif_pt_2) + restaurantName +
-                    getString(R.string.notif_pt_3) + restaurantAddress +
-                    getString(R.string.notif_pt_4) + users;
-        }
-        else {
-            message = getString(R.string.notif_pt_1) + username +
-                    getString(R.string.notif_pt_2) + restaurantName +
-                    getString(R.string.notif_pt_3) + restaurantAddress;
-        }
-
-        Data.Builder data = new Data.Builder();
-        data.putString("message", message);
-
         OneTimeWorkRequest myWork = new OneTimeWorkRequest.Builder(Worker.class)
-                .setInitialDelay(delay, TimeUnit.HOURS).setInputData(data.build()).build();
-
+                .setInitialDelay(delay, TimeUnit.HOURS).build();
         WorkManager.getInstance(this).enqueue(myWork);
-
-        PeriodicWorkRequest periodicWork = new PeriodicWorkRequest.Builder(Worker.class,
-                24, TimeUnit.HOURS).build();
-        WorkManager.getInstance(this).enqueue(periodicWork);
     }
 }

@@ -143,11 +143,11 @@
                 android:textColor="@color/primary_color"/>
 
         </RelativeLayout>
-
+            
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end">
+            android:layout_gravity="end">   
 
             <ImageButton
                 android:id="@+id/website_button"

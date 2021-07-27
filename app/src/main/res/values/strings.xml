@@ -86,4 +86,5 @@
     <string name="notif_pt_3">\ at \ </string>
     <string name="notif_pt_4">\ with \</string>
     <string name="notification_name">Time\ To\ Lunch!</string>
+    <string name="message_restaurant_null">\ let\'s choose a restaurant</string>
 </resources>

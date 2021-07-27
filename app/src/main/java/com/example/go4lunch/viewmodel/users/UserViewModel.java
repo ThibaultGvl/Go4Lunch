@@ -87,8 +87,8 @@ public class UserViewModel extends androidx.lifecycle.ViewModel {
         executor.execute(() -> mUserCRUDRepository.getRestaurantsFavorites(uid, context));
     }
 
-    public void updateRestaurantsLiked(String uid, List<String> restaurants, Context context) {
-        executor.execute(() -> mUserCRUDRepository.updateRestaurantsLiked(uid, restaurants, context));
+    public void updateRestaurantsLiked(String uid, List<String> restaurants, String restaurant, Context context) {
+        executor.execute(() -> mUserCRUDRepository.updateRestaurantsLiked(uid, restaurants, restaurant, context));
     }
 
     public void updateUserRestaurantName(String uid, String restaurantToLike, Context context) {

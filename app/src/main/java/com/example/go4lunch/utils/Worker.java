@@ -19,8 +19,14 @@ import com.example.go4lunch.R;
 import com.example.go4lunch.model.User;
 import com.example.go4lunch.view.activity.ConnexionActivity;
 import com.example.go4lunch.view.activity.MainActivity;
+import com.example.go4lunch.viewmodel.users.UserCRUD;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class Worker extends androidx.work.Worker {
@@ -28,6 +34,8 @@ public class Worker extends androidx.work.Worker {
     private final String mNotificationCanal = "password";
 
     private final String mNotificationName = "Time To Lunch !";
+
+    String message;
 
     private final int mId = 26;
 
@@ -38,8 +46,48 @@ public class Worker extends androidx.work.Worker {
     @NonNull
     @Override
     public Result doWork() {
-        String message = getInputData().getString("message");
-        sendVisualNotification(message);
+        String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+        UserCRUD.getUser(uid).addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot != null) {
+                User currentUser = documentSnapshot.toObject(User.class);
+                String username = Objects.requireNonNull(currentUser).getUsername();
+                String restaurantName = currentUser.getRestaurantName();
+                String restaurantAddress = currentUser.getRestaurantAddress();
+                List<User> names = new ArrayList<>();
+        UserCRUD.getUsers().addOnSuccessListener(documentsSnapshot -> {
+            if (documentsSnapshot != null) {
+                for (DocumentSnapshot documentSnapshot1 : documentsSnapshot) {
+                    User user = documentSnapshot1.toObject(User.class);
+                    if (Objects.requireNonNull(user).getRestaurant().equals(currentUser.getRestaurant())) {
+                        names.add(user);
+                    }
+                }
+            }
+        });
+                String users = names.toString();
+
+
+                if (names.size() != 0) {
+                    message = getApplicationContext().getString(R.string.notif_pt_1) + username +
+                              getApplicationContext().getString(R.string.notif_pt_2) +
+                              restaurantName +
+                              getApplicationContext().getString(R.string.notif_pt_3) +
+                              restaurantAddress +
+                              getApplicationContext().getString(R.string.notif_pt_4) + users;
+                }
+                else if (currentUser.getRestaurant() == null ||
+                        currentUser.getRestaurant().equals("")) {
+                    message = getApplicationContext().getString(R.string.notif_pt_1) + username +
+                            getApplicationContext().getString(R.string.message_restaurant_null);
+                }
+                else {
+                    message = getApplicationContext().getString(R.string.notif_pt_1) + username +
+                              getApplicationContext().getString(R.string.notif_pt_2) + restaurantName +
+                              getApplicationContext().getString(R.string.notif_pt_3) + restaurantAddress;
+                }
+            }
+            sendVisualNotification(message);
+        });
         return Result.success();
     }
 

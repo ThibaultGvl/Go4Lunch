@@ -161,13 +161,7 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void updateRestaurantsLiked(List<String> restaurantsLiked, String restaurantLike) {
-        if (restaurantsLiked.contains(restaurantLike)) {
-            restaurantsLiked.remove(restaurantLike);
-        }
-        else {
-            restaurantsLiked.add(restaurantLike);
-        }
-        mUserViewModel.updateRestaurantsLiked(currentUserId, restaurantsLiked,
+        mUserViewModel.updateRestaurantsLiked(currentUserId, restaurantsLiked, restaurantLike,
                 getBaseContext());
     }
 
