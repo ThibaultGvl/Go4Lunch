@@ -10,7 +10,9 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.work.Data;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.ListenableWorker;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
@@ -60,18 +62,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.type.DateTime;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -356,7 +350,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void getYourLunch() {
-       if (mUser.getRestaurant() != null && mUser.getRestaurant() != "") {
+       if (mUser.getRestaurant() != null && !mUser.getRestaurant().equals("")) {
            String placeId = mUser.getRestaurant();
            Intent intent = new Intent(this, DetailsActivity.class);
            intent.putExtra("placeId", placeId);
@@ -401,6 +395,7 @@ public class MainActivity extends AppCompatActivity
         }
         OneTimeWorkRequest myWork = new OneTimeWorkRequest.Builder(Worker.class)
                 .setInitialDelay(delay, TimeUnit.HOURS).build();
-        WorkManager.getInstance(this).enqueue(myWork);
+
+        WorkManager.getInstance(this).enqueueUniqueWork(TAG, ExistingWorkPolicy.KEEP, myWork);
     }
 }
