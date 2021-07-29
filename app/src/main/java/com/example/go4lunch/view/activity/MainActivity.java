@@ -396,6 +396,6 @@ public class MainActivity extends AppCompatActivity
         OneTimeWorkRequest myWork = new OneTimeWorkRequest.Builder(Worker.class)
                 .setInitialDelay(delay, TimeUnit.HOURS).build();
 
-        WorkManager.getInstance(this).enqueueUniqueWork(TAG, ExistingWorkPolicy.KEEP, myWork);
+        WorkManager.getInstance(this).enqueueUniqueWork(TAG, ExistingWorkPolicy.REPLACE, myWork);
     }
 }
