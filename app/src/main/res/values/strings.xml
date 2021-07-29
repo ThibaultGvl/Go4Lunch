@@ -34,9 +34,10 @@
     <!-- Sync Preferences -->
     <string name="sync_title" translatable="false">Sync email periodically</string>
     <string name="attachment_title" translatable="false">Download incoming attachments</string>
-    <string name="attachment_summary_on" translatable="false">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off" translatable="false">Only download attachments when manually requested</string>
+    <string name="attachment_summary_on" translatable="false">Automatically download attachments for
+        incoming emails</string>
+    <string name="attachment_summary_off" translatable="false">Only download attachments when
+        manually requested</string>
     <string name="slogan">Find a nice restaurant and invite your co-worker for lunch</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="sign_in_with_facebook">Sign in with Facebook</string>

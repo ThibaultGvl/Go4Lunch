@@ -75,6 +75,9 @@ public class UserCRUDRepository {
                 User user = documentSnapshot.toObject(User.class);
                 result.setValue(user);
             }
+            else {
+                result.setValue(new User("","","","","",new ArrayList<>(),"",""));
+            }
         });
         return result;
     }
@@ -92,8 +95,8 @@ public class UserCRUDRepository {
             String imageUrl = (user.getPhotoUrl() != null) ? Objects.requireNonNull
                     (this.getCurrentUser().getPhotoUrl()).toString() : null;
 
-            UserCRUD.createUser(uid, username, email, imageUrl, "", new ArrayList<>(),
-                    null, null).addOnFailureListener
+            UserCRUD.createUser(uid, username, email, imageUrl,"", new ArrayList<>(),
+                    "","").addOnFailureListener
                     (onFailureListener(context)).addOnSuccessListener
                     (aVoid -> result.setValue(user));
         }
@@ -183,7 +186,6 @@ public class UserCRUDRepository {
         MutableLiveData<String> result = new MutableLiveData<>();
         UserCRUD.deleteUser(uid).addOnFailureListener(onFailureListener(context))
                 .addOnSuccessListener(aVoid -> {
-            Toast.makeText(context, R.string.user_delete, Toast.LENGTH_SHORT).show();
             result.setValue(uid);
         });
     }

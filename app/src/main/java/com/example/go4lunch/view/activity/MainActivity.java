@@ -320,8 +320,11 @@ public class MainActivity extends AppCompatActivity
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setUser(User user) {
+
         if (isCurrentUserLogged()){
+
             mUser = user;
+
             if (Objects.requireNonNull(this.getCurrentUser()).getPhotoUrl() != null) {
                 Glide.with(this)
                         .load(this.getCurrentUser().getPhotoUrl())
@@ -339,7 +342,7 @@ public class MainActivity extends AppCompatActivity
 
             this.useWorker();
 
-            if (mUser.getUid() == null || mUser.getUid().equals("")) {
+            if (mUser == null || mUser.getUid() == null || mUser.getUid().equals("")) {
                 this.mUserViewModel.createCurrentUser(this);
             }
         }
@@ -353,7 +356,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void getYourLunch() {
-       if (mUser.getRestaurant() != null) {
+       if (mUser.getRestaurant() != null && mUser.getRestaurant() != "") {
            String placeId = mUser.getRestaurant();
            Intent intent = new Intent(this, DetailsActivity.class);
            intent.putExtra("placeId", placeId);

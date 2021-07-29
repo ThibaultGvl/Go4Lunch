@@ -45,7 +45,7 @@ public class UserViewModel extends androidx.lifecycle.ViewModel {
         return restaurantsLiked;
     }
 
-    public LiveData<User> getUser(String uid, Context context) {
+    public MutableLiveData<User> getUser(String uid, Context context) {
         return mUserCRUDRepository.getUser(uid, context);
     }
 
