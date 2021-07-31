@@ -40,9 +40,6 @@ import com.example.go4lunch.view.fragment.MapsFragment;
 import com.example.go4lunch.view.fragment.RestaurantFragment;
 import com.example.go4lunch.view.fragment.SettingsFragment;
 import com.example.go4lunch.view.fragment.UserFragment;
-import com.example.go4lunch.viewmodel.places.NearbyInjection;
-import com.example.go4lunch.viewmodel.places.NearbyRestaurantViewModel;
-import com.example.go4lunch.viewmodel.places.NearbyViewModelFactory;
 import com.example.go4lunch.viewmodel.users.UserInjection;
 import com.example.go4lunch.viewmodel.users.UserViewModelFactory;
 import com.example.go4lunch.viewmodel.users.UserViewModel;
@@ -251,7 +248,7 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK && mFragmentIdentifier == RESTAURANT_FRAGMENT) {
-                if (Autocomplete.getPlaceFromIntent(data).getTypes().contains(Place.Type.RESTAURANT)) {
+                if (Objects.requireNonNull(Autocomplete.getPlaceFromIntent(Objects.requireNonNull(data)).getTypes()).contains(Place.Type.RESTAURANT)) {
                     Place place = Autocomplete.getPlaceFromIntent(data);
                     String placeId = place.getId();
                     Intent intent = new Intent(this, DetailsActivity.class);
@@ -262,13 +259,13 @@ public class MainActivity extends AppCompatActivity
                     Toast.makeText(this, R.string.choose_restaurant, Toast.LENGTH_SHORT).show();
                 }
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
-                Status status = Autocomplete.getStatusFromIntent(data);
+                Status status = Autocomplete.getStatusFromIntent(Objects.requireNonNull(data));
                 Toast.makeText(this, "Error: " + status.getStatusMessage(),
                         Toast.LENGTH_LONG).show();
                 Log.i(TAG, status.getStatusMessage());
             }
             else if (resultCode == RESULT_OK && mFragmentIdentifier == MAPS_FRAGMENT) {
-                if (Autocomplete.getPlaceFromIntent(data).getTypes().contains(Place.Type.RESTAURANT)) {
+                if (Objects.requireNonNull(Autocomplete.getPlaceFromIntent(Objects.requireNonNull(data)).getTypes()).contains(Place.Type.RESTAURANT)) {
                     Place place = Autocomplete.getPlaceFromIntent(data);
                     double placeLatitude = Objects.requireNonNull(place.getLatLng()).latitude;
                     double placeLongitude = place.getLatLng().longitude;

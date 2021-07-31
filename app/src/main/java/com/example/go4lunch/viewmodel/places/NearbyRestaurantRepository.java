@@ -16,7 +16,6 @@ import retrofit2.Response;
 public class NearbyRestaurantRepository {
     private static PlacesApiService placesApiService;
     private final MutableLiveData<RestaurantOutputs> sRestaurants = new MutableLiveData<>();
-    private final String mBaseUrlForNearbySearch = "https://maps.googleapis.com/maps/api/place/";
 
     private static NearbyRestaurantRepository sNearbyRestaurantRepository;
 
@@ -28,7 +27,8 @@ public class NearbyRestaurantRepository {
     }
 
     public NearbyRestaurantRepository() {
-        placesApiService = RetrofitService.getPlacesInterface(mBaseUrlForNearbySearch);
+        String baseUrlForNearbySearch = "https://maps.googleapis.com/maps/api/place/";
+        placesApiService = RetrofitService.getPlacesInterface(baseUrlForNearbySearch);
     }
 
     public MutableLiveData<RestaurantOutputs> getRestaurants(String location, String radius, String key) {
@@ -52,12 +52,12 @@ public class NearbyRestaurantRepository {
         Call<RestaurantDetails> restaurantOutputsCall = placesApiService.getFollowingDetails(placeId, key);
         restaurantOutputsCall.enqueue(new Callback<RestaurantDetails>() {
             @Override
-            public void onResponse(Call<RestaurantDetails> call, Response<RestaurantDetails> response) {
+            public void onResponse(@NotNull Call<RestaurantDetails> call, @NotNull Response<RestaurantDetails> response) {
                 restaurantOutputsMutableLiveData.setValue(response.body());
             }
 
             @Override
-            public void onFailure(Call<RestaurantDetails> call, Throwable t) {
+            public void onFailure(@NotNull Call<RestaurantDetails> call, @NotNull Throwable t) {
                 restaurantOutputsMutableLiveData.postValue(null);
             }
         });

@@ -6,14 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.FragmentSettingsBinding;
 import com.example.go4lunch.view.activity.ConnexionActivity;
 import com.example.go4lunch.viewmodel.users.UserInjection;
