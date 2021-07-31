@@ -51,7 +51,6 @@ public class DetailsActivity extends AppCompatActivity {
     private final String currentUserId = FirebaseAuth.getInstance().getUid();
     private UserViewModel mUserViewModel;
     private NearbyRestaurantViewModel mRestaurantViewModel;
-    private Result mRestaurant;
     private String placeId;
     private final List<User> mUsers = new ArrayList<>();
     private final List<String> mRestaurantsLiked = new ArrayList<>();
@@ -78,8 +77,8 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void setRestaurant(RestaurantDetails restaurant) {
-            mRestaurant = restaurant.getResult();
-            updateWithRestaurant(mRestaurant);
+        Result restaurant1 = restaurant.getResult();
+            updateWithRestaurant(restaurant1);
     }
 
     private void updateWithRestaurant(Result mRestaurant) {

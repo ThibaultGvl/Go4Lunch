@@ -44,8 +44,6 @@ public class RestaurantFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
 
-    private int mColumnCount = 1;
-
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
     private NearbyRestaurantViewModel mNearbyRestaurantViewModel;
@@ -58,8 +56,6 @@ public class RestaurantFragment extends Fragment {
     private Location mLastKnownLocation;
 
     private boolean mLocationPermission;
-
-    private final int PERMISSION_ID = 26;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -83,9 +79,6 @@ public class RestaurantFragment extends Fragment {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient
                 (this.requireContext());
         this.getPlaces();
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
     }
 
     @Override
@@ -93,16 +86,13 @@ public class RestaurantFragment extends Fragment {
                              Bundle savedInstanceState) {
         com.example.go4lunch.databinding.FragmentRestaurantListBinding fragmentRestaurantListBinding
                 = FragmentRestaurantListBinding.inflate(inflater, container, false);
-        View view = fragmentRestaurantListBinding.getRoot();
+        RecyclerView view = fragmentRestaurantListBinding.getRoot();
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient
                 (this.requireContext());
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(mAdapter);
-        }
-            this.configureNearbyRestaurantViewModel();
+        Context context = view.getContext();
+        view.setLayoutManager(new LinearLayoutManager(context));
+        view.setAdapter(mAdapter);
+        this.configureNearbyRestaurantViewModel();
             this.getPlaces();
         return view;
     }
@@ -154,6 +144,7 @@ public class RestaurantFragment extends Fragment {
                 == PackageManager.PERMISSION_GRANTED) {
             mLocationPermission = true;
         } else {
+            int PERMISSION_ID = 26;
             ActivityCompat.requestPermissions(activity,
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSION_ID);

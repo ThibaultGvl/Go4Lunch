@@ -28,8 +28,6 @@ public class UserFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
 
-    private int mColumnCount = 1;
-
     private UserViewModel mViewModel;
 
     private final List<User> users = new ArrayList<>();
@@ -53,23 +51,17 @@ public class UserFragment extends Fragment {
         super.onCreate(savedInstanceState);
         this.configureViewModel();
         this.getUsers();
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
     }
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         com.example.go4lunch.databinding.FragmentUserListBinding fragmentUserBinding = FragmentUserListBinding.inflate(inflater, container, false);
-        View view = fragmentUserBinding.getRoot();
+        RecyclerView view = fragmentUserBinding.getRoot();
 
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(adapter);
-        }
+        Context context = view.getContext();
+        view.setLayoutManager(new LinearLayoutManager(context));
+        view.setAdapter(adapter);
         return view;
     }
 

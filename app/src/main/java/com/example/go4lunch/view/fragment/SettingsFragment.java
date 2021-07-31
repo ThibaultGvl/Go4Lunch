@@ -66,10 +66,9 @@ public class SettingsFragment extends Fragment {
         String currentUserId = currentUser.getUid();
         mSuppressButton.setOnClickListener(v -> {
             mUserViewModel.deleteUser(currentUserId, this.getContext());
-            Toast.makeText(requireContext(), R.string.user_delete, Toast.LENGTH_SHORT).show();
+            FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(this.getActivity(), ConnexionActivity.class);
             startActivity(intent);
-            FirebaseAuth.getInstance().signOut();
         });
     }
 

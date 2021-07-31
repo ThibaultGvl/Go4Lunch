@@ -120,7 +120,7 @@ public class RestaurantRecyclerViewAdapter
         }
         holder.mRestaurantRank.setRating((float) setRating(restaurant.getRating()));
         mUserViewModel.getUsers()
-                    .observe((LifecycleOwner) context, users -> {setUsers(users, restaurant, holder);});
+                    .observe((LifecycleOwner) context, users -> setUsers(users, restaurant, holder));
         holder.mFragmentRestaurantBinding.getRoot().setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), DetailsActivity.class);
             intent.putExtra("placeId", placeId);

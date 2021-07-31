@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity
         Places.initialize(this, BuildConfig.API_KEY);
         PlacesClient placesClient = Places.createClient(this);
         this.configureUserViewModel();
-        this.configureNearbyRestaurantViewModel();
         this.showFragment(MAPS_FRAGMENT);
         this.configureToolBar();
         this.configureBottomView();
@@ -310,9 +309,9 @@ public class MainActivity extends AppCompatActivity
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setUser(User user) {
 
-        if (isCurrentUserLogged()){
+        mUser = user;
 
-            mUser = user;
+        if (isCurrentUserLogged()){
 
             if (Objects.requireNonNull(this.getCurrentUser()).getPhotoUrl() != null) {
                 Glide.with(this)
@@ -369,12 +368,6 @@ public class MainActivity extends AppCompatActivity
         this.mUserViewModel = new ViewModelProvider(this, mViewModelFactory)
                 .get(UserViewModel.class);
             this.mUserViewModel.initUsers(this);
-    }
-
-    private void configureNearbyRestaurantViewModel() {
-        NearbyViewModelFactory nearbyViewModelFactory = NearbyInjection.provideRestaurantViewModel();
-        NearbyRestaurantViewModel nearbyRestaurantViewModel = new ViewModelProvider(this, nearbyViewModelFactory)
-                .get(NearbyRestaurantViewModel.class);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

@@ -31,13 +31,11 @@ import java.util.concurrent.TimeUnit;
 
 public class Worker extends androidx.work.Worker {
 
-    private final String mNotificationCanal = "password";
+    private String message;
 
-    private final String mNotificationName = "Time To Lunch !";
+    private String names;
 
-    String message;
-
-    private final int mId = 26;
+    private final List<User> mUsers = new ArrayList<>();
 
     public Worker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -53,27 +51,30 @@ public class Worker extends androidx.work.Worker {
                 String username = Objects.requireNonNull(currentUser).getUsername();
                 String restaurantName = currentUser.getRestaurantName();
                 String restaurantAddress = currentUser.getRestaurantAddress();
-                List<User> names = new ArrayList<>();
         UserCRUD.getUsers().addOnSuccessListener(documentsSnapshot -> {
+            List<User> users =  new ArrayList<>();
             if (documentsSnapshot != null) {
-                for (DocumentSnapshot documentSnapshot1 : documentsSnapshot) {
+            for (DocumentSnapshot documentSnapshot1 : documentsSnapshot.getDocuments()) {
+                if (Objects.equals(documentSnapshot1.get("restaurant"),  currentUser.getRestaurant()) && !documentSnapshot1
+                        .getId().equals(currentUser.getUid())) {
                     User user = documentSnapshot1.toObject(User.class);
-                    if (Objects.requireNonNull(user).getRestaurant().equals(currentUser.getRestaurant())) {
-                        names.add(user);
+                    users.add(user);
+                    mUsers.addAll(users);
+                    names = mUsers.toString();
                     }
                 }
             }
         });
-                String users = names.toString();
 
 
-                if (names.size() != 0) {
+
+                if (mUsers.size() != 0) {
                     message = getApplicationContext().getString(R.string.notif_pt_1) + username +
                               getApplicationContext().getString(R.string.notif_pt_2) +
                               restaurantName +
                               getApplicationContext().getString(R.string.notif_pt_3) +
                               restaurantAddress +
-                              getApplicationContext().getString(R.string.notif_pt_4) + users;
+                              getApplicationContext().getString(R.string.notif_pt_4) + names;
                 }
                 else if (currentUser.getRestaurant() == null ||
                         currentUser.getRestaurant().equals("")) {
@@ -94,11 +95,13 @@ public class Worker extends androidx.work.Worker {
     private void sendVisualNotification(String message) {
 
         Intent intent = new Intent(this.getApplicationContext(), ConnexionActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this.getApplicationContext(), mId,
+        int id = 26;
+        PendingIntent pendingIntent = PendingIntent.getActivity(this.getApplicationContext(), id,
                 intent, PendingIntent.FLAG_ONE_SHOT);
 
+        String notificationCanal = "password";
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this.getApplicationContext(), mNotificationCanal)
+                new NotificationCompat.Builder(this.getApplicationContext(), notificationCanal)
                         .setSmallIcon(R.drawable.ic_logo_go4lunch)
                         .setContentTitle
                                 (this.getApplicationContext().getString(R.string.notification_name))
@@ -114,11 +117,12 @@ public class Worker extends androidx.work.Worker {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_HIGH;
+            String notificationName = "Time To Lunch !";
             NotificationChannel mChannel = new NotificationChannel(this.getApplicationContext()
-                    .getString(R.string.notification_channel_id), mNotificationName,
+                    .getString(R.string.notification_channel_id), notificationName,
                     importance);
             notificationManager.createNotificationChannel(mChannel);
-            notificationManager.notify(mNotificationName, mId, notificationBuilder.build());
+            notificationManager.notify(notificationName, id, notificationBuilder.build());
         }
     }
 }
