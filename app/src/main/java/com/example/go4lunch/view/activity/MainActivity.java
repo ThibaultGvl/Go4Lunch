@@ -10,11 +10,8 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.ExistingWorkPolicy;
-import androidx.work.ListenableWorker;
 import androidx.work.OneTimeWorkRequest;
-import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import android.annotation.SuppressLint;
@@ -85,9 +82,7 @@ public class MainActivity extends AppCompatActivity
     private TextView currentUserName;
     private TextView currentUserEmail;
     private ImageView currentUserImage;
-    private ImageButton mSearchBtn;
     private UserViewModel mUserViewModel;
-    private NearbyRestaurantViewModel mNearbyRestaurantViewModel;
     private int mFragmentIdentifier;
     private User mUser = new User("", "", "", "", "",
             null, "", "");
@@ -192,8 +187,8 @@ public class MainActivity extends AppCompatActivity
     private void configureToolBar() {
         this.toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
-        mSearchBtn = binding.searchBtn;
-        mSearchBtn.setOnClickListener(v -> onSearchCalled());
+        ImageButton searchBtn = binding.searchBtn;
+        searchBtn.setOnClickListener(v -> onSearchCalled());
     }
 
     private void configureBottomView() {
@@ -378,7 +373,7 @@ public class MainActivity extends AppCompatActivity
 
     private void configureNearbyRestaurantViewModel() {
         NearbyViewModelFactory nearbyViewModelFactory = NearbyInjection.provideRestaurantViewModel();
-        mNearbyRestaurantViewModel = new ViewModelProvider(this, nearbyViewModelFactory)
+        NearbyRestaurantViewModel nearbyRestaurantViewModel = new ViewModelProvider(this, nearbyViewModelFactory)
                 .get(NearbyRestaurantViewModel.class);
     }
 

@@ -16,32 +16,23 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 public class ConnexionActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 123;
 
-    private ActivityConnexionBinding binding;
-
-    private Button fbBtn;
-
-    private Button googleBtn;
-
-    private Button emailBtn;
-
-    private Button twitterBtn;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityConnexionBinding.inflate(getLayoutInflater());
+        com.example.go4lunch.databinding.ActivityConnexionBinding binding = ActivityConnexionBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
-        googleBtn = binding.connexionGoogle;
-        fbBtn = binding.connexionFb;
-        emailBtn = binding.connexionEmail;
-        twitterBtn = binding.connexionTwitter;
+        Button googleBtn = binding.connexionGoogle;
+        Button fbBtn = binding.connexionFb;
+        Button emailBtn = binding.connexionEmail;
+        Button twitterBtn = binding.connexionTwitter;
         setContentView(view);
         googleBtn.setOnClickListener(v -> {
             if (isCurrentUserLogged()){
@@ -84,7 +75,7 @@ public class ConnexionActivity extends AppCompatActivity {
     private void startGoogleSignInActivity(){
         startActivityForResult(
                 AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(
-                        Arrays.asList(new AuthUI.IdpConfig.GoogleBuilder().build()))
+                        Collections.singletonList(new AuthUI.IdpConfig.GoogleBuilder().build()))
                         .setIsSmartLockEnabled(false, true)
                         .build(),
                 RC_SIGN_IN);
@@ -93,7 +84,7 @@ public class ConnexionActivity extends AppCompatActivity {
     private void startFacebookSignInActivity() {
         startActivityForResult(
                 AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(
-                        Arrays.asList(new AuthUI.IdpConfig.FacebookBuilder().build()))
+                        Collections.singletonList(new AuthUI.IdpConfig.FacebookBuilder().build()))
                         .setIsSmartLockEnabled(false, true)
                         .build(),
                 RC_SIGN_IN);
@@ -102,7 +93,7 @@ public class ConnexionActivity extends AppCompatActivity {
     private void startEmailSignInActivity() {
         startActivityForResult(
                 AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(
-                        Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build()))
+                        Collections.singletonList(new AuthUI.IdpConfig.EmailBuilder().build()))
                         .setIsSmartLockEnabled(false, true)
                         .build(),
                 RC_SIGN_IN);
@@ -111,7 +102,7 @@ public class ConnexionActivity extends AppCompatActivity {
     private void startTwitterSignInActivity() {
         startActivityForResult(
                 AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(
-                        Arrays.asList(new AuthUI.IdpConfig.TwitterBuilder().build()))
+                        Collections.singletonList(new AuthUI.IdpConfig.TwitterBuilder().build()))
                         .setIsSmartLockEnabled(false, true)
                         .build(),
                 RC_SIGN_IN);

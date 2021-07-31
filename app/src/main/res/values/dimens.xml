@@ -39,4 +39,8 @@
     <dimen name="address_restaurant_size">12sp</dimen>
     <dimen name="settings_margin_top">50dp</dimen>
     <dimen name="settings_margin_default">100dp</dimen>
+    <dimen name="information_details_margin">15dp</dimen>
+    <dimen name="fab_margin_bottom">40dp</dimen>
+    <dimen name="contact_margin">20dp</dimen>
+    <dimen name="button_contact_margin_top">5dp</dimen>
 </resources>

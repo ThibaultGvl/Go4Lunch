@@ -29,7 +29,6 @@ import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.R;
 import com.example.go4lunch.databinding.FragmentMapsBinding;
 import com.example.go4lunch.model.User;
-import com.example.go4lunch.model.details.Result;
 import com.example.go4lunch.model.restaurant.RestaurantOutputs;
 import com.example.go4lunch.model.restaurant.ResultRestaurant;
 import com.example.go4lunch.view.activity.DetailsActivity;
@@ -59,21 +58,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private FragmentMapsBinding mMapsBinding;
-    private final int apiKey = R.string.google_maps_key;
     private final int PERMISSION_ID = 26;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private final int DEFAULT_ZOOM = 15;
     private Location mLastKnownLocation;
     private boolean mLocationPermission;
     private NearbyRestaurantViewModel mNearbyRestaurantViewModel;
-    private String placeId;
     private double placeLatitude;
     private double placeLongitude;
     private LatLng placePosition;
     private String placeIdFromSearch = "";
     private UserViewModel mUserViewModel;
     List<ResultRestaurant> restaurantsList = new ArrayList<>();
-    private List<User> mUsers = new ArrayList<>();
+    private final List<User> mUsers = new ArrayList<>();
 
     public static MapsFragment newInstance() {
         return (new MapsFragment());

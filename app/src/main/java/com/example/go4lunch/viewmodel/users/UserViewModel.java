@@ -49,12 +49,6 @@ public class UserViewModel extends androidx.lifecycle.ViewModel {
         return mUserCRUDRepository.getUser(uid, context);
     }
 
-    public MutableLiveData<User> getCurrentUser(Context context) {
-        MutableLiveData<User> user;
-        user = (MutableLiveData<User>) mUserCRUDRepository.getCurrentUserFirestore(context);
-        return user;
-    }
-
     public LiveData<List<User>> getUserByPlaceId(String placeId, Context context) {
         return mUserCRUDRepository.getUserByPlaceId(placeId, context);
     }
@@ -81,10 +75,6 @@ public class UserViewModel extends androidx.lifecycle.ViewModel {
 
     public void updateUserRestaurantAddress(String uid, String restaurantAddress, Context context) {
         executor.execute(() -> mUserCRUDRepository.updateUserRestaurantAddress(uid, restaurantAddress, context));
-    }
-
-    public void getFavoritesRestaurants(String uid, Context context) {
-        executor.execute(() -> mUserCRUDRepository.getRestaurantsFavorites(uid, context));
     }
 
     public void updateRestaurantsLiked(String uid, List<String> restaurants, String restaurant, Context context) {

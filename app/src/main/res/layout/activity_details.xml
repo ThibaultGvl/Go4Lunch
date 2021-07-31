@@ -48,8 +48,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp">
+                android:layout_marginTop="@dimen/information_details_margin"
+                android:layout_marginBottom="@dimen/information_details_margin">
 
                 <TextView
                     android:id="@+id/restaurant_name_details"
@@ -90,7 +90,7 @@
             app:layout_constraintEnd_toEndOf="@id/restaurant_image"
             app:layout_constraintBottom_toBottomOf="@id/restaurant_info"
             android:layout_marginEnd="@dimen/details_fab_max_size"
-            android:layout_marginBottom="40dp"/>
+            android:layout_marginBottom="@dimen/fab_margin_bottom"/>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/restaurant_contact"
@@ -101,7 +101,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="20dp">
+                android:layout_margin="@dimen/contact_margin">
 
                 <RelativeLayout
                     android:id="@+id/call_layout"
@@ -126,7 +126,7 @@
                         android:text="@string/call"
                         android:textColor="@color/primary_color"
                         android:layout_below="@id/phone_button"
-                        android:layout_marginTop="5dp"/>
+                        android:layout_marginTop="@dimen/button_contact_margin_top"/>
 
                 </RelativeLayout>
 
@@ -153,7 +153,7 @@
                         android:text="@string/like"
                         android:layout_below="@id/like_button"
                         android:textColor="@color/primary_color"
-                        android:layout_marginTop="5dp"/>
+                        android:layout_marginTop="@dimen/button_contact_margin_top"/>
 
                 </RelativeLayout>
 
@@ -179,7 +179,7 @@
                         android:text="@string/website"
                         android:textColor="@color/primary_color"
                         android:layout_below="@id/website_button"
-                        android:layout_marginTop="5dp"/>
+                        android:layout_marginTop="@dimen/button_contact_margin_top"/>
 
                 </RelativeLayout>
 

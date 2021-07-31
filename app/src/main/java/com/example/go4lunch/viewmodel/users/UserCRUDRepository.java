@@ -54,19 +54,6 @@ public class UserCRUDRepository {
         return result;
     }
 
-    public MutableLiveData<User> getCurrentUserFirestore(Context context) {
-        MutableLiveData<User> result = new MutableLiveData<>();
-        String uid = getCurrentUser().getUid();
-        UserCRUD.getUser(uid).addOnFailureListener(onFailureListener(context))
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot != null) {
-                User user = documentSnapshot.toObject(User.class);
-                result.setValue(user);
-            }
-        });
-        return result;
-    }
-
     public MutableLiveData<User> getUser(String uid, Context context) {
         MutableLiveData<User> result = new MutableLiveData<>();
         UserCRUD.getUser(uid).addOnFailureListener(onFailureListener(context)).addOnSuccessListener
@@ -185,9 +172,7 @@ public class UserCRUDRepository {
     public void deleteUser(String uid, Context context) {
         MutableLiveData<String> result = new MutableLiveData<>();
         UserCRUD.deleteUser(uid).addOnFailureListener(onFailureListener(context))
-                .addOnSuccessListener(aVoid -> {
-            result.setValue(uid);
-        });
+                .addOnSuccessListener(aVoid -> result.setValue(uid));
     }
 
     protected FirebaseUser getCurrentUser(){ return FirebaseAuth.getInstance().getCurrentUser();}
