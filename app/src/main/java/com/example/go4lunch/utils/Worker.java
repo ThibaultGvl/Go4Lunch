@@ -45,45 +45,47 @@ public class Worker extends androidx.work.Worker {
                 String username = Objects.requireNonNull(currentUser).getUsername();
                 String restaurantName = currentUser.getRestaurantName();
                 String restaurantAddress = currentUser.getRestaurantAddress();
-        UserCRUD.getUsers().addOnSuccessListener(documentsSnapshot -> {
-            List<User> users =  new ArrayList<>();
-            if (documentsSnapshot != null) {
-            for (DocumentSnapshot documentSnapshot1 : documentsSnapshot.getDocuments()) {
-                if (Objects.equals(documentSnapshot1.get("restaurant"),  currentUser.getRestaurant()) && !documentSnapshot1
-                        .getId().equals(currentUser.getUid())) {
-                    User user = documentSnapshot1.toObject(User.class);
-                    users.add(user);
-                    mUsers.addAll(users);
-                    names = mUsers.toString();
-                    }
-                }
-            }
-        });
 
+                getUsersByRestaurantsForNotifications(currentUser);
 
 
                 if (mUsers.size() != 0) {
                     message = getApplicationContext().getString(R.string.notif_pt_1) + username +
-                              getApplicationContext().getString(R.string.notif_pt_2) +
-                              restaurantName +
-                              getApplicationContext().getString(R.string.notif_pt_3) +
-                              restaurantAddress +
-                              getApplicationContext().getString(R.string.notif_pt_4) + names;
-                }
-                else if (currentUser.getRestaurant() == null ||
+                            getApplicationContext().getString(R.string.notif_pt_2) +
+                            restaurantName +
+                            getApplicationContext().getString(R.string.notif_pt_3) +
+                            restaurantAddress +
+                            getApplicationContext().getString(R.string.notif_pt_4) + names;
+                } else if (currentUser.getRestaurant() == null ||
                         currentUser.getRestaurant().equals("")) {
+                    message = getApplicationContext().getString(R.string.notif_pt_1) + username + getApplicationContext().getString(R.string.message_restaurant_null);
+                } else {
                     message = getApplicationContext().getString(R.string.notif_pt_1) + username +
-                            getApplicationContext().getString(R.string.message_restaurant_null);
+                            getApplicationContext().getString(R.string.notif_pt_2) + restaurantName +
+                            getApplicationContext().getString(R.string.notif_pt_3) + restaurantAddress;
                 }
-                else {
-                    message = getApplicationContext().getString(R.string.notif_pt_1) + username +
-                              getApplicationContext().getString(R.string.notif_pt_2) + restaurantName +
-                              getApplicationContext().getString(R.string.notif_pt_3) + restaurantAddress;
-                }
+                sendVisualNotification(message);
             }
-            sendVisualNotification(message);
         });
         return Result.success();
+    }
+
+    private void getUsersByRestaurantsForNotifications(User currentUser) {
+        UserCRUD.getUsers().addOnSuccessListener(documentsSnapshot -> {
+            List<User> users = new ArrayList<>();
+            if (documentsSnapshot != null) {
+                for (DocumentSnapshot documentSnapshot1 : documentsSnapshot.getDocuments()) {
+                    User user = documentSnapshot1.toObject(User.class);
+                    if (Objects.equals(Objects.requireNonNull(user).getRestaurant(),
+                            currentUser.getRestaurant()) && user
+                            .getUid().equals(currentUser.getUid())) {
+                        users.add(user);
+                        mUsers.addAll(users);
+                        names = mUsers.toString();
+                    }
+                }
+            }
+        });
     }
 
     private void sendVisualNotification(String message) {

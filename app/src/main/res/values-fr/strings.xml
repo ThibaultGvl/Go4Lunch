@@ -61,7 +61,7 @@
     <string name="notif_pt_1">Salut \</string>
     <string name="notif_pt_2">\ c\'est l\'heure de manger, tu manges à \</string>
     <string name="notif_pt_3">\ à \</string>
-    <string name="notif_pt_4">\ avec \</string>
+    <string name="notif_pt_4">\ avec\ </string>
     <string name="notification_name">Bon Appétit\ !</string>
     <string name="message_restaurant_null">\ c\'est le moment de choisir un restaurant</string>
 </resources>
