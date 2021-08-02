@@ -42,7 +42,8 @@ public class User {
 
     public User() { }
 
-    public User(String uid, String username, String email, String picture, String restaurant, List<String> restaurantsLiked, String restaurantName, String restaurantAddress) {
+    public User(String uid, String username, String email, String picture, String restaurant,
+                List<String> restaurantsLiked, String restaurantName, String restaurantAddress) {
         this.uid = uid;
         this.username = username;
         this.email = email;

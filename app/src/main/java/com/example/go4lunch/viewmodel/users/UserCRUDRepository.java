@@ -63,7 +63,8 @@ public class UserCRUDRepository {
                 result.setValue(user);
             }
             else {
-                result.setValue(new User("","","","","",new ArrayList<>(),"",""));
+                result.setValue(new User("","","","","",
+                        new ArrayList<>(),"",""));
             }
         });
         return result;
@@ -157,7 +158,8 @@ public class UserCRUDRepository {
         return mutableLiveData;
     }
 
-    public void updateRestaurantsLiked(String uid, List<String> restaurantsLiked, String restaurantLike, Context context) {
+    public void updateRestaurantsLiked(String uid, List<String> restaurantsLiked,
+                                       String restaurantLike, Context context) {
         if (restaurantsLiked != null) {
             if (restaurantsLiked.contains(restaurantLike)) {
                 restaurantsLiked.remove(restaurantLike);

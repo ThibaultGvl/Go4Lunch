@@ -25,7 +25,8 @@ public class ConnexionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        com.example.go4lunch.databinding.ActivityConnexionBinding binding = ActivityConnexionBinding.inflate(getLayoutInflater());
+        com.example.go4lunch.databinding.ActivityConnexionBinding binding =
+                ActivityConnexionBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);

@@ -248,7 +248,8 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK && mFragmentIdentifier == RESTAURANT_FRAGMENT) {
-                if (Objects.requireNonNull(Autocomplete.getPlaceFromIntent(Objects.requireNonNull(data)).getTypes()).contains(Place.Type.RESTAURANT)) {
+                if (Objects.requireNonNull(Autocomplete.getPlaceFromIntent
+                        (Objects.requireNonNull(data)).getTypes()).contains(Place.Type.RESTAURANT)) {
                     Place place = Autocomplete.getPlaceFromIntent(data);
                     String placeId = place.getId();
                     Intent intent = new Intent(this, DetailsActivity.class);
@@ -265,7 +266,8 @@ public class MainActivity extends AppCompatActivity
                 Log.i(TAG, status.getStatusMessage());
             }
             else if (resultCode == RESULT_OK && mFragmentIdentifier == MAPS_FRAGMENT) {
-                if (Objects.requireNonNull(Autocomplete.getPlaceFromIntent(Objects.requireNonNull(data)).getTypes()).contains(Place.Type.RESTAURANT)) {
+                if (Objects.requireNonNull(Autocomplete.getPlaceFromIntent
+                        (Objects.requireNonNull(data)).getTypes()).contains(Place.Type.RESTAURANT)) {
                     Place place = Autocomplete.getPlaceFromIntent(data);
                     double placeLatitude = Objects.requireNonNull(place.getLatLng()).latitude;
                     double placeLongitude = place.getLatLng().longitude;
@@ -379,7 +381,7 @@ public class MainActivity extends AppCompatActivity
             delay = hourAlarm + (24 - timeNow);
         }
         OneTimeWorkRequest myWork = new OneTimeWorkRequest.Builder(Worker.class)
-                .setInitialDelay(1, TimeUnit.MINUTES).build();
+                .setInitialDelay(delay, TimeUnit.HOURS).build();
 
         WorkManager.getInstance(this).enqueueUniqueWork(TAG, ExistingWorkPolicy.REPLACE, myWork);
     }

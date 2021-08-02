@@ -113,7 +113,8 @@ public class DetailsActivity extends AppCompatActivity {
               startActivity(intent);
               }
               else {
-                  Toast.makeText(this, getString(R.string.no_phone), Toast.LENGTH_SHORT).show();
+                  Toast.makeText(this, getString(R.string.no_phone),
+                          Toast.LENGTH_SHORT).show();
               }
              });
             mWebButton.setOnClickListener(v -> {
@@ -123,11 +124,13 @@ public class DetailsActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 else {
-                    Toast.makeText(this, getString(R.string.no_website), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.no_website),
+                            Toast.LENGTH_SHORT).show();
                 }
             });
             mFab.setOnClickListener(v -> updateRestaurantChoose(mRestaurant));
-            mLikeButton.setOnClickListener(v -> updateRestaurantsLiked(mRestaurantsLiked, mRestaurant.getPlaceId()));
+            mLikeButton.setOnClickListener(v -> updateRestaurantsLiked(mRestaurantsLiked,
+                    mRestaurant.getPlaceId()));
         }
     }
 

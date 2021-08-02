@@ -27,18 +27,23 @@ public class DetailsRecyclerViewAdapter extends RecyclerView.Adapter<UserRecycle
     @NonNull
     @NotNull
     @Override
-    public UserRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        com.example.go4lunch.databinding.FragmentUserBinding fragmentUserBinding = (FragmentUserBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+    public UserRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent,
+                                                                 int viewType) {
+        com.example.go4lunch.databinding.FragmentUserBinding fragmentUserBinding =
+                (FragmentUserBinding.inflate(LayoutInflater.from(parent.getContext()),
+                        parent, false));
         return new UserRecyclerViewAdapter.ViewHolder(fragmentUserBinding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull @NotNull UserRecyclerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull @NotNull UserRecyclerViewAdapter.ViewHolder holder,
+                                 int position) {
         User user = users.get(position);
         String userJoining = user.getUsername() + holder.mFragmentUserBinding.getRoot()
                 .getContext().getString(R.string.is_joining);
         holder.userEating.setText(userJoining);
-        Glide.with(holder.userImage).load(user.getPicture()).apply(RequestOptions.circleCropTransform()).into(holder.userImage);
+        Glide.with(holder.userImage).load(user.getPicture()).apply(RequestOptions
+                .circleCropTransform()).into(holder.userImage);
     }
 
     @Override

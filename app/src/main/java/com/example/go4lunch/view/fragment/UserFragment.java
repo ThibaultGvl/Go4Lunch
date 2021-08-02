@@ -56,7 +56,8 @@ public class UserFragment extends Fragment {
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        com.example.go4lunch.databinding.FragmentUserListBinding fragmentUserBinding = FragmentUserListBinding.inflate(inflater, container, false);
+        com.example.go4lunch.databinding.FragmentUserListBinding fragmentUserBinding =
+                FragmentUserListBinding.inflate(inflater, container, false);
         RecyclerView view = fragmentUserBinding.getRoot();
 
         Context context = view.getContext();

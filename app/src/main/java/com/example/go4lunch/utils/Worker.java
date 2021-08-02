@@ -9,6 +9,7 @@ import android.media.RingtoneManager;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.work.WorkerParameters;
 
@@ -27,7 +28,7 @@ public class Worker extends androidx.work.Worker {
 
     private String message;
 
-    private String names;
+    private String mWorkmates;
 
     private final List<User> mUsers = new ArrayList<>();
 
@@ -35,6 +36,7 @@ public class Worker extends androidx.work.Worker {
         super(context, workerParams);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
     @Override
     public Result doWork() {
@@ -46,46 +48,45 @@ public class Worker extends androidx.work.Worker {
                 String restaurantName = currentUser.getRestaurantName();
                 String restaurantAddress = currentUser.getRestaurantAddress();
 
-                getUsersByRestaurantsForNotifications(currentUser);
 
+                UserCRUD.getUsers().addOnSuccessListener(documentsSnapshot -> {
+                    List<User> users = new ArrayList<>();
+                    if (documentsSnapshot != null) {
+                        for (DocumentSnapshot documentSnapshot1 : documentsSnapshot.getDocuments()) {
+                            User user = documentSnapshot1.toObject(User.class);
+                            if (Objects.equals(Objects.requireNonNull(user).getRestaurant(),
+                                    currentUser.getRestaurant()) && user
+                                    .getUid().equals(currentUser.getUid())) {
+                                users.add(user);
+                                mUsers.addAll(users);
+                                List<String> names = new ArrayList<>();
+                                names.add(user.getUsername());
+                                mWorkmates = String.join(",", names);
+                            }
+                        }
 
-                if (mUsers.size() != 0) {
-                    message = getApplicationContext().getString(R.string.notif_pt_1) + username +
-                            getApplicationContext().getString(R.string.notif_pt_2) +
-                            restaurantName +
-                            getApplicationContext().getString(R.string.notif_pt_3) +
-                            restaurantAddress +
-                            getApplicationContext().getString(R.string.notif_pt_4) + names;
-                } else if (currentUser.getRestaurant() == null ||
-                        currentUser.getRestaurant().equals("")) {
-                    message = getApplicationContext().getString(R.string.notif_pt_1) + username + getApplicationContext().getString(R.string.message_restaurant_null);
-                } else {
-                    message = getApplicationContext().getString(R.string.notif_pt_1) + username +
-                            getApplicationContext().getString(R.string.notif_pt_2) + restaurantName +
-                            getApplicationContext().getString(R.string.notif_pt_3) + restaurantAddress;
-                }
-                sendVisualNotification(message);
+                                if (mUsers.size() != 0) {
+                                    message = getApplicationContext().getString(R.string.notif_pt_1) + username +
+                                            getApplicationContext().getString(R.string.notif_pt_2) +
+                                            restaurantName +
+                                            getApplicationContext().getString(R.string.notif_pt_3) +
+                                            restaurantAddress +
+                                            getApplicationContext().getString(R.string.notif_pt_4) +
+                                            mWorkmates;
+                                } else if (currentUser.getRestaurant() == null ||
+                                        currentUser.getRestaurant().equals("")) {
+                                    message = getApplicationContext().getString(R.string.notif_pt_1) + username + getApplicationContext().getString(R.string.message_restaurant_null);
+                                } else {
+                                    message = getApplicationContext().getString(R.string.notif_pt_1) + username +
+                                            getApplicationContext().getString(R.string.notif_pt_2) + restaurantName +
+                                            getApplicationContext().getString(R.string.notif_pt_3) + restaurantAddress;
+                                }
+                                sendVisualNotification(message);
+                    }
+                });
             }
         });
         return Result.success();
-    }
-
-    private void getUsersByRestaurantsForNotifications(User currentUser) {
-        UserCRUD.getUsers().addOnSuccessListener(documentsSnapshot -> {
-            List<User> users = new ArrayList<>();
-            if (documentsSnapshot != null) {
-                for (DocumentSnapshot documentSnapshot1 : documentsSnapshot.getDocuments()) {
-                    User user = documentSnapshot1.toObject(User.class);
-                    if (Objects.equals(Objects.requireNonNull(user).getRestaurant(),
-                            currentUser.getRestaurant()) && user
-                            .getUid().equals(currentUser.getUid())) {
-                        users.add(user);
-                        mUsers.addAll(users);
-                        names = mUsers.toString();
-                    }
-                }
-            }
-        });
     }
 
     private void sendVisualNotification(String message) {

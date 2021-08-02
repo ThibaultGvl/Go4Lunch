@@ -134,7 +134,8 @@ public class RestaurantRecyclerViewAdapter
 
     private void setUsers(List<User> users, ResultRestaurant restaurant, ViewHolder holder) {
            for (User user : users) {
-               if (user.getRestaurant() != null && user.getRestaurant().equals(restaurant.getPlaceId())) {
+               if (user.getRestaurant() != null && user.getRestaurant().equals(restaurant
+                       .getPlaceId())) {
                    mUsers.add(user);
                } else {
                    mUsers.remove(user);

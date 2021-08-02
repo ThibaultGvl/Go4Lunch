@@ -60,7 +60,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private FragmentMapsBinding mMapsBinding;
     private final int PERMISSION_ID = 26;
     private FusedLocationProviderClient mFusedLocationProviderClient;
-    private final int DEFAULT_ZOOM = 15;
+    private final int DEFAULT_ZOOM = 16;
     private Location mLastKnownLocation;
     private boolean mLocationPermission;
     private NearbyRestaurantViewModel mNearbyRestaurantViewModel;
@@ -201,7 +201,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         if (restaurants != null) {
             restaurantsList = restaurants.getResults();
             for (ResultRestaurant restaurant : restaurantsList) {
-                LatLng latLng = new LatLng(restaurant.getGeometry().getLocation().getLat(), restaurant.getGeometry().getLocation().getLng());
+                LatLng latLng = new LatLng(restaurant.getGeometry().getLocation().getLat(),
+                        restaurant.getGeometry().getLocation().getLng());
                 String id = restaurant.getPlaceId();
                 setMarker(latLng, id);
             }

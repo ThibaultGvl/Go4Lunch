@@ -1,4 +1,4 @@
-package com.example.go4lunch.viewmodel.places;
+package com.example.go4lunch.utils;
 
 import com.example.go4lunch.model.details.RestaurantDetails;
 import com.example.go4lunch.model.restaurant.RestaurantOutputs;
