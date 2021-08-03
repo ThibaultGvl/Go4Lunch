@@ -381,7 +381,7 @@ public class MainActivity extends AppCompatActivity
             delay = hourAlarm + (24 - timeNow);
         }
         OneTimeWorkRequest myWork = new OneTimeWorkRequest.Builder(Worker.class)
-                .setInitialDelay(1, TimeUnit.SECONDS).build();
+                .setInitialDelay(delay, TimeUnit.HOURS).build();
 
         WorkManager.getInstance(this).enqueueUniqueWork(TAG, ExistingWorkPolicy.REPLACE, myWork);
     }
